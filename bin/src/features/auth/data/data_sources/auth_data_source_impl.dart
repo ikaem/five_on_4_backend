@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import '../../../../wrappers/libraries/crypt/crypt_wrapper.dart';
 import '../../../../wrappers/libraries/drift/app_database.dart';
 import '../../../../wrappers/local/database/database_wrapper.dart';
+import '../../../core/utils/extensions/date_time_extension.dart';
 import '../../domain/values/new_auth_data_value.dart';
 import 'auth_data_source.dart';
 
@@ -34,8 +35,8 @@ class AuthDataSourceImpl implements AuthDataSource {
           email: authValue.email,
           password: Value(hashedPassword),
           authType: authValue.authType.name,
-          createdAt: authValue.createdAt,
-          updatedAt: authValue.updatedAt,
+          createdAt: authValue.createdAt.normalizedToSeconds,
+          updatedAt: authValue.updatedAt.normalizedToSeconds,
         );
         final authId = await _databaseWrapper.authRepo.insertOne(authCompanion);
 

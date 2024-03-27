@@ -15,6 +15,7 @@ dependencies:
   drift_postgres: ^1.2.0
   envied: ^0.5.3
   equatable: ^2.0.5
+  mocktail: ^1.0.3
   postgres: ^3.1.2
   shelf: ^1.4.0
   shelf_router: ^1.1.0
