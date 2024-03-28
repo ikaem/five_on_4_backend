@@ -38,12 +38,12 @@ Future<void> main() async {
   group("$AuthDataSource", () {
     group(".createAuth()", () {
       final dataValueGoogle = NewAuthDataValueGoogle(
-        createdAt: DateTime.now().normalizedToSeconds,
+        // createdAt: DateTime.now().normalizedToSeconds,
         email: "email",
         firstName: "firstName",
         lastName: "lastName",
         nickname: "nickname",
-        updatedAt: DateTime.now().normalizedToSeconds,
+        // updatedAt: DateTime.now().normalizedToSeconds,
       );
 
       test(
@@ -70,8 +70,10 @@ Future<void> main() async {
             email: dataValueGoogle.email,
             password: null,
             authType: AuthTypeConstants.google.name,
-            createdAt: dataValueGoogle.createdAt,
-            updatedAt: dataValueGoogle.updatedAt,
+            createdAt: DateTime.now().normalizedToSeconds,
+            updatedAt: DateTime.now().normalizedToSeconds,
+            // createdAt: dataValueGoogle.createdAt,
+            // updatedAt: dataValueGoogle.updatedAt,
           );
           expect(auth, equals(expectedAuth));
 
@@ -107,8 +109,10 @@ Future<void> main() async {
             firstName: dataValueGoogle.firstName,
             lastName: dataValueGoogle.lastName,
             nickname: dataValueGoogle.nickname,
-            createdAt: dataValueGoogle.createdAt,
-            updatedAt: dataValueGoogle.updatedAt,
+            createdAt: DateTime.now().normalizedToSeconds,
+            updatedAt: DateTime.now().normalizedToSeconds,
+            // createdAt: dataValueGoogle.createdAt,
+            // updatedAt: dataValueGoogle.updatedAt,
             teamId: null,
           );
 

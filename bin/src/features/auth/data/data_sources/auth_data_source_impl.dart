@@ -31,12 +31,15 @@ class AuthDataSourceImpl implements AuthDataSource {
             ? null
             : _cryptWrapper.getHashedPassword(password: password);
 
+        final createdAt = DateTime.now().normalizedToSeconds;
+        final updatedAt = createdAt;
+
         final authCompanion = AuthEntityCompanion.insert(
           email: authValue.email,
           password: Value(hashedPassword),
           authType: authValue.authType.name,
-          createdAt: authValue.createdAt.normalizedToSeconds,
-          updatedAt: authValue.updatedAt.normalizedToSeconds,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
         );
         final authId = await _databaseWrapper.authRepo.insertOne(authCompanion);
 
@@ -45,8 +48,8 @@ class AuthDataSourceImpl implements AuthDataSource {
           lastName: authValue.lastName,
           nickname: authValue.nickname,
           authId: authId,
-          createdAt: authValue.createdAt,
-          updatedAt: authValue.updatedAt,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
           teamId: Value(null),
         );
         await _databaseWrapper.playersRepo.insertOne(playerCompanion);

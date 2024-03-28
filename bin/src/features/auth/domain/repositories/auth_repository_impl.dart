@@ -5,12 +5,12 @@ import 'auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   const AuthRepositoryImpl({
-    required GoogleApisWrapper googleIdTokenValidatorWrapper,
+    required GoogleApisWrapper googleApisWrapper,
     required AuthDataSource authDataSource,
-  })  : _googleIdTokenValidatorWrapper = googleIdTokenValidatorWrapper,
+  })  : _googleApisWrapper = googleApisWrapper,
         _authDataSource = authDataSource;
 
-  final GoogleApisWrapper _googleIdTokenValidatorWrapper;
+  final GoogleApisWrapper _googleApisWrapper;
   final AuthDataSource _authDataSource;
 
   // what this does is
@@ -25,7 +25,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required String idToken,
   }) async {
     final validatedGoogleAuthResponse =
-        await _googleIdTokenValidatorWrapper.validateIdToken(
+        await _googleApisWrapper.validateIdToken(
       idToken: idToken,
     );
 
@@ -44,8 +44,8 @@ class AuthRepositoryImpl implements AuthRepository {
     // create new auth because this is google
     final newAuthEntityValue = NewAuthDataValueGoogle(
       email: validatedGoogleAuthResponse.email,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
+      // createdAt: DateTime.now(),
+      // updatedAt: DateTime.now(),
       firstName: validatedGoogleAuthResponse.givenName,
       lastName: validatedGoogleAuthResponse.familyName,
       nickname: validatedGoogleAuthResponse.givenName,
