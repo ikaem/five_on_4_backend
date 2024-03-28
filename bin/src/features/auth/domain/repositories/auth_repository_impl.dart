@@ -1,16 +1,16 @@
-import '../../../../wrappers/local/google_id_token_validator/google_id_token_validator_wrapper.dart';
+import '../../../../wrappers/local/google_apis/google_apis_wrapper.dart';
 import '../../data/data_sources/auth_data_source.dart';
 import '../values/new_auth_data_value.dart';
 import 'auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   const AuthRepositoryImpl({
-    required GoogleIdTokenValidatorWrapper googleIdTokenValidatorWrapper,
+    required GoogleApisWrapper googleIdTokenValidatorWrapper,
     required AuthDataSource authDataSource,
   })  : _googleIdTokenValidatorWrapper = googleIdTokenValidatorWrapper,
         _authDataSource = authDataSource;
 
-  final GoogleIdTokenValidatorWrapper _googleIdTokenValidatorWrapper;
+  final GoogleApisWrapper _googleIdTokenValidatorWrapper;
   final AuthDataSource _authDataSource;
 
   // what this does is

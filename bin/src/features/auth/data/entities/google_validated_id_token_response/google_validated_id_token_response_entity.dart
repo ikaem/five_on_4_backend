@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class GoogleValidatedIdTokenResponseEntity extends Equatable {
-  const GoogleValidatedIdTokenResponseEntity({
+class GoogleApisValidatedIdTokenResponseEntity extends Equatable {
+  const GoogleApisValidatedIdTokenResponseEntity({
     required this.iss,
     required this.azp,
     required this.aud,
@@ -54,7 +54,7 @@ class GoogleValidatedIdTokenResponseEntity extends Equatable {
         typ,
       ];
 
-  GoogleValidatedIdTokenResponseEntity.fromJson({
+  GoogleApisValidatedIdTokenResponseEntity.fromJson({
     required Map<String, dynamic> json,
   })  : iss = json['iss'] as String,
         azp = json['azp'] as String,
