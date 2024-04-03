@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../../wrappers/libraries/drift/app_database.dart';
 import '../../domain/values/new_auth_data_value.dart';
 

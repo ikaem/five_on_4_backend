@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class AuthModel extends Equatable {
   const AuthModel({
+    // TODO chnage this to id, not auth ID
     required this.authId,
     required this.email,
     required this.createdAt,

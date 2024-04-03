@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:crypt/crypt.dart';
 import 'package:crypto/crypto.dart';
@@ -7,6 +8,7 @@ import 'package:shelf_router/shelf_router.dart';
 
 import '../../../../wrappers/libraries/crypt/crypt_wrapper.dart';
 import '../../../auth/presentation/router/auth_router.dart';
+import '../../utils/extensions/request_extension.dart';
 
 class AppRouter {
   AppRouter({
@@ -21,6 +23,30 @@ class AppRouter {
 
       final storedPassHash =
           cryptWrapper.getHashedPassword(password: "hellopass");
+
+      // TODO make this an extension or something
+      // final bodyString = await req.readAsString();
+      // final body = jsonDecode(bodyString);
+
+      // final bodyMap = await req.parseBody();
+
+      final bodyMap = await req.parseBody();
+
+      final idToken = bodyMap["idToken"];
+      if (idToken is! String) {
+        return Response.badRequest(
+          body: jsonEncode({"error": "idToken is required"}),
+          // encoding: utf8,
+          headers: {
+            "Content-Type": "application/json",
+            // "Set-Cookie": "mycookie=test; HttpOnly; SameSite=Strict; Secure",
+            "Set-Cookie": [
+              Cookie("mycookie2", "test").toString(),
+              Cookie("mycookie3", "test").toString(),
+            ],
+          },
+        );
+      }
 
       final providedPass = req.requestedUri.queryParameters["pass"];
       // final hashedProvidedPass =
@@ -52,3 +78,5 @@ class AppRouter {
   final Router _router;
   Router get router => _router;
 }
+
+// TODO move to extensions

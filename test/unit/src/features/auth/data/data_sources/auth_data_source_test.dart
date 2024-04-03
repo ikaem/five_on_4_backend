@@ -14,6 +14,8 @@ import '../../../../../../helpers/database/test_database.dart';
 Future<void> main() async {
   final cryptWrapper = _MockCryptWrapper();
   late TestDatabaseWrapper testDatabaseWrapper;
+
+  // tested class
   late AuthDataSource authDataSource;
 
   setUp(() async {
