@@ -94,7 +94,6 @@ class AuthDataSourceImpl implements AuthDataSource {
     final findAuth = select..where((tbl) => tbl.id.equals(id));
 
     final auth = await findAuth.getSingleOrNull();
-
     return auth;
   }
 }

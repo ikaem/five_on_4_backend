@@ -24,6 +24,7 @@ class DatabaseWrapper {
 
   $PlayerEntityTable get playersRepo => db.playerEntity;
   $AuthEntityTable get authRepo => db.authEntity;
+  $MatchEntityTable get matchesRepo => db.matchEntity;
 
   bool get isInitialized {
     // TODO maybe there is some better way for thsi
