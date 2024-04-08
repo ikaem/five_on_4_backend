@@ -10,6 +10,7 @@ dependencies:
   args: ^2.4.0
   crypt: ^4.3.1
   crypto: ^3.0.3
+  dart_jsonwebtoken: ^2.13.0
   dio: ^5.4.2
   drift: ^2.16.0
   drift_postgres: ^1.2.0
