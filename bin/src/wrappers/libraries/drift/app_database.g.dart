@@ -1037,6 +1037,11 @@ class $MatchEntityTable extends MatchEntity
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _dateAndTimeMeta =
       const VerificationMeta('dateAndTime');
   @override
@@ -1069,7 +1074,7 @@ class $MatchEntityTable extends MatchEntity
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
-      [id, dateAndTime, location, description, createdAt, updatedAt];
+      [id, title, dateAndTime, location, description, createdAt, updatedAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1082,6 +1087,12 @@ class $MatchEntityTable extends MatchEntity
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
     }
     if (data.containsKey('date_and_time')) {
       context.handle(
@@ -1128,6 +1139,8 @@ class $MatchEntityTable extends MatchEntity
     return MatchEntityData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       dateAndTime: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}date_and_time'])!,
       location: attachedDatabase.typeMapping
@@ -1149,6 +1162,7 @@ class $MatchEntityTable extends MatchEntity
 
 class MatchEntityData extends DataClass implements Insertable<MatchEntityData> {
   final int id;
+  final String title;
   final DateTime dateAndTime;
   final String location;
   final String description;
@@ -1156,6 +1170,7 @@ class MatchEntityData extends DataClass implements Insertable<MatchEntityData> {
   final DateTime updatedAt;
   const MatchEntityData(
       {required this.id,
+      required this.title,
       required this.dateAndTime,
       required this.location,
       required this.description,
@@ -1165,6 +1180,7 @@ class MatchEntityData extends DataClass implements Insertable<MatchEntityData> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    map['title'] = Variable<String>(title);
     map['date_and_time'] = Variable<DateTime>(dateAndTime);
     map['location'] = Variable<String>(location);
     map['description'] = Variable<String>(description);
@@ -1176,6 +1192,7 @@ class MatchEntityData extends DataClass implements Insertable<MatchEntityData> {
   MatchEntityCompanion toCompanion(bool nullToAbsent) {
     return MatchEntityCompanion(
       id: Value(id),
+      title: Value(title),
       dateAndTime: Value(dateAndTime),
       location: Value(location),
       description: Value(description),
@@ -1189,6 +1206,7 @@ class MatchEntityData extends DataClass implements Insertable<MatchEntityData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return MatchEntityData(
       id: serializer.fromJson<int>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
       dateAndTime: serializer.fromJson<DateTime>(json['dateAndTime']),
       location: serializer.fromJson<String>(json['location']),
       description: serializer.fromJson<String>(json['description']),
@@ -1201,6 +1219,7 @@ class MatchEntityData extends DataClass implements Insertable<MatchEntityData> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'title': serializer.toJson<String>(title),
       'dateAndTime': serializer.toJson<DateTime>(dateAndTime),
       'location': serializer.toJson<String>(location),
       'description': serializer.toJson<String>(description),
@@ -1211,6 +1230,7 @@ class MatchEntityData extends DataClass implements Insertable<MatchEntityData> {
 
   MatchEntityData copyWith(
           {int? id,
+          String? title,
           DateTime? dateAndTime,
           String? location,
           String? description,
@@ -1218,6 +1238,7 @@ class MatchEntityData extends DataClass implements Insertable<MatchEntityData> {
           DateTime? updatedAt}) =>
       MatchEntityData(
         id: id ?? this.id,
+        title: title ?? this.title,
         dateAndTime: dateAndTime ?? this.dateAndTime,
         location: location ?? this.location,
         description: description ?? this.description,
@@ -1228,6 +1249,7 @@ class MatchEntityData extends DataClass implements Insertable<MatchEntityData> {
   String toString() {
     return (StringBuffer('MatchEntityData(')
           ..write('id: $id, ')
+          ..write('title: $title, ')
           ..write('dateAndTime: $dateAndTime, ')
           ..write('location: $location, ')
           ..write('description: $description, ')
@@ -1238,13 +1260,14 @@ class MatchEntityData extends DataClass implements Insertable<MatchEntityData> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, dateAndTime, location, description, createdAt, updatedAt);
+  int get hashCode => Object.hash(
+      id, title, dateAndTime, location, description, createdAt, updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is MatchEntityData &&
           other.id == this.id &&
+          other.title == this.title &&
           other.dateAndTime == this.dateAndTime &&
           other.location == this.location &&
           other.description == this.description &&
@@ -1254,6 +1277,7 @@ class MatchEntityData extends DataClass implements Insertable<MatchEntityData> {
 
 class MatchEntityCompanion extends UpdateCompanion<MatchEntityData> {
   final Value<int> id;
+  final Value<String> title;
   final Value<DateTime> dateAndTime;
   final Value<String> location;
   final Value<String> description;
@@ -1261,6 +1285,7 @@ class MatchEntityCompanion extends UpdateCompanion<MatchEntityData> {
   final Value<DateTime> updatedAt;
   const MatchEntityCompanion({
     this.id = const Value.absent(),
+    this.title = const Value.absent(),
     this.dateAndTime = const Value.absent(),
     this.location = const Value.absent(),
     this.description = const Value.absent(),
@@ -1269,18 +1294,21 @@ class MatchEntityCompanion extends UpdateCompanion<MatchEntityData> {
   });
   MatchEntityCompanion.insert({
     this.id = const Value.absent(),
+    required String title,
     required DateTime dateAndTime,
     required String location,
     required String description,
     required DateTime createdAt,
     required DateTime updatedAt,
-  })  : dateAndTime = Value(dateAndTime),
+  })  : title = Value(title),
+        dateAndTime = Value(dateAndTime),
         location = Value(location),
         description = Value(description),
         createdAt = Value(createdAt),
         updatedAt = Value(updatedAt);
   static Insertable<MatchEntityData> custom({
     Expression<int>? id,
+    Expression<String>? title,
     Expression<DateTime>? dateAndTime,
     Expression<String>? location,
     Expression<String>? description,
@@ -1289,6 +1317,7 @@ class MatchEntityCompanion extends UpdateCompanion<MatchEntityData> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (title != null) 'title': title,
       if (dateAndTime != null) 'date_and_time': dateAndTime,
       if (location != null) 'location': location,
       if (description != null) 'description': description,
@@ -1299,6 +1328,7 @@ class MatchEntityCompanion extends UpdateCompanion<MatchEntityData> {
 
   MatchEntityCompanion copyWith(
       {Value<int>? id,
+      Value<String>? title,
       Value<DateTime>? dateAndTime,
       Value<String>? location,
       Value<String>? description,
@@ -1306,6 +1336,7 @@ class MatchEntityCompanion extends UpdateCompanion<MatchEntityData> {
       Value<DateTime>? updatedAt}) {
     return MatchEntityCompanion(
       id: id ?? this.id,
+      title: title ?? this.title,
       dateAndTime: dateAndTime ?? this.dateAndTime,
       location: location ?? this.location,
       description: description ?? this.description,
@@ -1319,6 +1350,9 @@ class MatchEntityCompanion extends UpdateCompanion<MatchEntityData> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
     }
     if (dateAndTime.present) {
       map['date_and_time'] = Variable<DateTime>(dateAndTime.value);
@@ -1342,6 +1376,7 @@ class MatchEntityCompanion extends UpdateCompanion<MatchEntityData> {
   String toString() {
     return (StringBuffer('MatchEntityCompanion(')
           ..write('id: $id, ')
+          ..write('title: $title, ')
           ..write('dateAndTime: $dateAndTime, ')
           ..write('location: $location, ')
           ..write('description: $description, ')

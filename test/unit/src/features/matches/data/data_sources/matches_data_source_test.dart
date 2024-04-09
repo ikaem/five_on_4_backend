@@ -55,6 +55,7 @@ void main() {
 
           // given
           final matchCompanion = MatchEntityCompanion.insert(
+            title: "title",
             dateAndTime: DateTime.now().normalizedToSeconds,
             location: "location",
             description: "description",
@@ -70,6 +71,7 @@ void main() {
           // then
           final expectedMatch = MatchEntityData(
             id: id,
+            title: matchCompanion.title.value,
             dateAndTime: matchCompanion.dateAndTime.value,
             location: matchCompanion.location.value,
             description: matchCompanion.description.value,

@@ -78,3 +78,7 @@ make generate_migrations_steps
     ),
 
 ```
+6. run the following command
+```
+make generate
+```
