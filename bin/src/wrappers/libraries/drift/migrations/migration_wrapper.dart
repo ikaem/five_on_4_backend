@@ -12,9 +12,10 @@ class MigrationWrapper {
         // await m.addColumn(schema.users, schema.users.nickname);
         await m.createTable(schema.matchEntity);
       },
-      // from2To3: (m, schema) async {
-      //   await m.createTable(schema.somethingElse);
-      // },
+      from2To3: (m, schema) async {
+        // await m.createTable(schema.somethingElse);
+        await m.addColumn(schema.matchEntity, schema.matchEntity.title);
+      },
     ),
     beforeOpen: (details) async {
       // some populate things if needed

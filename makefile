@@ -10,10 +10,10 @@ generate_migrations:
 
 
 generate_migrations_schema:
-	dart run drift_dev schema dump bin/wrappers/libraries/drift/app_database.dart bin/wrappers/libraries/drift/migrations/schemas
+	dart run drift_dev schema dump bin/src/wrappers/libraries/drift/app_database.dart bin/src/wrappers/libraries/drift/migrations/schemas
 
 generate_migrations_steps:
-	dart run drift_dev schema steps bin/wrappers/libraries/drift/migrations/schemas bin/wrappers/libraries/drift/migrations/schema_versions/schema_versions.dart
+	dart run drift_dev schema steps bin/src/wrappers/libraries/drift/migrations/schemas bin/src/wrappers/libraries/drift/migrations/schema_versions/schema_versions.dart
 
 
 just_example_how_to_add_env_vars_to_built_app:
