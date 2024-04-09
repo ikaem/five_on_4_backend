@@ -50,3 +50,31 @@ You should see the logging printed in the first terminal:
 
 
 ## How to do db migrations
+1. make changes 
+- add new table
+- or add new column
+- or change column type
+- - or some such
+2. increase "schemaVersion" on AppDatabase by 1
+3. run the following command
+```
+maake generate_migrations_schema
+```
+4. run the following command
+```
+make generate_migrations_steps
+```
+5. add next migration to migration_wrapper that matches your db modification. for example:
+```
+    onUpgrade: stepByStep(
+      from1To2: (m, schema) async {
+        // await m.addColumn(schema.users, schema.users.nickname);
+        await m.createTable(schema.matchEntity);
+      },
+      from2To3: (m, schema) async {
+        // await m.createTable(schema.somethingElse);
+        await m.addColumn(schema.matchEntity, schema.matchEntity.title);
+      },
+    ),
+
+```
