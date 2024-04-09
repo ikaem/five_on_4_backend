@@ -7,6 +7,7 @@ import '../../../../../../../bin/src/features/auth/domain/repositories/auth_repo
 import '../../../../../../../bin/src/features/auth/domain/repositories/auth_repository_impl.dart';
 import '../../../../../../../bin/src/features/auth/domain/values/new_auth_data_value.dart';
 import '../../../../../../../bin/src/features/auth/utils/constants/auth_type_constants.dart';
+import '../../../../../../../bin/src/features/auth/utils/converters/auth_converter.dart';
 import '../../../../../../../bin/src/wrappers/libraries/drift/app_database.dart';
 import '../../../../../../../bin/src/wrappers/local/google_apis/google_apis_wrapper.dart';
 
@@ -155,6 +156,59 @@ void main() {
           );
         },
       );
+
+      group(".getAuthById()", () {
+        test(
+          "given invalid authId "
+          "when .getAuthById() is called "
+          "then should return null",
+          () async {
+            // setup
+            when(() => authDataSource.getAuthById(id: any(named: "id")))
+                .thenAnswer((i) async => null);
+
+            // given
+            final authId = 1;
+
+            // when
+            final result = await authRepositoryImpl.getAuthById(
+              id: authId,
+            );
+
+            // then
+            expect(result, null);
+
+            // cleanup
+          },
+        );
+
+        test(
+          "given valid authId "
+          "when .getAuthById() is called "
+          "then should return expected auth",
+          () async {
+            // setup
+            when(() => authDataSource.getAuthById(id: any(named: "id")))
+                .thenAnswer((i) async => testAuthEntityData);
+
+            // given
+            final authId = 1;
+
+            // when
+            final result = await authRepositoryImpl.getAuthById(
+              id: authId,
+            );
+
+            // then
+            final expectedResult = AuthConverter.modelFromEntity(
+              entity: testAuthEntityData,
+            );
+            expect(result, expectedResult);
+
+            // cleanup
+          },
+        );
+      });
     },
   );
 }

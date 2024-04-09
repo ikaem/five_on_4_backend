@@ -1,4 +1,4 @@
-import 'package:drift/drift.dart';
+import 'package:drift/drift.dart' hide isNull;
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
@@ -133,37 +133,18 @@ Future<void> main() async {
         "then should return expected auth",
         () async {
           // setup
-          final email = "email";
-          final password = "password";
-
-          // given
-          final authCompanion = AuthEntityCompanion.insert(
-            email: email,
-            password: Value(password),
-            authType: AuthTypeConstants.emailPassword.name,
-            createdAt: DateTime.now().normalizedToSeconds,
-            updatedAt: DateTime.now().normalizedToSeconds,
-          );
+          final email = testAuthCompanion.email.value;
 
           await testDatabaseWrapper.databaseWrapper.authRepo
-              .insertOne(authCompanion);
+              .insertOne(testAuthCompanion);
 
           // when
           final auth = await authDataSource.getAuthByEmail(email: email);
 
           // then
-          final expectedAuth = AuthEntityData(
-            id: 1,
-            email: email,
-            password: password,
-            authType: AuthTypeConstants.emailPassword.name,
-            createdAt: authCompanion.createdAt.value,
-            updatedAt: authCompanion.updatedAt.value,
-          );
-
           expect(
             auth,
-            equals(expectedAuth),
+            equals(testAuthEntityData),
           );
 
           // cleanup
@@ -190,7 +171,69 @@ Future<void> main() async {
         },
       );
     });
+
+    group(".getAuthById()", () {
+      test(
+        "given invalid authId "
+        "when .getAuthById() is called "
+        "then should return null",
+        () async {
+          // setup
+
+          // given
+          final authId = 1;
+
+          // when
+          final auth = await authDataSource.getAuthById(id: authId);
+
+          // then
+          expect(auth, isNull);
+
+          // cleanup
+        },
+      );
+
+      test(
+        "given valid authId "
+        "when .getAuthById() is called "
+        "then should return expected auth",
+        () async {
+          // setup
+          await testDatabaseWrapper.databaseWrapper.authRepo
+              .insertOne(testAuthCompanion);
+
+          // given
+          final authId = testAuthCompanion.id.value;
+
+          // when
+          final auth = await authDataSource.getAuthById(id: authId);
+
+          // then
+          expect(auth, equals(testAuthEntityData));
+
+          // cleanup
+        },
+      );
+    });
   });
 }
 
 class _MockCryptWrapper extends Mock implements CryptWrapper {}
+
+final testAuthCompanion = AuthEntityCompanion.insert(
+  id: Value(1),
+  email: "email",
+  password: Value("password"),
+  authType: AuthTypeConstants.emailPassword.name,
+  createdAt: DateTime.now().normalizedToSeconds,
+  updatedAt: DateTime.now().normalizedToSeconds,
+);
+
+final testAuthEntityData = AuthEntityData(
+  id: testAuthCompanion.id.value,
+  email: testAuthCompanion.email.value,
+  password: testAuthCompanion.password.value,
+  authType: testAuthCompanion.authType.value,
+  createdAt: testAuthCompanion.createdAt.value,
+  updatedAt: testAuthCompanion.updatedAt.value,
+);

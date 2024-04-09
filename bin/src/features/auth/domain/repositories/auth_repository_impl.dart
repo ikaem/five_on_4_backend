@@ -1,5 +1,7 @@
 import '../../../../wrappers/local/google_apis/google_apis_wrapper.dart';
+import '../../../core/presentation/router/domain/models/auth/auth_model.dart';
 import '../../data/data_sources/auth_data_source.dart';
+import '../../utils/converters/auth_converter.dart';
 import '../values/new_auth_data_value.dart';
 import 'auth_repository.dart';
 
@@ -56,5 +58,20 @@ class AuthRepositoryImpl implements AuthRepository {
     );
 
     return authId;
+  }
+
+  @override
+  Future<AuthModel?> getAuthById({
+    required int id,
+  }) async {
+    final authEntityData = await _authDataSource.getAuthById(
+      id: id,
+    );
+    if (authEntityData == null) {
+      return null;
+    }
+
+    final authModel = AuthConverter.modelFromEntity(entity: authEntityData);
+    return authModel;
   }
 }

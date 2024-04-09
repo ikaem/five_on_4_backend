@@ -11,4 +11,8 @@ abstract class AuthRepository {
   Future<int?> googleLogin({
     required String idToken,
   });
+
+  Future<AuthModel?> getAuthById({
+    required int id,
+  });
 }
