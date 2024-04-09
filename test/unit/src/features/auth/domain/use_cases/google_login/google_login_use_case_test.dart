@@ -1,8 +1,8 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/auth/domain/repositories/auth_repository.dart';
-import '../../../../../../../bin/src/features/auth/domain/use_cases/google_login/google_login_use_case.dart';
+import '../../../../../../../../bin/src/features/auth/domain/repositories/auth_repository.dart';
+import '../../../../../../../../bin/src/features/auth/domain/use_cases/google_login/google_login_use_case.dart';
 
 void main() {
   final authRepository = _MockAuthRepository();
