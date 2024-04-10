@@ -26,4 +26,20 @@ class PlayersRepositoryImpl implements PlayersRepository {
 
     return model;
   }
+
+  @override
+  Future<PlayerModel?> getPlayerById({
+    required int id,
+  }) async {
+    final playerEntityData = await _playersDataSource.getPlayerById(
+      id: id,
+    );
+    if (playerEntityData == null) {
+      return null;
+    }
+
+    final model = PlayersConverter.modelFromEntity(entity: playerEntityData);
+
+    return model;
+  }
 }

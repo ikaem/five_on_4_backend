@@ -26,7 +26,55 @@ void main() {
   });
 
   group("$PlayersDataSource", () {
-    group(".getPlayerByAuthId", () {
+    group(".getPlayerById()", () {
+      test(
+        "given an invalid id "
+        "when .getPlayerById() is called "
+        "then should return null",
+        () async {
+          // setup
+
+          // given
+          final id = 1;
+
+          // when
+          final player = await playersDataSource.getPlayerById(
+            id: id,
+          );
+
+          // then
+          expect(player, isNull);
+
+          // cleanup
+        },
+      );
+
+      test(
+        "given a valid id "
+        "when .getPlayerById() is called "
+        "then should return expected player entity data",
+        () async {
+          // setup
+          await testDatabaseWrapper.databaseWrapper.playersRepo
+              .insertOne(testPlayerCompanion);
+
+          // given
+          final playerId = testPlayerCompanion.id.value;
+
+          // when
+          final player = await playersDataSource.getPlayerById(
+            id: playerId,
+          );
+
+          // then
+          expect(player, equals(testPlayerEntityData));
+
+          // cleanup
+        },
+      );
+    });
+
+    group(".getPlayerByAuthId()", () {
       test(
         "given player for an authId does not exist in db "
         "when .getPlayerByAuthId() is called with the authId "
@@ -96,3 +144,23 @@ void main() {
     });
   });
 }
+
+final testPlayerCompanion = PlayerEntityCompanion.insert(
+  id: Value(1),
+  firstName: "firstName",
+  lastName: "lastName",
+  nickname: "nickname",
+  createdAt: DateTime.now().normalizedToSeconds,
+  updatedAt: DateTime.now().normalizedToSeconds,
+  authId: 1,
+);
+
+final testPlayerEntityData = PlayerEntityData(
+  id: testPlayerCompanion.id.value,
+  firstName: testPlayerCompanion.firstName.value,
+  lastName: testPlayerCompanion.lastName.value,
+  nickname: testPlayerCompanion.nickname.value,
+  createdAt: testPlayerCompanion.createdAt.value,
+  updatedAt: testPlayerCompanion.updatedAt.value,
+  authId: testPlayerCompanion.authId.value,
+);

@@ -6,6 +6,7 @@ import '../../../../../../../bin/src/features/players/data/data_sources/players_
 import '../../../../../../../bin/src/features/players/domain/models/player_model.dart';
 import '../../../../../../../bin/src/features/players/domain/repositories/players_repository.dart';
 import '../../../../../../../bin/src/features/players/domain/repositories/players_repository_impl.dart';
+import '../../../../../../../bin/src/features/players/utils/converters/players_converter.dart';
 import '../../../../../../../bin/src/wrappers/libraries/drift/app_database.dart';
 
 void main() {
@@ -21,6 +22,57 @@ void main() {
   });
 
   group("$PlayersRepository", () {
+    group(".getPlayerById()", () {
+      test(
+        "given an invalid id "
+        "when .getPlayerById() is called "
+        "then should return null",
+        () async {
+          // setup
+          when(() => playersDataSource.getPlayerById(id: any(named: "id")))
+              .thenAnswer((i) async => null);
+
+          // given
+          final id = 1;
+
+          // when
+          final player = await playersRepository.getPlayerById(
+            id: id,
+          );
+
+          // then
+          expect(player, isNull);
+
+          // cleanup
+        },
+      );
+
+      test(
+        "given a valid id "
+        "when .getPlayerById() is called "
+        "then should return expected player",
+        () async {
+          // setup
+          when(() => playersDataSource.getPlayerById(id: any(named: "id")))
+              .thenAnswer((i) async => testPlayerEntityData);
+
+          // given
+          final id = 1;
+
+          // when
+          final player = await playersRepository.getPlayerById(
+            id: id,
+          );
+
+          // then
+          final expectedPlayer =
+              PlayersConverter.modelFromEntity(entity: testPlayerEntityData);
+          expect(player, equals(expectedPlayer));
+
+          // cleanup
+        },
+      );
+    });
     group(".getPlayerByAuthId()", () {
       test(
         "given authId and non-existing matching player in db"

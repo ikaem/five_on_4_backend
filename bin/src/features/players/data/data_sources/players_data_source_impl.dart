@@ -22,4 +22,16 @@ class PlayersDataSourceImpl implements PlayersDataSource {
 
     return player;
   }
+
+  @override
+  Future<PlayerEntityData?> getPlayerById({
+    required int id,
+  }) async {
+    final select = _databaseWrapper.playersRepo.select();
+    final findPlayer = select..where((tbl) => tbl.id.equals(id));
+
+    final player = await findPlayer.getSingleOrNull();
+
+    return player;
+  }
 }

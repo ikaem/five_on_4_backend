@@ -3,7 +3,6 @@ import 'package:test/test.dart';
 
 import '../../../../../../../bin/src/features/core/utils/extensions/date_time_extension.dart';
 import '../../../../../../../bin/src/features/matches/data/data_sources/matches_data_source.dart';
-import '../../../../../../../bin/src/features/matches/domain/models/match_model.dart';
 import '../../../../../../../bin/src/features/matches/domain/repositories/matches_repository.dart';
 import '../../../../../../../bin/src/features/matches/domain/repositories/matches_repository_impl.dart';
 import '../../../../../../../bin/src/features/matches/utils/converters/matches_converters.dart';
