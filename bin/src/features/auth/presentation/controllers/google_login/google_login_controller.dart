@@ -78,6 +78,24 @@ class GoogleLoginController {
       playerNickname: player.nickname,
     );
 
+    /* 
+    TODO this should work better
+          final cookieToString = Cookie("mycookie", "value").toString();
+      final cookieToString2 = Cookie("mycookie2", "value2").toString();
+
+      final response2 = Response.ok("hello2", headers: {
+        // "set-cookie": "mycookie=test; HttpOnly; SameSite=Strict; Secure",
+        // "set-cookie": Cookie("mycookie", "value".toString()),
+        "set-cookie": [
+          cookieToString,
+          cookieToString2,
+        ],
+      });
+
+      return response2;
+    
+     */
+
     return Response.ok(
       jsonEncode(responsePayload),
       headers: {
