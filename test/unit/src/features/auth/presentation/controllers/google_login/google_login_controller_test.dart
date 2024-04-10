@@ -9,7 +9,7 @@ import '../../../../../../../../bin/src/features/auth/domain/use_cases/google_lo
 import '../../../../../../../../bin/src/features/auth/presentation/controllers/google_login/google_login_controller.dart';
 import '../../../../../../../../bin/src/features/core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
 import '../../../../../../../../bin/src/features/players/domain/models/player_model.dart';
-import '../../../../../../../../bin/src/features/players/domain/use_cases/get_player_by_auth_id.dart';
+import '../../../../../../../../bin/src/features/players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
 
 void main() {
   final googleLoginUseCase = _MockGoogleLoginUseCase();

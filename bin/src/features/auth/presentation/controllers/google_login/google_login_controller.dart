@@ -5,7 +5,7 @@ import 'package:shelf/shelf.dart';
 
 import '../../../../core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
 import '../../../../core/utils/extensions/request_extension.dart';
-import '../../../../players/domain/use_cases/get_player_by_auth_id.dart';
+import '../../../../players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
 import '../../../domain/use_cases/google_login/google_login_use_case.dart';
 
 class GoogleLoginController {

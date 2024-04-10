@@ -1,5 +1,5 @@
-import '../models/player_model.dart';
-import '../repositories/players_repository.dart';
+import '../../models/player_model.dart';
+import '../../repositories/players_repository.dart';
 
 class GetPlayerByAuthIdUseCase {
   GetPlayerByAuthIdUseCase({
