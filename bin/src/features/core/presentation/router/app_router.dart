@@ -19,6 +19,8 @@ class AppRouter {
     _router.get("/test", (Request req) async {
       final secret = "9beSsexjUXBir09LIK9uQ50QSGXCho4gqdAl/L5CAhB";
 
+      final cookies = req.headers[HttpHeaders.cookieHeader];
+
       final cryptWrapper = CryptWrapper(passwordSalt: secret);
 
       final storedPassHash =
@@ -71,7 +73,17 @@ class AppRouter {
       // print(hashedPass);
       // final encodedPass = utf8.encode(myPass);
       // final pass = sha256.convert(input)
-      return Response.ok("test");
+      return Response.ok(
+        "test",
+        headers: {
+          "Content-Type": "Application/json",
+          "Set-Cookie": [
+            Cookie.fromSetCookieValue(
+                    "mycookie=test; HttpOnly; SameSite=Strict; Secure")
+                .toString(),
+          ]
+        },
+      );
     });
   }
 
