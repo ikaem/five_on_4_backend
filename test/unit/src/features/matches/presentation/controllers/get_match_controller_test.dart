@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
@@ -35,14 +38,35 @@ void main() {
         "when .call() is called "
         "then should return expected response",
         () async {
-          // lets see how request looks like even
           // setup
 
           // given
 
+          when(() => request.headers).thenReturn({});
+
           // when
+          final response = await getMatchController.call(request);
 
           // then
+          final expectedResponse = Response.badRequest(
+            body: jsonEncode(
+              {
+                "ok": false,
+                "message": "Invalid request.",
+              },
+            ),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          );
+
+          final responseString = await response.readAsString();
+
+          expect(
+            responseString,
+            equals(await expectedResponse.readAsString()),
+          );
+          expect(response.statusCode, equals(expectedResponse.statusCode));
 
           // cleanup
         },

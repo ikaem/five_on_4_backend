@@ -1,5 +1,9 @@
 // create interface or base class for all controllers
 
+import 'dart:convert';
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:shelf/shelf.dart';
 
 import '../../../auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
@@ -20,6 +24,40 @@ class GetMatchController {
   final GetAuthByIdUseCase _getAuthByIdUseCase;
 
   Future<Response> call(Request request) async {
-    return Response.ok("Hello, World!");
+    // TODO extract this
+    final requestCookies = request.headers[HttpHeaders.cookieHeader];
+    if (requestCookies == null) {
+      return _handleNoAccessTokenCookieResponse();
+    }
+
+    // we have cookie now - we need to parse it and get the access token
+
+    final successResponse = Response.ok(
+      jsonEncode(
+        {
+          "ok": true,
+          "data": {},
+          "message": "Match found.",
+        },
+      ),
+    );
+    return successResponse;
   }
+}
+
+Response _handleNoAccessTokenCookieResponse() {
+  log("No access token cookie provided", name: "GetMatchController");
+  final response = Response.badRequest(
+    body: jsonEncode(
+      {
+        "ok": false,
+        "message": "Invalid request.",
+      },
+    ),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  );
+
+  return response;
 }
