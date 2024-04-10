@@ -28,6 +28,7 @@ class GoogleLoginController {
     final idToken = bodyMap["idToken"] as String?;
     if (idToken == null) {
       // TODcreate proper response for this
+      // TODO type all responses somehow so they are all uniform
       return Response(400,
           body: jsonEncode({
             "ok": false,
