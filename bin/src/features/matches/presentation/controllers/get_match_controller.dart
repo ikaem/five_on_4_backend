@@ -27,7 +27,9 @@ class GetMatchController {
     // TODO extract this
     final requestCookies = request.headers[HttpHeaders.cookieHeader];
     if (requestCookies == null) {
-      return _handleNoAccessTokenCookieResponse();
+      return _generateInvalidRequest(
+        logMessage: "No cookies found in request.",
+      );
     }
 
     // we have cookie now - we need to parse it and get the access token
@@ -45,8 +47,13 @@ class GetMatchController {
   }
 }
 
-Response _handleNoAccessTokenCookieResponse() {
-  log("No access token cookie provided", name: "GetMatchController");
+Response _generateInvalidRequest({
+  required String logMessage,
+}) {
+  log(
+    logMessage,
+    name: "GetMatchController",
+  );
   final response = Response.badRequest(
     body: jsonEncode(
       {

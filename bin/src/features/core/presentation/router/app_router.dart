@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:crypt/crypt.dart';
@@ -73,9 +74,16 @@ class AppRouter {
       // print(hashedPass);
       // final encodedPass = utf8.encode(myPass);
       // final pass = sha256.convert(input)
+
+      final cookie = Cookie.fromSetCookieValue(
+          "accessToken=sample_access_token; Path=/protected/area; Expires=Wed, 12 Jun 2024 23:59:59 GMT");
+
+      final cookieString = cookie.toString();
+
       final requestCookies = req.headers[HttpHeaders.cookieHeader];
+      log("requestCookies: $requestCookies", name: "AppRouter");
       return Response.ok(
-        "test",
+        jsonEncode({"test": "test"}),
         // {
         //   "hello": "hello",
         // },
@@ -84,7 +92,17 @@ class AppRouter {
           HttpHeaders.setCookieHeader: [
             // Cookie("mycookie", "test2").toString(),
             // Cookie.fromSetCookieValue("mycookie=test; HttpOnly; Secure")
-            Cookie.fromSetCookieValue("mycookie=tes2tdf").toString(),
+            // Cookie.fromSetCookieValue("accessToken=abc123; HttpOnly; Secure")
+            Cookie.fromSetCookieValue(
+                    "access_token=your_access_token_value; Expires=Thursday, 25-Dec-2025 23:13:00 GMT; HttpOnly")
+                .toString(),
+            Cookie.fromSetCookieValue(
+                    "another_cookie_name=your_another_cookie_value; Expires=Thursday, 25-Dec-2025 23:13:00 GMT; HttpOnly")
+                .toString(),
+            // Cookie.fromSetCookieValue("accessToken2=abc1233; HttpOnly; Secure")
+            // Cookie.fromSetCookieValue(
+            //         "accessToken1=sample_access_token1; Path=/protected/area; Expires=Wed, 12 Jun 2024 23:59:59 GMT")
+            //     .toString(),
           ]
         },
       );
@@ -96,3 +114,17 @@ class AppRouter {
 }
 
 // TODO move to extensions
+
+/* 
+
+
+
+request with cookies
+curl -b "access_token=your_access_token_value; Expires=Thursday, 25-Dec-2025 23:13:00 GMT; HttpOnly; Secure" \
+  -b "another_cookie_name=your_another_cookie_value; Expires=Thursday, 25-Dec-2025 23:13:00 GMT; HttpOnly; Secure" http://localhost:8080/test
+
+
+
+
+
+ */

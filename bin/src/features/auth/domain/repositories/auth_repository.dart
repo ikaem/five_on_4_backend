@@ -1,4 +1,4 @@
-import '../../../core/presentation/router/domain/models/auth/auth_model.dart';
+import '../../../core/domain/models/auth/auth_model.dart';
 
 abstract class AuthRepository {
   // what this does is

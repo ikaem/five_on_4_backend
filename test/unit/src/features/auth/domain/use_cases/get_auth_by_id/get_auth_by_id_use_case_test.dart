@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 import '../../../../../../../../bin/src/features/auth/domain/repositories/auth_repository.dart';
 import '../../../../../../../../bin/src/features/auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
-import '../../../../../../../../bin/src/features/core/presentation/router/domain/models/auth/auth_model.dart';
+import '../../../../../../../../bin/src/features/core/domain/models/auth/auth_model.dart';
 
 void main() {
   final authRepository = _MockAuthRepository();

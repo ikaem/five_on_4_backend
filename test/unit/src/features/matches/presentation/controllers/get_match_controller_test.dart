@@ -48,16 +48,9 @@ void main() {
           final response = await getMatchController.call(request);
 
           // then
-          final expectedResponse = Response.badRequest(
-            body: jsonEncode(
-              {
-                "ok": false,
-                "message": "Invalid request.",
-              },
-            ),
-            headers: {
-              "Content-Type": "application/json",
-            },
+          final expectedResponse = _generateExpectedResponse(
+            ok: false,
+            message: "Invalid request.",
           );
 
           final responseString = await response.readAsString();
@@ -68,6 +61,38 @@ void main() {
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
 
+          // cleanup
+        },
+      );
+
+      test(
+        "given given a request with invalid accessToken cookie"
+        "when .call() is called"
+        "then should return expected response",
+        () async {
+          // setup
+
+          // given
+          when(() => request.headers).thenReturn({
+            HttpHeaders.cookieHeader: "accessToken=invalid_access_token",
+          });
+
+          // when
+          final response = await getMatchController.call(request);
+
+          // then
+          final expectedResponse = _generateExpectedResponse(
+            ok: false,
+            message: "Invalid request.",
+          );
+
+          final responseString = await response.readAsString();
+
+          expect(
+            responseString,
+            equals(await expectedResponse.readAsString()),
+          );
+          expect(response.statusCode, equals(expectedResponse.statusCode));
           // cleanup
         },
       );
@@ -82,3 +107,20 @@ class _MockGetPlayerByIdUseCase extends Mock implements GetPlayerByIdUseCase {}
 class _MockGetAuthByIdUseCase extends Mock implements GetAuthByIdUseCase {}
 
 class _MockRequest extends Mock implements Request {}
+
+Response _generateExpectedResponse({
+  required bool ok,
+  required String message,
+}) {
+  return Response.badRequest(
+    body: jsonEncode(
+      {
+        "ok": ok,
+        "message": message,
+      },
+    ),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  );
+}

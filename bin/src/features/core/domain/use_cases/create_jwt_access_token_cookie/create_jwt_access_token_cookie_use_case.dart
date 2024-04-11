@@ -4,6 +4,7 @@ import '../../../../../wrappers/libraries/dart_jsonwebtoken/dart_jsonwebtoken_wr
 
 // TODO this should do other stuff - this should actually create cookie with jwt token in it
 
+// TODO this should also delegage to cookies handler wrapper
 class CreateJWTAccessTokenCookieUseCase {
   const CreateJWTAccessTokenCookieUseCase({
     required DartJsonWebTokenWrapper dartJsonWebTokenWrapper,

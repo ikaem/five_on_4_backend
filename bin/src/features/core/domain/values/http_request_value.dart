@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../utils/constants/http_methods_constants.dart';
+import '../../utils/constants/http_methods_constants.dart';
 
 class HttpRequestUriPartsValue extends Equatable {
   const HttpRequestUriPartsValue({

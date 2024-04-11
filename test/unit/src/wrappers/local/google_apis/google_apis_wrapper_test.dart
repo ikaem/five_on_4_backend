@@ -2,7 +2,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
 import '../../../../../../bin/src/features/auth/data/entities/google_validated_id_token_response/google_validated_id_token_response_entity.dart';
-import '../../../../../../bin/src/features/core/presentation/router/domain/values/http_request_value.dart';
+import '../../../../../../bin/src/features/core/domain/values/http_request_value.dart';
 import '../../../../../../bin/src/wrappers/libraries/dio/dio_wrapper.dart';
 import '../../../../../../bin/src/wrappers/local/google_apis/google_apis_wrapper.dart';
 

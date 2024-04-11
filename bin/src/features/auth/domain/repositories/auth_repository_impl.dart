@@ -1,5 +1,5 @@
 import '../../../../wrappers/local/google_apis/google_apis_wrapper.dart';
-import '../../../core/presentation/router/domain/models/auth/auth_model.dart';
+import '../../../core/domain/models/auth/auth_model.dart';
 import '../../data/data_sources/auth_data_source.dart';
 import '../../utils/converters/auth_converter.dart';
 import '../values/new_auth_data_value.dart';

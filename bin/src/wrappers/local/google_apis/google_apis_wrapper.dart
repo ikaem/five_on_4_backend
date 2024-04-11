@@ -1,5 +1,5 @@
 import '../../../features/auth/data/entities/google_validated_id_token_response/google_validated_id_token_response_entity.dart';
-import '../../../features/core/presentation/router/domain/values/http_request_value.dart';
+import '../../../features/core/domain/values/http_request_value.dart';
 import '../../../features/core/utils/constants/http_constants.dart';
 import '../../libraries/dio/dio_wrapper.dart';
 

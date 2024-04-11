@@ -1,6 +1,6 @@
 // TODO test this
 import '../../../../wrappers/libraries/drift/app_database.dart';
-import '../../../core/presentation/router/domain/models/auth/auth_model.dart';
+import '../../../core/domain/models/auth/auth_model.dart';
 
 abstract class AuthConverter {
   // do not allow extending

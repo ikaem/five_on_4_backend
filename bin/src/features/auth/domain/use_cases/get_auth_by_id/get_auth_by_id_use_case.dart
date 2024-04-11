@@ -1,4 +1,4 @@
-import '../../../../core/presentation/router/domain/models/auth/auth_model.dart';
+import '../../../../core/domain/models/auth/auth_model.dart';
 import '../../repositories/auth_repository.dart';
 
 class GetAuthByIdUseCase {
