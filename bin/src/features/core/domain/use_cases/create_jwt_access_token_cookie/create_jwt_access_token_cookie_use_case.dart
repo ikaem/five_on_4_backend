@@ -11,6 +11,7 @@ class CreateJWTAccessTokenCookieUseCase {
   }) : _dartJsonWebTokenWrapper = dartJsonWebTokenWrapper;
 
   final DartJsonWebTokenWrapper _dartJsonWebTokenWrapper;
+  // TODO this should accept payload of accesstokendata class as well
 
   Cookie call({
     required Map<String, dynamic> payload,
