@@ -1,6 +1,7 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
+import '../../../../../../../../bin/src/features/core/domain/exceptions/jwt_exceptions.dart';
 import '../../../../../../../../bin/src/features/core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
 import '../../../../../../../../bin/src/features/core/domain/values/access_token_data_value.dart';
 import '../../../../../../../../bin/src/wrappers/libraries/dart_jsonwebtoken/dart_jsonwebtoken_wrapper.dart';
@@ -30,14 +31,9 @@ void main() {
           // setup
 
           // given
-
-          when(() => dartJsonWebTokenWrapper.verify(token: jwt)).thenReturn(
-            JWTValidatedPayload(
-              isInvalid: true,
-              isExpired: false,
-              data: {},
-            ),
-          );
+          when(() => dartJsonWebTokenWrapper.verify<Map<String, dynamic>>(
+                token: jwt,
+              )).thenThrow(JsonWebTokenInvalidException(jwt));
 
           // when
           final result = getAccessTokenDataFromAccessJwtUseCase.call(
@@ -45,7 +41,8 @@ void main() {
           );
 
           // then
-          expect(result, isNull);
+          final expectedResult = AccessTokenDataValueInvalid(jwt: jwt);
+          expect(result, equals(expectedResult));
 
           // cleanup
         },
@@ -59,14 +56,9 @@ void main() {
           // setup
 
           // given
-
-          when(() => dartJsonWebTokenWrapper.verify(token: jwt)).thenReturn(
-            JWTValidatedPayload(
-              isInvalid: false,
-              isExpired: true,
-              data: {},
-            ),
-          );
+          when(() => dartJsonWebTokenWrapper.verify<Map<String, dynamic>>(
+                token: jwt,
+              )).thenThrow(JsonWebTokenExpiredException(jwt));
 
           // when
           final result = getAccessTokenDataFromAccessJwtUseCase.call(
@@ -74,7 +66,8 @@ void main() {
           );
 
           // then
-          expect(result, isNull);
+          final expectedResult = AccessTokenDataValueExpired(jwt: jwt);
+          expect(result, equals(expectedResult));
 
           // cleanup
         },
@@ -83,24 +76,18 @@ void main() {
       test(
         "given valid jwt "
         "when .call() is called "
-        "then should return AccessTokenData",
+        "then should return expected response",
         () async {
           // setup
+          final payload = {
+            "playerId": 1,
+            "authId": 2,
+          };
 
           // given
-          final playerId = 1;
-          final authId = 2;
-
-          when(() => dartJsonWebTokenWrapper.verify(token: jwt)).thenReturn(
-            JWTValidatedPayload(
-              isInvalid: false,
-              isExpired: false,
-              data: {
-                "playerId": playerId,
-                "authId": authId,
-              },
-            ),
-          );
+          when(() => dartJsonWebTokenWrapper.verify<Map<String, dynamic>>(
+                token: jwt,
+              )).thenReturn(payload);
 
           // when
           final result = getAccessTokenDataFromAccessJwtUseCase.call(
@@ -108,15 +95,11 @@ void main() {
           );
 
           // then
-          expect(
-            result,
-            equals(
-              AccessTokenDataValue(
-                playerId: playerId,
-                authId: authId,
-              ),
-            ),
+          final expectedResult = AccessTokenDataValueValid(
+            playerId: payload["playerId"]!,
+            authId: payload["authId"]!,
           );
+          expect(result, equals(expectedResult));
 
           // cleanup
         },

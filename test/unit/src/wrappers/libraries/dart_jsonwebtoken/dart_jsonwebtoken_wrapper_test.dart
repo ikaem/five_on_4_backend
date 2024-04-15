@@ -1,6 +1,7 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:test/test.dart';
 
+import '../../../../../../bin/src/features/core/domain/exceptions/jwt_exceptions.dart';
 import '../../../../../../bin/src/wrappers/libraries/dart_jsonwebtoken/dart_jsonwebtoken_wrapper.dart';
 
 void main() {
@@ -55,41 +56,20 @@ void main() {
       test(
         "given an invalid token "
         "when call verify() "
-        "then should return expected payload",
+        "then should throw expected exception",
         () async {
           // setup
           final dartJsonWebTokenWrapper = DartJsonWebTokenWrapper(
             jwtSecret: jwtSecret,
           );
-
-          // given
-          // final token = _createTestToken(
-          //   payload: {"key": "value"},
-          //   jwtSecret: jwtSecret,
-          //   expiresIn: Duration(
-          //     days: 7,
-          //   ),
-          // );
           final token = "invalid_token";
 
-          // when
-          final payload = dartJsonWebTokenWrapper.verify(
-            token: token,
-          );
-
-          // then
-          final expectedPayload = JWTValidatedPayload(
-            isInvalid: true,
-            isExpired: false,
-            // isException: false,
-            data: {},
-          );
-
+          // when & then
           expect(
-            payload,
-            equals(expectedPayload),
-            // equals({"key": "value"}),
-          );
+              () => dartJsonWebTokenWrapper.verify(
+                    token: token,
+                  ),
+              throwsA(isA<JsonWebTokenInvalidException>()));
 
           // cleanup
         },
@@ -98,58 +78,50 @@ void main() {
       test(
         "given an expired token "
         "when call verify() "
-        "then should return expected payload",
+        "then should throw expected exception",
         () async {
           // setup
           final dartJsonWebTokenWrapper = DartJsonWebTokenWrapper(
             jwtSecret: jwtSecret,
           );
+          final payload = {"key": "value"};
 
           // given
           final token = _createTestToken(
-            payload: {"key": "value"},
+            payload: payload,
             jwtSecret: jwtSecret,
             expiresIn: Duration(
               seconds: -1,
             ),
           );
 
-          // when
-          final payload = dartJsonWebTokenWrapper.verify(
-            token: token,
-          );
-
-          // then
-          final expectedPayload = JWTValidatedPayload(
-            isInvalid: false,
-            isExpired: true,
-            // isException: false,
-            data: {},
-          );
-
+          // when & then
           expect(
-            payload,
-            equals(expectedPayload),
-            // equals({"key": "value"}),
+            () => dartJsonWebTokenWrapper.verify(
+              token: token,
+            ),
+            throwsA(
+              isA<JsonWebTokenExpiredException>(),
+            ),
           );
-
-          // cleanup
         },
       );
 
       test(
-        "given a valid token "
-        "when call verify() "
-        "then should return expected payload",
+        "given valid token"
+        "when call verify()"
+        "then should return expected result",
         () async {
           // setup
           final dartJsonWebTokenWrapper = DartJsonWebTokenWrapper(
             jwtSecret: jwtSecret,
           );
 
+          final payload = {"key": "value"};
+
           // given
           final token = _createTestToken(
-            payload: {"key": "value"},
+            payload: payload,
             jwtSecret: jwtSecret,
             expiresIn: Duration(
               days: 7,
@@ -157,21 +129,16 @@ void main() {
           );
 
           // when
-          final payload = dartJsonWebTokenWrapper.verify(
+          final result = dartJsonWebTokenWrapper.verify<Map<String, dynamic>>(
             token: token,
           );
 
+          // then
           expect(
-            payload.isExpired,
-            isFalse,
+            result,
+            containsPair("key", equals("value")),
+            // equals(payload),
           );
-
-          expect(
-            payload.isInvalid,
-            isFalse,
-          );
-
-          expect(payload.data, containsPair("key", equals("value")));
 
           // cleanup
         },

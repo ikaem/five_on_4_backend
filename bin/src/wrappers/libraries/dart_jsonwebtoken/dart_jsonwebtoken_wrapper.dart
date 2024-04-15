@@ -1,5 +1,6 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
-import 'package:equatable/equatable.dart';
+
+import '../../../features/core/domain/exceptions/jwt_exceptions.dart';
 
 class DartJsonWebTokenWrapper {
   DartJsonWebTokenWrapper({
@@ -21,59 +22,43 @@ class DartJsonWebTokenWrapper {
     return token;
   }
 
-  // Map<String, dynamic> verify({
-  JWTValidatedPayload verify({
+  T verify<T>({
+    // String verify({
     required String token,
   }) {
     try {
       final jwt = JWT.verify(token, SecretKey(_jwtSecret));
+      final payload = jwt.payload as T;
 
-      // TODO maybe this can return whether the token is valid or not, and expired and so on
-
-      // TODO this is dynamic
-      return JWTValidatedPayload(
-        isInvalid: false,
-        isExpired: false,
-        // isException: false,
-        data: jwt.payload,
-      );
+      return payload;
     } on JWTExpiredException {
-      return JWTValidatedPayload(
-        isInvalid: false,
-        isExpired: true,
-        // isException: false,
-        data: {},
-      );
+      throw JsonWebTokenExpiredException(token);
     } catch (e) {
-      return JWTValidatedPayload(
-        isInvalid: true,
-        isExpired: false,
-        // isException: true,
-        data: {},
-      );
+      throw JsonWebTokenInvalidException(token);
     }
   }
 }
 
 // TODO possibly create value for this, move to values in core
-class JWTValidatedPayload extends Equatable {
-  JWTValidatedPayload({
-    required this.isExpired,
-    required this.isInvalid,
-    // required this.isException,
-    required this.data,
-  });
+// TODO probably dont need this even - or maybe we do
+// class JWTValidatedPayload extends Equatable {
+//   JWTValidatedPayload({
+//     required this.isExpired,
+//     required this.isInvalid,
+//     // required this.isException,
+//     required this.data,
+//   });
 
-  final bool isExpired;
-  final bool isInvalid;
-  // final bool isException;
-  final Map<String, dynamic> data;
+//   final bool isExpired;
+//   final bool isInvalid;
+//   // final bool isException;
+//   final Map<String, dynamic> data;
 
-  @override
-  List<Object?> get props => [
-        isExpired,
-        isInvalid,
-        // isException,
-        data,
-      ];
-}
+//   @override
+//   List<Object?> get props => [
+//         isExpired,
+//         isInvalid,
+//         // isException,
+//         data,
+//       ];
+// }

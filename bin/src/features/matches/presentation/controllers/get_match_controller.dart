@@ -7,7 +7,9 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 
 import '../../../auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
+import '../../../core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
 import '../../../core/domain/use_cases/get_cookie_by_name_in_string/get_cookie_by_name_in_string_use_case.dart';
+import '../../../core/domain/values/access_token_data_value.dart';
 import '../../../players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
 import '../../domain/use_cases/get_match/get_match_use_case.dart';
 
@@ -17,21 +19,27 @@ class GetMatchController {
     required GetPlayerByIdUseCase getPlayerByIdUseCase,
     required GetAuthByIdUseCase getAuthByIdUseCase,
     required GetCookieByNameInStringUseCase getCookieByNameInStringUseCase,
+    required GetAccessTokenDataFromAccessJwtUseCase
+        getAccessTokenDataFromAccessJwtUseCase,
   })  : _getMatchUseCase = getMatchUseCase,
         _getPlayerByIdUseCase = getPlayerByIdUseCase,
         _getAuthByIdUseCase = getAuthByIdUseCase,
-        _getCookieByNameInStringUseCase = getCookieByNameInStringUseCase;
+        _getCookieByNameInStringUseCase = getCookieByNameInStringUseCase,
+        _getAccessTokenDataFromAccessJwtUseCase =
+            getAccessTokenDataFromAccessJwtUseCase;
 
   final GetMatchUseCase _getMatchUseCase;
   final GetPlayerByIdUseCase _getPlayerByIdUseCase;
   final GetAuthByIdUseCase _getAuthByIdUseCase;
   final GetCookieByNameInStringUseCase _getCookieByNameInStringUseCase;
+  final GetAccessTokenDataFromAccessJwtUseCase
+      _getAccessTokenDataFromAccessJwtUseCase;
 
   Future<Response> call(Request request) async {
     // TODO extract this
     final requestCookies = request.headers[HttpHeaders.cookieHeader];
     if (requestCookies == null) {
-      return _generateInvalidRequest(
+      return _generateBadRequestResponse(
         logMessage: "No cookies found in request.",
         responseMessage: "No cookies found in request.",
       );
@@ -44,7 +52,7 @@ class GetMatchController {
       cookieName: "accessToken",
     );
     if (accessTokenCookie == null) {
-      return _generateInvalidRequest(
+      return _generateBadRequestResponse(
         logMessage: "No accessToken cookie found in request.",
         responseMessage: "No accessToken cookie found in request.",
       );
@@ -52,9 +60,44 @@ class GetMatchController {
 
     final accessToken = accessTokenCookie.value;
     // now we need to pass value to use case to decode jwt
+    final accessTokenData =
+        _getAccessTokenDataFromAccessJwtUseCase(jwt: accessToken);
 
-    // now we have access token cookie
-    // check if access token inside is valid
+    if (accessTokenData is AccessTokenDataValueInvalid) {
+      return _generateBadRequestResponse(
+        logMessage: "Invalid auth token in cookie.",
+        responseMessage: "Invalid auth token in cookie.",
+      );
+    }
+
+    if (accessTokenData is AccessTokenDataValueExpired) {
+      return _generateBadRequestResponse(
+        logMessage: "Expired auth token in cookie.",
+        responseMessage: "Expired auth token in cookie.",
+      );
+    }
+
+    final validAccessTokenData = accessTokenData as AccessTokenDataValueValid;
+
+    // get auth id from access token
+    final authId = validAccessTokenData.authId;
+    final auth = await _getAuthByIdUseCase(id: authId);
+    if (auth == null) {
+      return _generateBadRequestResponse(
+        logMessage: "Auth not found.",
+        responseMessage: "Auth not found.",
+      );
+    }
+
+    // get player id from access token
+    final playerId = validAccessTokenData.playerId;
+    final player = await _getPlayerByIdUseCase(id: playerId);
+    if (player == null) {
+      return _generateBadRequestResponse(
+        logMessage: "Player not found.",
+        responseMessage: "Player not found.",
+      );
+    }
 
     final successResponse = Response.ok(
       jsonEncode(
@@ -69,7 +112,7 @@ class GetMatchController {
   }
 }
 
-Response _generateInvalidRequest({
+Response _generateBadRequestResponse({
   required String logMessage,
   required String responseMessage,
 }) {
@@ -82,6 +125,29 @@ Response _generateInvalidRequest({
       {
         "ok": false,
         "message": "Invalid request - $responseMessage.",
+      },
+    ),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  );
+
+  return response;
+}
+
+Response _generateNonExistentResponse({
+  required String logMessage,
+  required String responseMessage,
+}) {
+  log(
+    logMessage,
+    name: "GetMatchController",
+  );
+  final response = Response.notFound(
+    jsonEncode(
+      {
+        "ok": false,
+        "message": "Resource not found - $responseMessage.",
       },
     ),
     headers: {
