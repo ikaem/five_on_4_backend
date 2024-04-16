@@ -17,7 +17,7 @@ class AppRouter {
   }) : _router = Router() {
     _router.mount("/auth/", authRouter.router.call);
     // TODO test only
-    _router.get("/test", (Request req) async {
+    _router.get("/test/<greeting>", (Request req, String greeting) async {
       // final secret = "9beSsexjUXBir09LIK9uQ50QSGXCho4gqdAl/L5CAhB";
 
       // final cookies = req.headers[HttpHeaders.cookieHeader];

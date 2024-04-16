@@ -82,3 +82,7 @@ make generate_migrations_steps
 ```
 make generate
 ```
+
+
+## Docs for tools
+- shelf by andrea - https://codewithandrea.com/articles/build-deploy-dart-shelf-app-globe/

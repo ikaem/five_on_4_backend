@@ -10,7 +10,9 @@ import '../../../auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.da
 import '../../../core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
 import '../../../core/domain/use_cases/get_cookie_by_name_in_string/get_cookie_by_name_in_string_use_case.dart';
 import '../../../core/domain/values/access_token_data_value.dart';
+import '../../../core/utils/extensions/request_extension.dart';
 import '../../../players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
+import '../../domain/models/match_model.dart';
 import '../../domain/use_cases/get_match/get_match_use_case.dart';
 
 class GetMatchController {
@@ -35,7 +37,7 @@ class GetMatchController {
   final GetAccessTokenDataFromAccessJwtUseCase
       _getAccessTokenDataFromAccessJwtUseCase;
 
-  Future<Response> call(Request request) async {
+  Future<Response> call(Request request, String matchIdParam) async {
     // TODO extract this
     final requestCookies = request.headers[HttpHeaders.cookieHeader];
     if (requestCookies == null) {
@@ -83,7 +85,7 @@ class GetMatchController {
     final authId = validAccessTokenData.authId;
     final auth = await _getAuthByIdUseCase(id: authId);
     if (auth == null) {
-      return _generateBadRequestResponse(
+      return _generateNonExistentResponse(
         logMessage: "Auth not found.",
         responseMessage: "Auth not found.",
       );
@@ -93,20 +95,48 @@ class GetMatchController {
     final playerId = validAccessTokenData.playerId;
     final player = await _getPlayerByIdUseCase(id: playerId);
     if (player == null) {
-      return _generateBadRequestResponse(
+      return _generateNonExistentResponse(
         logMessage: "Player not found.",
         responseMessage: "Player not found.",
       );
     }
 
-    final successResponse = Response.ok(
-      jsonEncode(
-        {
-          "ok": true,
-          "data": {},
-          "message": "Match found.",
-        },
-      ),
+    final doPlayerAndAuthMatch = player.authId == auth.id;
+    if (!doPlayerAndAuthMatch) {
+      return _generateBadRequestResponse(
+        logMessage: "Found player does not match auth id.",
+        responseMessage: "Found player does not match auth id.",
+      );
+    }
+
+    // now we can go and retrieve the match
+    final matchId = int.tryParse(matchIdParam);
+    if (matchId == null) {
+      return _generateBadRequestResponse(
+        logMessage: "Invalid match id provided.",
+        responseMessage: "Invalid match id provided.",
+      );
+    }
+
+    final match = await _getMatchUseCase(matchId: matchId);
+    if (match == null) {
+      return _generateNonExistentResponse(
+        logMessage: "Match not found.",
+        responseMessage: "Match not found.",
+      );
+    }
+
+    // final successResponse = Response.ok(
+    //   jsonEncode(
+    //     {
+    //       "ok": true,
+    //       "data": {},
+    //       "message": "Match found.",
+    //     },
+    //   ),
+    // );
+    final successResponse = _generateSuccessResponse(
+      match: match,
     );
     return successResponse;
   }
@@ -143,6 +173,7 @@ Response _generateNonExistentResponse({
     logMessage,
     name: "GetMatchController",
   );
+
   final response = Response.notFound(
     jsonEncode(
       {
@@ -155,5 +186,27 @@ Response _generateNonExistentResponse({
     },
   );
 
+  return response;
+}
+
+Response _generateSuccessResponse({
+  required MatchModel match,
+}) {
+  final payload = {
+    "id": match.id,
+    "title": match.title,
+    "dateAndTime": match.dateAndTime,
+    "location": match.location,
+    "description": match.description,
+  };
+  final response = Response.ok(
+    jsonEncode(
+      {
+        "ok": true,
+        "data": payload,
+        "message": "Match found.",
+      },
+    ),
+  );
   return response;
 }
