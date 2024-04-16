@@ -121,6 +121,7 @@ void main() {
             name:
                 "${testPlayerEntityData.firstName} ${testPlayerEntityData.lastName}",
             nickname: testPlayerEntityData.nickname,
+            authId: testPlayerEntityData.authId,
           );
           expect(player, equals(expectedPlayer));
 

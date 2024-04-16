@@ -434,4 +434,5 @@ final _testPlayerModel = PlayerModel(
   id: 1,
   name: "name",
   nickname: "nickname",
+  authId: 1,
 );

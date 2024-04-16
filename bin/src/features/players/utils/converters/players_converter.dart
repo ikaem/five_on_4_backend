@@ -1,5 +1,4 @@
 import '../../../../wrappers/libraries/drift/app_database.dart';
-import '../../data/entities/player/player_entity.dart';
 import '../../domain/models/player_model.dart';
 
 abstract class PlayersConverter {
@@ -13,6 +12,7 @@ abstract class PlayersConverter {
       id: entity.id,
       name: name,
       nickname: entity.nickname,
+      authId: entity.authId,
     );
 
     return model;
