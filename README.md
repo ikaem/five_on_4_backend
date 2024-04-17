@@ -87,3 +87,7 @@ make generate
 ## Docs for tools
 - shelf by andrea - https://codewithandrea.com/articles/build-deploy-dart-shelf-app-globe/
 - add middleware to specific routes - https://codereview.stackexchange.com/questions/274183/authentication-middleware-using-dart-shelf 
+- kodecode middleware - https://www.kodeco.com/31602619-building-dart-apis-with-google-cloud-run?page=4 
+
+# TODO 
+- CREATE ERROR HANDLER FOR ALL ROUTES - TO BE ABLE TO JUST THROW SPECIFIC ERROR, AND THIS ERROR HANDLER WOULD DO THAT

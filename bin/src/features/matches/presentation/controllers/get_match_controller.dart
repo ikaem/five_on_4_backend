@@ -37,7 +37,23 @@ class GetMatchController {
   final GetAccessTokenDataFromAccessJwtUseCase
       _getAccessTokenDataFromAccessJwtUseCase;
 
-  Future<Response> call(Request request, String id) async {
+  Future<Response> call(
+    Request request,
+    // String id,
+  ) async {
+    // TODO I guess this is always string
+    final paramsMap =
+        request.context["shelf_router/params"] as Map<String, String>;
+    final idParam = paramsMap["id"];
+    if (idParam is! String) {
+      return _generateBadRequestResponse(
+        logMessage: "No id provided.",
+        responseMessage: "No id provided.",
+      );
+    }
+
+    final matchIdTest = int.tryParse(idParam);
+
     // TODO extract this
     final requestCookies = request.headers[HttpHeaders.cookieHeader];
     if (requestCookies == null) {
@@ -110,7 +126,28 @@ class GetMatchController {
     }
 
     // now we can go and retrieve the match
-    final matchId = int.tryParse(id);
+    // final matchId = int.tryParse(id);
+    // TODO make this a separate function to handle this
+    final pathSegments = request.url.pathSegments;
+    // TODO make sure that path segments have lenght of two
+    if (pathSegments.length != 2) {
+      // TODO do this better
+      // TODO possibly also make some parser to add this to the request
+      return Response.internalServerError(
+        body: jsonEncode(
+          {
+            "ok": false,
+            "data": {},
+            "message": "There was an issue on the server"
+          },
+        ),
+      );
+    }
+    // TODO make this into a middleware of its own - and add to to the router as middleware as well
+    final matchId = int.tryParse(pathSegments[1]);
+
+    // final idParam = request.context["id"];
+
     if (matchId == null) {
       return _generateBadRequestResponse(
         logMessage: "Invalid match id provided.",
@@ -126,15 +163,6 @@ class GetMatchController {
       );
     }
 
-    // final successResponse = Response.ok(
-    //   jsonEncode(
-    //     {
-    //       "ok": true,
-    //       "data": {},
-    //       "message": "Match found.",
-    //     },
-    //   ),
-    // );
     final successResponse = _generateSuccessResponse(
       match: match,
     );

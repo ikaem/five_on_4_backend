@@ -15,7 +15,7 @@ void main() {
     dartJsonWebTokenWrapper: dartJsonWebTokenWrapper,
   );
 
-  setUp(() {
+  tearDown(() {
     reset(dartJsonWebTokenWrapper);
   });
 

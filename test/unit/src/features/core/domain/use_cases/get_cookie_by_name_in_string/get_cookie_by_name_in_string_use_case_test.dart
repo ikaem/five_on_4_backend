@@ -14,7 +14,7 @@ void main() {
     cookiesHandlerWrapper: cookiesHandlerWrapper,
   );
 
-  setUp(() {
+  tearDown(() {
     reset(cookiesHandlerWrapper);
   });
 
