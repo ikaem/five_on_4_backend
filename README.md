@@ -86,3 +86,4 @@ make generate
 
 ## Docs for tools
 - shelf by andrea - https://codewithandrea.com/articles/build-deploy-dart-shelf-app-globe/
+- add middleware to specific routes - https://codereview.stackexchange.com/questions/274183/authentication-middleware-using-dart-shelf 

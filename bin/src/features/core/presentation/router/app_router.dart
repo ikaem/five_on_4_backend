@@ -2,20 +2,19 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:crypt/crypt.dart';
-import 'package:crypto/crypto.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
-import '../../../../wrappers/libraries/crypt/crypt_wrapper.dart';
 import '../../../auth/presentation/router/auth_router.dart';
-import '../../utils/extensions/request_extension.dart';
+import '../../../matches/presentation/router/matches_router.dart';
 
 class AppRouter {
   AppRouter({
     required AuthRouter authRouter,
+    required MatchesRouter matchesRouter,
   }) : _router = Router() {
-    _router.mount("/auth/", authRouter.router.call);
+    _router.mount("/auth", authRouter.router.call);
+    _router.mount("/matches", matchesRouter.router.call);
     // TODO test only
     _router.get("/test/<greeting>", (Request req, String greeting) async {
       // final secret = "9beSsexjUXBir09LIK9uQ50QSGXCho4gqdAl/L5CAhB";

@@ -37,7 +37,7 @@ class GetMatchController {
   final GetAccessTokenDataFromAccessJwtUseCase
       _getAccessTokenDataFromAccessJwtUseCase;
 
-  Future<Response> call(Request request, String matchIdParam) async {
+  Future<Response> call(Request request, String id) async {
     // TODO extract this
     final requestCookies = request.headers[HttpHeaders.cookieHeader];
     if (requestCookies == null) {
@@ -110,7 +110,7 @@ class GetMatchController {
     }
 
     // now we can go and retrieve the match
-    final matchId = int.tryParse(matchIdParam);
+    final matchId = int.tryParse(id);
     if (matchId == null) {
       return _generateBadRequestResponse(
         logMessage: "Invalid match id provided.",

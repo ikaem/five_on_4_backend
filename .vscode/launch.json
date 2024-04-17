@@ -5,6 +5,7 @@
       "name": "Shelf Server (Debug)",
       "type": "dart",
       "request": "launch",
+      // TODO in program, run all env vars before run the app - use export to make sure we can use platform.environment
       "program": "bin/main.dart", // Path to your main server file (e.g., bin/server.dart)
       "args": [],
       "toolArgs": []

@@ -19,6 +19,9 @@ class EnvVarsWrapper {
   @EnviedField(varName: "AUTH_PASSWORD_SALT")
   final String _authPasswordSalt = _EnvVarsWrapper._authPasswordSalt;
 
+  @EnviedField(varName: "JWT_SECRET")
+  final String _jwtSecret = _EnvVarsWrapper._jwtSecret;
+
   EnvVarsDBWrapper get dbWrapper {
     return EnvVarsDBWrapper(
       host: _pgHost,
@@ -31,6 +34,7 @@ class EnvVarsWrapper {
   EnvVarsAuthWrapper get authWrapper {
     return EnvVarsAuthWrapper(
       passwordSalt: _authPasswordSalt,
+      jwtSecret: _jwtSecret,
     );
   }
 }
@@ -51,6 +55,8 @@ class EnvVarsDBWrapper {
 class EnvVarsAuthWrapper {
   EnvVarsAuthWrapper({
     required this.passwordSalt,
+    required this.jwtSecret,
   });
   final String passwordSalt;
+  final String jwtSecret;
 }
