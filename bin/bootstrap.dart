@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import '../test/helpers/database/test_database.dart';
 import 'src/features/core/presentation/router/app_router.dart';
 import 'src/server.dart';
 import 'src/wrappers/local/database/database_wrapper.dart';
@@ -32,6 +31,7 @@ Future<void> boostrap() async {
   );
 }
 
+// TODO this could be done in the initializer as well
 Future<DatabaseWrapper> _getInitializedDatabaseWrapper({
   required EnvVarsWrapper envVarWrapper,
 }) async {
