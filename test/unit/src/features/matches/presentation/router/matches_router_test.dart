@@ -12,8 +12,6 @@ void main() {
   final getMatchController = _MockGetMatchController();
   final authorizationMiddleware = _MockAuthorizationMiddleware();
 
-  final request = _MockRequest();
-
   // tested class
   final matchesRouter = MatchesRouter(
     getMatchController: getMatchController,
@@ -27,7 +25,6 @@ void main() {
   tearDown(() {
     reset(getMatchController);
     reset(authorizationMiddleware);
-    reset(request);
   });
 
   group("$MatchesRouter", () {
@@ -122,7 +119,5 @@ class _MockAuthorizationMiddleware extends Mock
   //   };
   // }
 }
-
-class _MockRequest extends Mock implements Request {}
 
 class _FakeRequest extends Fake implements Request {}

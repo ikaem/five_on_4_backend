@@ -131,11 +131,11 @@ class DependenciesInitializerWrapper {
     );
     final getMatchController = GetMatchController(
       getMatchUseCase: getMatchUseCase,
-      getPlayerByIdUseCase: getPlayerByIdUseCase,
-      getAuthByIdUseCase: getAuthByIdUseCase,
-      getCookieByNameInStringUseCase: getCookieByNameInStringUseCase,
-      getAccessTokenDataFromAccessJwtUseCase:
-          getAccessTokenDataFromAccessJwtUseCase,
+      // getPlayerByIdUseCase: getPlayerByIdUseCase,
+      // getAuthByIdUseCase: getAuthByIdUseCase,
+      // getCookieByNameInStringUseCase: getCookieByNameInStringUseCase,
+      // getAccessTokenDataFromAccessJwtUseCase:
+      //     getAccessTokenDataFromAccessJwtUseCase,
     );
 
     // router

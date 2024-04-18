@@ -16,4 +16,27 @@ extension RequestExtension on Request {
       return {};
     }
   }
+
+  T? getUrlParam<T>({
+    required String paramName,
+    required T? Function(String value) parser,
+  }) {
+    try {
+      final shelfRouterParamsKey = "shelf_router/params";
+      final paramsMap = context[shelfRouterParamsKey] as Map<String, String>;
+
+      final paramValue = paramsMap[paramName];
+      if (paramValue is! String) {
+        return null;
+      }
+
+      final parsedValue = parser(paramValue);
+
+      return parsedValue;
+    } catch (e) {
+      log("Error in getting url param: $e", name: "RequestExtension");
+
+      return null;
+    }
+  }
 }
