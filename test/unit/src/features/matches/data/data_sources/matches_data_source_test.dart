@@ -25,6 +25,90 @@ void main() {
   });
 
   group("$MatchesDataSource", () {
+    group(".createMatch()", () {
+      test(
+        "given valid create match value "
+        "when .createMatch() is called  "
+        "then should return expected match id",
+        () async {
+          // setup
+
+          // given
+          final createMatchValue = CreateMatchValue(
+            description: "description",
+            title: "title",
+            dateAndTime: DateTime.now().millisecondsSinceEpoch,
+            location: "location",
+            createdAt: DateTime.now().millisecondsSinceEpoch,
+            updatedAt: DateTime.now().millisecondsSinceEpoch,
+          );
+
+          // when
+          final matchId = await matchesDataSource.createMatch(
+            createMatchValue: createMatchValue,
+          );
+
+          // then
+          expect(matchId, equals(1));
+
+          // cleanup
+          print("TODO cleanup");
+        },
+      );
+
+      test(
+        "given valid create match value "
+        "when .createMatch() is called  "
+        "then should store expected match in db",
+        () async {
+          // setup
+
+          // given
+          final createMatchValue = CreateMatchValue(
+            description: "description",
+            title: "title",
+            dateAndTime:
+                DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+            location: "location",
+            createdAt:
+                DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+            updatedAt:
+                DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+          );
+
+          // when
+          final matchId = await matchesDataSource.createMatch(
+            createMatchValue: createMatchValue,
+          );
+
+          // then
+          final expectedMatch = MatchEntityData(
+            id: matchId,
+            title: createMatchValue.title,
+            dateAndTime: DateTime.fromMillisecondsSinceEpoch(
+                createMatchValue.dateAndTime),
+            location: createMatchValue.location,
+            description: createMatchValue.description,
+            createdAt:
+                DateTime.fromMillisecondsSinceEpoch(createMatchValue.createdAt),
+            updatedAt:
+                DateTime.fromMillisecondsSinceEpoch(createMatchValue.updatedAt),
+          );
+
+          final select =
+              testDatabaseWrapper.databaseWrapper.matchesRepo.select();
+          final findMatch = select..where((tbl) => tbl.id.equals(matchId));
+
+          final match = await findMatch.getSingleOrNull();
+
+          expect(match, equals(expectedMatch));
+
+          // cleanup
+          print("TODO cleanup");
+        },
+      );
+    });
+
     group(".getMatch()", () {
       test(
         "given match does not exist in db "
