@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:shelf/shelf.dart';
@@ -19,20 +20,20 @@ class Server {
   }) async {
     final requestHandler = Pipeline()
         .addMiddleware(logRequests())
-        .addMiddleware((innerHandler) {
-          return (request) {
-            return Future.sync(() => innerHandler(request)).then((response) {
-              // response = response.change(headers: {
-              //   'Access-Control-Allow-Origin': '*',
-              //   'Access-Control-Allow-Methods': 'GET, POST, DELETE, PUT, PATCH',
-              //   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-              // });
-              return response;
-            });
-          };
-        })
-        .addMiddleware(someRandomMiddleware())
-        .addMiddleware(someOtherRandomMiddleware)
+        // .addMiddleware((innerHandler) {
+        //   return (request) {
+        //     return Future.sync(() => innerHandler(request)).then((response) {
+        //       // response = response.change(headers: {
+        //       //   'Access-Control-Allow-Origin': '*',
+        //       //   'Access-Control-Allow-Methods': 'GET, POST, DELETE, PUT, PATCH',
+        //       //   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        //       // });
+        //       return response;
+        //     });
+        //   };
+        // })
+        .addMiddleware(errorReturningMiddleware)
+        // .addMiddleware(someOtherRandomMiddleware)
         .addHandler(
           _appRouter.router.call,
         );
@@ -62,12 +63,13 @@ Middleware someRandomMiddleware() => (innerHandler) {
       };
     };
 
-final someOtherRandomMiddleware = createMiddleware(
+final errorReturningMiddleware = createMiddleware(
   errorHandler: (
     Object error,
     StackTrace stackTrace,
   ) {
     // this will return
+    log("Error: $error");
     return Response.internalServerError(
       body: jsonEncode(
         {
