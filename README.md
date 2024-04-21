@@ -91,3 +91,8 @@ make generate
 
 # TODO 
 - CREATE ERROR HANDLER FOR ALL ROUTES - TO BE ABLE TO JUST THROW SPECIFIC ERROR, AND THIS ERROR HANDLER WOULD DO THAT
+
+
+## Controller vs use case
+- controller should pass raw data to the use case. if repo needs any Value data, use case should assemble it
+  - just to make sure that use case has work to do
