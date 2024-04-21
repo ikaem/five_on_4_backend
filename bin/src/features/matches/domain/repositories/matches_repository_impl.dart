@@ -1,6 +1,7 @@
 import '../../data/data_sources/matches_data_source.dart';
 import '../../utils/converters/matches_converters.dart';
 import '../models/match_model.dart';
+import '../values/create_match_value.dart';
 import 'matches_repository.dart';
 
 class MatchesRepositoryImpl implements MatchesRepository {
@@ -26,5 +27,14 @@ class MatchesRepositoryImpl implements MatchesRepository {
     );
 
     return match;
+  }
+
+  @override
+  Future<int> createMatch({required CreateMatchValue createMatchValue}) async {
+    final id = await matchesDataSource.createMatch(
+      createMatchValue: createMatchValue,
+    );
+
+    return id;
   }
 }

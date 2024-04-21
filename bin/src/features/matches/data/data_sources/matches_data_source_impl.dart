@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import '../../../../wrappers/libraries/drift/app_database.dart';
 import '../../../../wrappers/local/database/database_wrapper.dart';
 import '../../../core/utils/extensions/date_time_extension.dart';
+import '../../domain/values/create_match_value.dart';
 import 'matches_data_source.dart';
 
 class MatchesDataSourceImpl implements MatchesDataSource {
@@ -24,7 +25,9 @@ class MatchesDataSourceImpl implements MatchesDataSource {
   }
 
   @override
-  Future<int> createMatch({required CreateMatchValue createMatchValue}) async {
+  Future<int> createMatch({
+    required CreateMatchValue createMatchValue,
+  }) async {
     final matchDateAndTime = DateTime.fromMillisecondsSinceEpoch(
       createMatchValue.dateAndTime,
     ).normalizedToSeconds;
