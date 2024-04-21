@@ -112,6 +112,9 @@ Response _generateSuccessResponse({
         "message": "Match found.",
       },
     ),
+    headers: {
+      "Content-Type": "application/json",
+    },
   );
   return response;
 }
