@@ -1,16 +1,12 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-// import '../../../../../../../bin/src/features/auth/utils/middlewares/another_authorization_middleware.dart';
-// import '../../../../../../../bin/src/features/auth/utils/middlewares/authorization_middleware.dart';
 import '../../../../../../../bin/src/features/matches/presentation/controllers/get_match_controller.dart';
 import '../../../../../../../bin/src/features/matches/presentation/router/matches_router.dart';
-
-// ((Request) => FutureOr<Response>) => (Request) => FutureOr<Response>
+import '../../../../../../../bin/src/wrappers/local/custom_middleware/custom_middleware_wrapper.dart';
 
 Middleware function = (innerHandler) {
   return (request) {
@@ -22,13 +18,26 @@ Middleware function = (innerHandler) {
 
 void main() {
   final getMatchController = _MockGetMatchController();
-  // final authorizationMiddleware = _MockAuthorizationMiddleware();
+  final requestAuthorizationMiddleware =
+      _MockRequestAuthorizationMiddlewareWrapper();
+  final authorizationRequestHandler = _MockMiddlewareRequestHandlerCallback();
 
-  // // tested class
-  // final matchesRouter = MatchesRouter(
-  //   getMatchController: getMatchController,
-  //   authorizationMiddleware: authorizationMiddleware,
-  // );
+  setUp(() {
+    when(() => authorizationRequestHandler.call(any()))
+        .thenAnswer((invocation) async {
+      // NOTE return null to propagate request to the next middleware - the handler
+      return null;
+    });
+    when(() => requestAuthorizationMiddleware.call()).thenReturn(
+      createMiddleware(
+        requestHandler: authorizationRequestHandler.call,
+      ),
+    );
+
+    when(() => getMatchController.call(any())).thenAnswer((invocation) async {
+      return Response.ok("ok");
+    });
+  });
 
   setUpAll(() {
     registerFallbackValue(_FakeRequest());
@@ -36,7 +45,8 @@ void main() {
 
   tearDown(() {
     reset(getMatchController);
-    // reset(authorizationMiddleware);
+    reset(requestAuthorizationMiddleware);
+    reset(authorizationRequestHandler);
   });
 
   group("$MatchesRouter", () {
@@ -47,102 +57,71 @@ void main() {
       );
 
       test(
-        "given authorizationMiddlewareWrapper instance"
-        "when set get listener for /<id> endpoint"
-        "then should call the authorizationMiddlewareWrapper instance",
+        "given AuthorizationMiddleware instance "
+        "when a request to the endpoint is made"
+        "then should call the AuthorizationMiddleware's request handler",
         () async {
           // setup
+          final matchesRouter = MatchesRouter(
+            getMatchController: getMatchController,
+            requestAuthorizationMiddleware: requestAuthorizationMiddleware,
+          );
 
           // given
 
           // when
+          await matchesRouter.router(realRequest);
 
           // then
+          final captured =
+              verify(() => authorizationRequestHandler.call(captureAny()))
+                  .captured;
+          final capturedRequest = captured[0] as Request;
+
+          expect(capturedRequest.method, equals(realRequest.method));
+          expect(capturedRequest.url, equals(realRequest.url));
 
           // cleanup
         },
       );
 
       test(
-        "given AuthorizationMiddleware instance "
-        "when a request to the endpoint is made"
-        "then should call the AuthorizationMiddleware instance",
-        () async {
-          // final getMatchController = _MockGetMatchController();
-          // final authorizationMiddleware = _MockAuthorizationMiddleware();
+          "given GetMatchController instance"
+          "when a request to the endpoint is made"
+          "then should call the GetMatchController instance", () async {
+        // setup
+        final matchesRouter = MatchesRouter(
+          getMatchController: getMatchController,
+          requestAuthorizationMiddleware: requestAuthorizationMiddleware,
+        );
 
-          // when(() => authorizationMiddleware.call()).thenReturn(
-          //   createMiddleware(
-          //     requestHandler: (request) {
-          //       return Response.ok("ok");
-          //     },
-          //   ),
-          // );
-          // setup
-          when(() => getMatchController.call(any()))
-              .thenAnswer((invocation) async => Response.ok("ok"));
+        // given
 
-          // given
-          // when(() => authorizationMiddleware.call())
-          //     .thenReturn(createMiddleware());
+        // when
+        await matchesRouter.router(realRequest);
 
-          // tested class
-          // NOTE: router has to be created only after middleware is stubbed up because the router uses it immediatley
-          // final anotherAuthorizationMiddleware = AnotherAuthorizationMiddleware(
-          //   onValidateRequest: (request) async {
-          //     return Response.ok("ok");
-          //   },
-          // );
-          // final matchesRouter = MatchesRouter(
-          //   getMatchController: getMatchController,
-          //   authorizationMiddleware: authorizationMiddleware,
-          //   anotherAuthorizationMiddleware: anotherAuthorizationMiddleware,
-          // );
+        // then
+        final captured =
+            verify(() => getMatchController.call(captureAny())).captured;
+        final capturedRequest = captured[0] as Request;
 
-          // when
-          // final router = await matchesRouter.router(realRequest);
-          // final responseAsString = await router.readAsString();
+        expect(capturedRequest.method, equals(realRequest.method));
+        expect(capturedRequest.url, equals(realRequest.url));
 
-          // then
-
-          print("hello");
-          // verify(() => authorizationMiddleware.call()).called(1);
-          // verify(() => authorizationMiddleware.call()(any())(any())).called(1);
-        },
-      );
-
-      // test(
-      //   "given GetMatchController instance"
-      //   "when a request to the endpoint is made"
-      //   "then should call the GetMatchController instance",
-      //   () async {
-      //     // setup
-      //     when(() => authorizationMiddleware.call()).thenReturn(
-      //       createMiddleware(),
-      //     );
-
-      //     // given
-      //     when(() => getMatchController.call(any()))
-      //         .thenAnswer((invocation) async => Response.ok("ok"));
-
-      //     // when
-      //     final requestHandler = Pipeline()
-      //         .addMiddleware(authorizationMiddleware.call())
-      //         .addHandler(matchesRouter.router.call);
-
-      //     await requestHandler(realRequest);
-
-      //     // then
-      //     verify(() => getMatchController.call(any())).called(1);
-
-      //     // cleanup
-      //   },
-      // );
+        // cleanup
+      });
     });
   });
 }
 
 class _MockGetMatchController extends Mock implements GetMatchController {}
+
+class _MockRequestAuthorizationMiddlewareWrapper extends Mock
+    implements CustomMiddlewareWrapper {}
+
+class _MockMiddlewareRequestHandlerCallback extends Mock {
+  FutureOr<Response?> call(Request request);
+}
 
 class _FakeRequest extends Fake implements Request {}
 
