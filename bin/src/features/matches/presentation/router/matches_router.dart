@@ -5,31 +5,56 @@ import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
+// import '../../../../wrappers/local/custom_middleware/custom_middleware.dart';
 import '../../../auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
+import '../../../auth/utils/middlewares/another_authorization_middleware.dart';
 import '../../../auth/utils/middlewares/authorization_middleware.dart';
 import '../../../core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
 import '../../../core/domain/use_cases/get_cookie_by_name_in_string/get_cookie_by_name_in_string_use_case.dart';
 import '../../../core/domain/values/access_token_data_value.dart';
+import '../../../../wrappers/local/custom_middleware/custom_middleware_wrapper.dart';
 import '../../../players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
 import '../controllers/get_match_controller.dart';
 
 class MatchesRouter {
   MatchesRouter({
     required GetMatchController getMatchController,
-    required AuthorizationMiddleware authorizationMiddleware,
+    // required AuthorizationMiddleware authorizationMiddleware,
+    // required AnotherAuthorizationMiddleware anotherAuthorizationMiddleware,
+    required CustomMiddlewareWrapper requestAuthorizationMiddleware,
   }) {
     final matchesRouter = Router();
 
     // matchesRouter.get("/<id>", getMatchController.call);
     matchesRouter.get(
       "/<id>",
-      // Pipeline()
-      //     .addMiddleware(authorizationMiddleware())
-      //     .addHandler(getMatchController.call),
-      (Request request) async {
-        final response = await getMatchController.call(request);
-        return response;
-      },
+
+      Pipeline()
+          // .addMiddleware(authorizationMiddleware())
+          // .addMiddleware(someRandomMiddleware())
+          // .addMiddleware(anotherAuthorizationMiddleware())
+          .addMiddleware(requestAuthorizationMiddleware())
+          .addHandler(getMatchController.call),
+      // Pipeline().addMiddleware((request) {
+      //   manualMiddlere() {}
+
+      //   // final middleware = authorizationMiddleware()(request);
+
+      //   // return middleware;
+
+      //   // final middw = createMiddleware();
+      //   // return middw(request);
+
+      //   // final what =  middw(request);
+
+      //   // return what();
+      // })
+
+      // .addHandler(getMatchController.call),
+      // (Request request) async {
+      //   final response = await getMatchController.call(request);
+      //   return response;
+      // },
     );
 
     _router = matchesRouter;
@@ -38,6 +63,19 @@ class MatchesRouter {
   late final Router _router;
   Router get router => _router;
 }
+
+Middleware someRandomMiddleware() => (innerHandler) {
+      return (request) {
+        // TODO here we can validate? and return responses
+        return Future.sync(() {
+          return innerHandler(request);
+        }).then((response) {
+          print("request here: $request");
+          print("inner handler here: $innerHandler");
+          return response;
+        });
+      };
+    };
 
 // TODO move this somewhere
 // TODO maybe make interface for validators?

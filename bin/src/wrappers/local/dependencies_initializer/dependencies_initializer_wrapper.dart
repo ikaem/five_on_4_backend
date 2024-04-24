@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:developer';
 
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' hide Response;
+import 'package:shelf/shelf.dart';
 
 import '../../../features/auth/data/data_sources/auth_data_source_impl.dart';
 import '../../../features/auth/domain/repositories/auth_repository_impl.dart';
@@ -8,7 +10,10 @@ import '../../../features/auth/domain/use_cases/get_auth_by_id/get_auth_by_id_us
 import '../../../features/auth/domain/use_cases/google_login/google_login_use_case.dart';
 import '../../../features/auth/presentation/controllers/google_login/google_login_controller.dart';
 import '../../../features/auth/presentation/router/auth_router.dart';
+import '../../../features/auth/utils/middlewares/another_authorization_middleware.dart';
 import '../../../features/auth/utils/middlewares/authorization_middleware.dart';
+import '../../../features/auth/utils/middlewares/request_authorization_middleware_wrapper.dart';
+import '../../../features/auth/utils/validators/request_authorization_validator.dart';
 import '../../../features/core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
 import '../../../features/core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
 import '../../../features/core/domain/use_cases/get_cookie_by_name_in_string/get_cookie_by_name_in_string_use_case.dart';
@@ -26,6 +31,7 @@ import '../../libraries/crypt/crypt_wrapper.dart';
 import '../../libraries/dart_jsonwebtoken/dart_jsonwebtoken_wrapper.dart';
 import '../../libraries/dio/dio_wrapper.dart';
 import '../cookies_handler/cookies_handler_wrapper.dart';
+// import '../custom_middleware/custom_middleware.dart';
 import '../database/database_wrapper.dart';
 import '../env_vars/env_vars_wrapper.dart';
 import '../google_apis/google_apis_wrapper.dart';
@@ -114,15 +120,6 @@ class DependenciesInitializerWrapper {
       dartJsonWebTokenWrapper: dartJsonWebTokenWrapper,
     );
 
-    // middlewares
-    final authorizationMiddleware = AuthorizationMiddleware(
-      getAccessTokenDataFromAccessJwtUseCase:
-          getAccessTokenDataFromAccessJwtUseCase,
-      getAuthByIdUseCase: getAuthByIdUseCase,
-      getCookieByNameInStringUseCase: getCookieByNameInStringUseCase,
-      getPlayerByIdUseCase: getPlayerByIdUseCase,
-    );
-
     // controllers
     final googleLoginController = GoogleLoginController(
       googleLoginUseCase: googleLoginUseCase,
@@ -138,13 +135,46 @@ class DependenciesInitializerWrapper {
       //     getAccessTokenDataFromAccessJwtUseCase,
     );
 
+    // middlewares
+    // final authorizationMiddleware = AuthorizationMiddleware(
+    //   getAccessTokenDataFromAccessJwtUseCase:
+    //       getAccessTokenDataFromAccessJwtUseCase,
+    //   getAuthByIdUseCase: getAuthByIdUseCase,
+    //   getCookieByNameInStringUseCase: getCookieByNameInStringUseCase,
+    //   getPlayerByIdUseCase: getPlayerByIdUseCase,
+    // );
+
+    final requestAuthorizationValidator = RequestAuthorizationValidator(
+      getCookieByNameInStringUseCase: getCookieByNameInStringUseCase,
+      getAccessTokenDataFromAccessJwtUseCase:
+          getAccessTokenDataFromAccessJwtUseCase,
+      getPlayerByIdUseCase: getPlayerByIdUseCase,
+      getAuthByIdUseCase: getAuthByIdUseCase,
+    );
+    final requestAuthorizationMiddleware =
+        RequestAuthorizationMiddlewareWrapper(
+      requestHandler: requestAuthorizationValidator.validate,
+    );
     // router
     final authRouter = AuthRouter(
       googleLoginController: googleLoginController,
     );
+
+// TODO temp
+    // final anotherAuthorizationMiddleware = AnotherAuthorizationMiddleware(
+    //   onValidateRequest: onValidateRequest,
+    // );
+
+// TODO to here
+
     final matchesRouter = MatchesRouter(
-        getMatchController: getMatchController,
-        authorizationMiddleware: authorizationMiddleware);
+      getMatchController: getMatchController,
+      // requestAuthorizationMiddleware: authorizationMiddlewareWrapper,
+      requestAuthorizationMiddleware: requestAuthorizationMiddleware,
+      // authorizationMiddleware: authorizationMiddleware,
+      // // TODO test
+      // anotherAuthorizationMiddleware: anotherAuthorizationMiddleware,
+    );
 
     final AppRouter appRouter = AppRouter(
       authRouter: authRouter,
@@ -157,3 +187,9 @@ class DependenciesInitializerWrapper {
 // Middleware someRandomMiddleware() {
 // // retun
 // }
+
+FutureOr<Response?> Function(Request) onValidateRequest =
+    (Request request) async {
+  // return null;
+  return Response.ok("ok");
+};
