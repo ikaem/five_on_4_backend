@@ -5,8 +5,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/auth/utils/middlewares/another_authorization_middleware.dart';
-import '../../../../../../../bin/src/features/auth/utils/middlewares/authorization_middleware.dart';
+// import '../../../../../../../bin/src/features/auth/utils/middlewares/another_authorization_middleware.dart';
+// import '../../../../../../../bin/src/features/auth/utils/middlewares/authorization_middleware.dart';
 import '../../../../../../../bin/src/features/matches/presentation/controllers/get_match_controller.dart';
 import '../../../../../../../bin/src/features/matches/presentation/router/matches_router.dart';
 
@@ -88,11 +88,11 @@ void main() {
 
           // tested class
           // NOTE: router has to be created only after middleware is stubbed up because the router uses it immediatley
-          final anotherAuthorizationMiddleware = AnotherAuthorizationMiddleware(
-            onValidateRequest: (request) async {
-              return Response.ok("ok");
-            },
-          );
+          // final anotherAuthorizationMiddleware = AnotherAuthorizationMiddleware(
+          //   onValidateRequest: (request) async {
+          //     return Response.ok("ok");
+          //   },
+          // );
           // final matchesRouter = MatchesRouter(
           //   getMatchController: getMatchController,
           //   authorizationMiddleware: authorizationMiddleware,
@@ -143,33 +143,6 @@ void main() {
 }
 
 class _MockGetMatchController extends Mock implements GetMatchController {}
-
-class _MockAuthorizationMiddleware extends Mock
-    implements AuthorizationMiddleware {
-  // TODO test
-
-  // @override
-  // Middleware call() {
-  //   final middleware = createMiddleware(
-  //     requestHandler: (p0) {
-  //       // return null;
-  //       return Response.badRequest();
-  //     },
-  //   );
-
-  //   return middleware;
-
-  //   // TODO: implement call
-  //   // return (innerHandler) {
-  //   //   return (request) {
-  //   //     // return request;
-  //   //     return Future.sync(() => innerHandler(request)).then((response) {
-  //   //       return response;
-  //   //     });
-  //   //   };
-  //   // };
-  // }
-}
 
 class _FakeRequest extends Fake implements Request {}
 
