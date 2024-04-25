@@ -12,8 +12,9 @@ import '../../../core/domain/use_cases/get_cookie_by_name_in_string/get_cookie_b
 import '../../../core/domain/values/access_token_data_value.dart';
 
 // TODO this needs to be tested
+// TODO create validator interface somewhere
 class RequestAuthorizationValidator {
-  RequestAuthorizationValidator({
+  const RequestAuthorizationValidator({
     required GetCookieByNameInStringUseCase getCookieByNameInStringUseCase,
     required GetAccessTokenDataFromAccessJwtUseCase
         getAccessTokenDataFromAccessJwtUseCase,
