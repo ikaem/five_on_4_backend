@@ -46,8 +46,6 @@ class AuthRepositoryImpl implements AuthRepository {
     // create new auth because this is google
     final newAuthEntityValue = NewAuthDataValueGoogle(
       email: validatedGoogleAuthResponse.email,
-      // createdAt: DateTime.now(),
-      // updatedAt: DateTime.now(),
       firstName: validatedGoogleAuthResponse.givenName,
       lastName: validatedGoogleAuthResponse.familyName,
       nickname: validatedGoogleAuthResponse.givenName,
@@ -57,6 +55,29 @@ class AuthRepositoryImpl implements AuthRepository {
       authValue: newAuthEntityValue,
     );
 
+    return authId;
+  }
+
+// TODO this does not need to be nullable - for
+  @override
+  Future<int> register({
+    required String email,
+    required String password,
+    required String firstName,
+    required String lastName,
+    required String nickname,
+  }) async {
+    final newAuthEntityValue = NewAuthDataValueEmailPassword(
+      email: email,
+      password: password,
+      firstName: firstName,
+      lastName: lastName,
+      nickname: nickname,
+    );
+
+    final authId = await _authDataSource.createAuth(
+      authValue: newAuthEntityValue,
+    );
     return authId;
   }
 

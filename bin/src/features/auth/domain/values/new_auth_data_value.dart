@@ -42,13 +42,15 @@ class NewAuthDataValueEmailPassword extends NewAuthDataValue {
   const NewAuthDataValueEmailPassword({
     required super.email,
     required String super.password,
-    required super.authType,
+    // required super.authType,
     // required super.createdAt,
     // required super.updatedAt,
     required super.firstName,
     required super.lastName,
     required super.nickname,
-  });
+  }) : super(
+          authType: AuthTypeConstants.emailPassword,
+        );
 }
 
 class NewAuthDataValueGoogle extends NewAuthDataValue {

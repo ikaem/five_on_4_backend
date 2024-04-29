@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
@@ -32,6 +34,53 @@ void main() {
   group(
     "$AuthRepository",
     () {
+      group(".register()", () {
+        test(
+          "given all required parameters"
+          "when .register() is called "
+          "then should call AuthDataSource.createAuth and return authId",
+          () async {
+            // setup
+            when(() => authDataSource.createAuth(
+                authValue: any(named: "authValue"))).thenAnswer((i) async => 1);
+
+            // given
+            final email = "email";
+            final password = "password";
+            final firstName = "firstName";
+            final lastName = "lastName";
+            final nickname = "nickname";
+
+            // when
+            final result = await authRepositoryImpl.register(
+              email: email,
+              password: password,
+              firstName: firstName,
+              lastName: lastName,
+              nickname: nickname,
+            );
+
+            // then
+            final expectedNewAuthEntityValue = NewAuthDataValueEmailPassword(
+              email: email,
+              password: password,
+              firstName: firstName,
+              lastName: lastName,
+              nickname: nickname,
+            );
+
+            verify(
+              () => authDataSource.createAuth(
+                authValue: expectedNewAuthEntityValue,
+              ),
+            ).called(1);
+            expect(result, equals(1));
+
+            // cleanup
+          },
+        );
+      });
+
       group(
         ".googleLogin()",
         () {

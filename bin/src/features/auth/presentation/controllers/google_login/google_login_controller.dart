@@ -52,7 +52,7 @@ class GoogleLoginController {
 
     final player = await _getPlayerByAuthIdUseCase(authId: authId);
     if (player == null) {
-      // TODO this should log somewhere - this is a critical error
+      // TODO this should log somewhere - this is a critical error - maybe even delete auth
       log("Authenticated player not found", name: "GoogleLoginController");
 
       return Response(404,

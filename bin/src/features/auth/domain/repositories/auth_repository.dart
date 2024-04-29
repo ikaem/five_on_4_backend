@@ -12,6 +12,14 @@ abstract class AuthRepository {
     required String idToken,
   });
 
+  Future<int> register({
+    required String email,
+    required String password,
+    required String firstName,
+    required String lastName,
+    required String nickname,
+  });
+
   Future<AuthModel?> getAuthById({
     required int id,
   });
