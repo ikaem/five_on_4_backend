@@ -1,15 +1,11 @@
-// TODO this needs testing
-
 import 'dart:async';
 
 import 'package:shelf/shelf.dart';
 
 import '../../../../wrappers/local/custom_middleware/custom_middleware_wrapper.dart';
 
-// import '../../../../wrappers/local/custom_middleware/custom_middleware.dart';
-
-class RequestAuthorizationMiddlewareWrapper implements CustomMiddlewareWrapper {
-  const RequestAuthorizationMiddlewareWrapper({
+class MatchCreateRequestMiddlewareWrapper implements CustomMiddlewareWrapper {
+  const MatchCreateRequestMiddlewareWrapper({
     required FutureOr<Response?> Function(Request request)? requestHandler,
   }) : _requestHandler = requestHandler;
 
