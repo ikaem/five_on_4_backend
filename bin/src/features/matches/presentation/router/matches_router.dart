@@ -1,60 +1,34 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
-// import '../../../../wrappers/local/custom_middleware/custom_middleware.dart';
-import '../../../auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
-// import '../../../auth/utils/middlewares/another_authorization_middleware.dart';
-// import '../../../auth/utils/middlewares/authorization_middleware.dart';
-import '../../../core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
-import '../../../core/domain/use_cases/get_cookie_by_name_in_string/get_cookie_by_name_in_string_use_case.dart';
-import '../../../core/domain/values/access_token_data_value.dart';
+
 import '../../../../wrappers/local/custom_middleware/custom_middleware_wrapper.dart';
-import '../../../players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
+import '../controllers/create_match_controller.dart';
 import '../controllers/get_match_controller.dart';
 
 class MatchesRouter {
   MatchesRouter({
     required GetMatchController getMatchController,
-    // required AuthorizationMiddleware authorizationMiddleware,
-    // required AnotherAuthorizationMiddleware anotherAuthorizationMiddleware,
+    required CreateMatchController createMatchController,
     required CustomMiddlewareWrapper requestAuthorizationMiddleware,
+    required CustomMiddlewareWrapper matchCreateRequestMiddleware,
   }) {
     final matchesRouter = Router();
 
-    // matchesRouter.get("/<id>", getMatchController.call);
+    matchesRouter.post(
+      "/",
+      Pipeline()
+          .addMiddleware(requestAuthorizationMiddleware())
+          .addMiddleware(matchCreateRequestMiddleware())
+          .addHandler(createMatchController.call),
+    );
+
     matchesRouter.get(
       "/<id>",
-
       Pipeline()
-          // .addMiddleware(authorizationMiddleware())
-          // .addMiddleware(someRandomMiddleware())
-          // .addMiddleware(anotherAuthorizationMiddleware())
           .addMiddleware(requestAuthorizationMiddleware())
           .addHandler(getMatchController.call),
-      // Pipeline().addMiddleware((request) {
-      //   manualMiddlere() {}
-
-      //   // final middleware = authorizationMiddleware()(request);
-
-      //   // return middleware;
-
-      //   // final middw = createMiddleware();
-      //   // return middw(request);
-
-      //   // final what =  middw(request);
-
-      //   // return what();
-      // })
-
-      // .addHandler(getMatchController.call),
-      // (Request request) async {
-      //   final response = await getMatchController.call(request);
-      //   return response;
-      // },
     );
 
     _router = matchesRouter;

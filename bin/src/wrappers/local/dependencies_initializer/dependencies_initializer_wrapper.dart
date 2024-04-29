@@ -20,9 +20,13 @@ import '../../../features/core/domain/use_cases/get_cookie_by_name_in_string/get
 import '../../../features/core/presentation/router/app_router.dart';
 import '../../../features/matches/data/data_sources/matches_data_source_impl.dart';
 import '../../../features/matches/domain/repositories/matches_repository_impl.dart';
+import '../../../features/matches/domain/use_cases/create_match/create_match_use_case.dart';
 import '../../../features/matches/domain/use_cases/get_match/get_match_use_case.dart';
+import '../../../features/matches/presentation/controllers/create_match_controller.dart';
 import '../../../features/matches/presentation/controllers/get_match_controller.dart';
 import '../../../features/matches/presentation/router/matches_router.dart';
+import '../../../features/matches/utils/middlewares/match_create_request_middleware_wrapper.dart';
+import '../../../features/matches/utils/validators/match_create_request_validator.dart';
 import '../../../features/players/data/data_sources/players_data_source_impl.dart';
 import '../../../features/players/domain/repositories/players_repository_impl.dart';
 import '../../../features/players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
@@ -119,6 +123,9 @@ class DependenciesInitializerWrapper {
         GetAccessTokenDataFromAccessJwtUseCase(
       dartJsonWebTokenWrapper: dartJsonWebTokenWrapper,
     );
+    final createMatchUseCase = CreateMatchUseCase(
+      matchesRepository: matchesRespository,
+    );
 
     // controllers
     final googleLoginController = GoogleLoginController(
@@ -128,22 +135,12 @@ class DependenciesInitializerWrapper {
     );
     final getMatchController = GetMatchController(
       getMatchUseCase: getMatchUseCase,
-      // getPlayerByIdUseCase: getPlayerByIdUseCase,
-      // getAuthByIdUseCase: getAuthByIdUseCase,
-      // getCookieByNameInStringUseCase: getCookieByNameInStringUseCase,
-      // getAccessTokenDataFromAccessJwtUseCase:
-      //     getAccessTokenDataFromAccessJwtUseCase,
     );
 
-    // middlewares
-    // final authorizationMiddleware = AuthorizationMiddleware(
-    //   getAccessTokenDataFromAccessJwtUseCase:
-    //       getAccessTokenDataFromAccessJwtUseCase,
-    //   getAuthByIdUseCase: getAuthByIdUseCase,
-    //   getCookieByNameInStringUseCase: getCookieByNameInStringUseCase,
-    //   getPlayerByIdUseCase: getPlayerByIdUseCase,
-    // );
+    final createMatchController =
+        CreateMatchController(createMatchUseCase: createMatchUseCase);
 
+    // validators
     final requestAuthorizationValidator = RequestAuthorizationValidator(
       getCookieByNameInStringUseCase: getCookieByNameInStringUseCase,
       getAccessTokenDataFromAccessJwtUseCase:
@@ -151,29 +148,27 @@ class DependenciesInitializerWrapper {
       getPlayerByIdUseCase: getPlayerByIdUseCase,
       getAuthByIdUseCase: getAuthByIdUseCase,
     );
+    final matchCreateRequestValidator = MatchCreateRequestValidator();
+
+    // middlewares
     final requestAuthorizationMiddleware =
         RequestAuthorizationMiddlewareWrapper(
       requestHandler: requestAuthorizationValidator.validate,
     );
+    final matchCreateRequestMiddleware = MatchCreateRequestMiddlewareWrapper(
+      requestHandler: matchCreateRequestValidator.validate,
+    );
+
     // router
     final authRouter = AuthRouter(
       googleLoginController: googleLoginController,
     );
 
-// TODO temp
-    // final anotherAuthorizationMiddleware = AnotherAuthorizationMiddleware(
-    //   onValidateRequest: onValidateRequest,
-    // );
-
-// TODO to here
-
     final matchesRouter = MatchesRouter(
       getMatchController: getMatchController,
-      // requestAuthorizationMiddleware: authorizationMiddlewareWrapper,
+      createMatchController: createMatchController,
       requestAuthorizationMiddleware: requestAuthorizationMiddleware,
-      // authorizationMiddleware: authorizationMiddleware,
-      // // TODO test
-      // anotherAuthorizationMiddleware: anotherAuthorizationMiddleware,
+      matchCreateRequestMiddleware: matchCreateRequestMiddleware,
     );
 
     final AppRouter appRouter = AppRouter(
@@ -183,13 +178,3 @@ class DependenciesInitializerWrapper {
     _appRouter = appRouter;
   }
 }
-
-// Middleware someRandomMiddleware() {
-// // retun
-// }
-
-FutureOr<Response?> Function(Request) onValidateRequest =
-    (Request request) async {
-  // return null;
-  return Response.ok("ok");
-};
