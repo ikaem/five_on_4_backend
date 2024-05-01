@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 import '../../../../../../../bin/src/features/core/utils/extensions/date_time_extension.dart';
 import '../../../../../../../bin/src/features/matches/domain/use_cases/create_match/create_match_use_case.dart';
 import '../../../../../../../bin/src/features/matches/presentation/controllers/create_match_controller.dart';
-import '../../../../../../../bin/src/features/matches/utils/constants/match_create_request_body_constants.dart';
+import '../../../../../../../bin/src/features/matches/utils/constants/match_create_request_body_key_constants.dart';
 
 void main() {
   final createMatchUseCase = _MockCreateMatchUseCase();
@@ -27,11 +27,11 @@ void main() {
 
   group("$CreateMatchController", () {
     final validRequest = {
-      MatchCreateRequestBodyConstants.TITLE.value: "valid_title",
-      MatchCreateRequestBodyConstants.DATE_AND_TIME.value:
+      MatchCreateRequestBodyKeyConstants.TITLE.value: "valid_title",
+      MatchCreateRequestBodyKeyConstants.DATE_AND_TIME.value:
           DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
-      MatchCreateRequestBodyConstants.LOCATION.value: "valid_location",
-      MatchCreateRequestBodyConstants.DESCRIPTION.value: "valid_description",
+      MatchCreateRequestBodyKeyConstants.LOCATION.value: "valid_location",
+      MatchCreateRequestBodyKeyConstants.DESCRIPTION.value: "valid_description",
     };
     group(".call()", () {
       test(

@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/matches/utils/constants/match_create_request_body_constants.dart';
+import '../../../../../../../bin/src/features/matches/utils/constants/match_create_request_body_key_constants.dart';
 import '../../../../../../../bin/src/features/matches/utils/validators/match_create_request_validator.dart';
 
 void main() {
@@ -26,10 +26,10 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            MatchCreateRequestBodyConstants.DESCRIPTION.value:
+            MatchCreateRequestBodyKeyConstants.DESCRIPTION.value:
                 "valid_description",
-            MatchCreateRequestBodyConstants.DATE_AND_TIME.value: 1,
-            MatchCreateRequestBodyConstants.LOCATION.value: "valid_location",
+            MatchCreateRequestBodyKeyConstants.DATE_AND_TIME.value: 1,
+            MatchCreateRequestBodyKeyConstants.LOCATION.value: "valid_location",
           };
 
           // given
@@ -62,9 +62,9 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            MatchCreateRequestBodyConstants.TITLE.value: "valid_title",
-            MatchCreateRequestBodyConstants.DATE_AND_TIME.value: 1,
-            MatchCreateRequestBodyConstants.LOCATION.value: "valid_location",
+            MatchCreateRequestBodyKeyConstants.TITLE.value: "valid_title",
+            MatchCreateRequestBodyKeyConstants.DATE_AND_TIME.value: 1,
+            MatchCreateRequestBodyKeyConstants.LOCATION.value: "valid_location",
           };
 
           // given
@@ -103,10 +103,10 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            MatchCreateRequestBodyConstants.TITLE.value: "valid_title",
-            MatchCreateRequestBodyConstants.DESCRIPTION.value:
+            MatchCreateRequestBodyKeyConstants.TITLE.value: "valid_title",
+            MatchCreateRequestBodyKeyConstants.DESCRIPTION.value:
                 "valid_description",
-            MatchCreateRequestBodyConstants.LOCATION.value: "valid_location",
+            MatchCreateRequestBodyKeyConstants.LOCATION.value: "valid_location",
           };
 
           // given
@@ -145,11 +145,11 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            MatchCreateRequestBodyConstants.TITLE.value: "valid_title",
-            MatchCreateRequestBodyConstants.DESCRIPTION.value:
+            MatchCreateRequestBodyKeyConstants.TITLE.value: "valid_title",
+            MatchCreateRequestBodyKeyConstants.DESCRIPTION.value:
                 "valid_description",
-            MatchCreateRequestBodyConstants.DATE_AND_TIME.value: 1,
-            MatchCreateRequestBodyConstants.LOCATION.value: "valid_location",
+            MatchCreateRequestBodyKeyConstants.DATE_AND_TIME.value: 1,
+            MatchCreateRequestBodyKeyConstants.LOCATION.value: "valid_location",
           };
 
           // given
@@ -188,10 +188,10 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            MatchCreateRequestBodyConstants.TITLE.value: "valid_title",
-            MatchCreateRequestBodyConstants.DESCRIPTION.value:
+            MatchCreateRequestBodyKeyConstants.TITLE.value: "valid_title",
+            MatchCreateRequestBodyKeyConstants.DESCRIPTION.value:
                 "valid_description",
-            MatchCreateRequestBodyConstants.DATE_AND_TIME.value:
+            MatchCreateRequestBodyKeyConstants.DATE_AND_TIME.value:
                 DateTime.now().add(Duration(days: 1)).millisecondsSinceEpoch,
           };
 

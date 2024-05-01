@@ -40,11 +40,11 @@ void main() {
 
   group("$RequestAuthorizationValidator", () {
     group(".validate()", () {
-      final validResponse = Response.ok("ok");
+      // final validResponse = Response.ok("ok");
 
       test(
         "given a request without cookies "
-        "when .call() is called "
+        "when .validate() is called "
         "then should return expected response",
         () async {
           // setup

@@ -5,7 +5,7 @@ import 'package:shelf/shelf.dart';
 import '../../../core/utils/extensions/date_time_extension.dart';
 import '../../../core/utils/extensions/request_extension.dart';
 import '../../domain/use_cases/create_match/create_match_use_case.dart';
-import '../../utils/constants/match_create_request_body_constants.dart';
+import '../../utils/constants/match_create_request_body_key_constants.dart';
 
 class CreateMatchController {
   CreateMatchController({
@@ -21,13 +21,13 @@ class CreateMatchController {
     final bodyMap = await request.parseBody();
 
     final title =
-        bodyMap[MatchCreateRequestBodyConstants.TITLE.value] as String;
+        bodyMap[MatchCreateRequestBodyKeyConstants.TITLE.value] as String;
     final dateAndTime =
-        bodyMap[MatchCreateRequestBodyConstants.DATE_AND_TIME.value] as int;
+        bodyMap[MatchCreateRequestBodyKeyConstants.DATE_AND_TIME.value] as int;
     final location =
-        bodyMap[MatchCreateRequestBodyConstants.LOCATION.value] as String;
+        bodyMap[MatchCreateRequestBodyKeyConstants.LOCATION.value] as String;
     final description =
-        bodyMap[MatchCreateRequestBodyConstants.DESCRIPTION.value] as String;
+        bodyMap[MatchCreateRequestBodyKeyConstants.DESCRIPTION.value] as String;
 
     final nowDate = DateTime.now().normalizedToSeconds.millisecondsSinceEpoch;
     final createdAt = nowDate;
