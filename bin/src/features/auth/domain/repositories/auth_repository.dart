@@ -23,4 +23,8 @@ abstract class AuthRepository {
   Future<AuthModel?> getAuthById({
     required int id,
   });
+
+  Future<AuthModel?> getAuthByEmail({
+    required String email,
+  });
 }

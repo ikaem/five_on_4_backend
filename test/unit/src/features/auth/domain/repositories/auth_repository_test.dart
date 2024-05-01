@@ -206,6 +206,62 @@ void main() {
         },
       );
 
+      group(".getAuthByEmail()", () {
+        test(
+          "given email with existing auth "
+          "when .getAuthByEmail() is called "
+          "then should return expected auth",
+          () async {
+            // setup
+            when(() =>
+                    authDataSource.getAuthByEmail(email: any(named: "email")))
+                .thenAnswer((i) async => testAuthEntityData);
+
+            // given
+            final email = "email";
+
+            // when
+            final result = await authRepositoryImpl.getAuthByEmail(
+              email: email,
+            );
+
+            // then
+            final expectedResult = AuthConverter.modelFromEntity(
+              entity: testAuthEntityData,
+            );
+
+            expect(result, expectedResult);
+
+            // cleanup
+          },
+        );
+
+        test(
+          "given email with no existing auth "
+          "when .getAuthByEmail() is called "
+          "then should return null",
+          () async {
+            // setup
+            when(() =>
+                    authDataSource.getAuthByEmail(email: any(named: "email")))
+                .thenAnswer((i) async => null);
+
+            // given
+            final email = "email";
+
+            // when
+            final result = await authRepositoryImpl.getAuthByEmail(
+              email: email,
+            );
+
+            // then
+            expect(result, null);
+
+            // cleanup
+          },
+        );
+      });
+
       group(".getAuthById()", () {
         test(
           "given invalid authId "

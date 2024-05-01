@@ -95,4 +95,20 @@ class AuthRepositoryImpl implements AuthRepository {
     final authModel = AuthConverter.modelFromEntity(entity: authEntityData);
     return authModel;
   }
+
+  @override
+  Future<AuthModel?> getAuthByEmail({
+    required String email,
+  }) async {
+    final authEntityData = await _authDataSource.getAuthByEmail(
+      email: email,
+    );
+
+    if (authEntityData == null) {
+      return null;
+    }
+
+    final authModel = AuthConverter.modelFromEntity(entity: authEntityData);
+    return authModel;
+  }
 }
