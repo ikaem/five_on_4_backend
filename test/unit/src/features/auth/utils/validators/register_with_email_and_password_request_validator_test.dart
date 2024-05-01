@@ -4,21 +4,21 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/auth/utils/constants/register_with_username_and_password_request_body_key_constants.dart';
-import '../../../../../../../bin/src/features/matches/utils/validators/register_with_username_and_password_request_validator.dart';
+import '../../../../../../../bin/src/features/auth/utils/constants/register_with_email_and_password_request_body_key_constants.dart';
+import '../../../../../../../bin/src/features/matches/utils/validators/register_with_email_and_password_request_validator.dart';
 import '../../../../../../helpers/response.dart';
 
 void main() {
   final request = _MockRequest();
 
   // tested class
-  final validator = RegisterWithUsernameAndPasswordRequestValidator();
+  final validator = RegisterWithEmailAndPasswordRequestValidator();
 
   tearDown(() {
     reset(request);
   });
 
-  group("$RegisterWithUsernameAndPasswordRequestValidator", () {
+  group("$RegisterWithEmailAndPasswordRequestValidator", () {
     group(".validate()", () {
       // should return expected response if email is not provided
       test(
@@ -28,14 +28,14 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .PASSWORD.value: "PASSWORD",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                "PASSWORD",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
                 .FIRST_NAME.value: "FIRST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .LAST_NAME.value: "LAST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .NICKNAME.value: "NICKNAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                "LAST_NAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                "NICKNAME",
           };
 
           // given
@@ -69,16 +69,15 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants.EMAIL.value:
-                1,
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .PASSWORD.value: "PASSWORD",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value: 1,
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                "PASSWORD",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
                 .FIRST_NAME.value: "FIRST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .LAST_NAME.value: "LAST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .NICKNAME.value: "NICKNAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                "LAST_NAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                "NICKNAME",
           };
 
           // given
@@ -113,16 +112,16 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants.EMAIL.value:
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
                 "not_an_email",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .PASSWORD.value: "PASSWORD",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                "PASSWORD",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
                 .FIRST_NAME.value: "FIRST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .LAST_NAME.value: "LAST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .NICKNAME.value: "NICKNAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                "LAST_NAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                "NICKNAME",
           };
 
           // given
@@ -157,14 +156,14 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants.EMAIL.value:
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
                 "email@valid.com",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
                 .FIRST_NAME.value: "FIRST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .LAST_NAME.value: "LAST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .NICKNAME.value: "NICKNAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                "LAST_NAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                "NICKNAME",
           };
 
           // given
@@ -198,16 +197,16 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants.EMAIL.value:
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
                 "email@valid.com",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .PASSWORD.value: 1,
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                1,
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
                 .FIRST_NAME.value: "FIRST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .LAST_NAME.value: "LAST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .NICKNAME.value: "NICKNAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                "LAST_NAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                "NICKNAME",
           };
 
           // given
@@ -242,16 +241,16 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants.EMAIL.value:
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
                 "email@valid.com",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .PASSWORD.value: "12345",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                "12345",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
                 .FIRST_NAME.value: "FIRST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .LAST_NAME.value: "LAST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .NICKNAME.value: "NICKNAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                "LAST_NAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                "NICKNAME",
           };
 
           // given
@@ -286,16 +285,16 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants.EMAIL.value:
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
                 "email@valid.com",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .PASSWORD.value: "123456789101112131415",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                "123456789101112131415",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
                 .FIRST_NAME.value: "FIRST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .LAST_NAME.value: "LAST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .NICKNAME.value: "NICKNAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                "LAST_NAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                "NICKNAME",
           };
 
           // given
@@ -330,16 +329,16 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants.EMAIL.value:
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
                 "email@valid.com",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .PASSWORD.value: "12345678910111213",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                "12345678910111213",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
                 .FIRST_NAME.value: "FIRST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .LAST_NAME.value: "LAST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .NICKNAME.value: "NICKNAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                "LAST_NAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                "NICKNAME",
           };
 
           // given
@@ -375,14 +374,14 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants.EMAIL.value:
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
                 "email@valid.com",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .PASSWORD.value: "12345678910111asd",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .LAST_NAME.value: "LAST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .NICKNAME.value: "NICKNAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                "12345678910111asd",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                "LAST_NAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                "NICKNAME",
           };
 
           // given
@@ -417,16 +416,16 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants.EMAIL.value:
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
                 "email@valid.com",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .PASSWORD.value: "12345678910111asd",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                "12345678910111asd",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
                 .FIRST_NAME.value: 1,
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .LAST_NAME.value: "LAST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .NICKNAME.value: "NICKNAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                "LAST_NAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                "NICKNAME",
           };
 
           // given
@@ -461,14 +460,14 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants.EMAIL.value:
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
                 "email@valid.com",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .PASSWORD.value: "12345678910111asd",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                "12345678910111asd",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
                 .FIRST_NAME.value: "FIRST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .NICKNAME.value: "NICKNAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                "NICKNAME",
           };
 
           // given
@@ -503,16 +502,16 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants.EMAIL.value:
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
                 "email@valid.com",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .PASSWORD.value: "12345678910111asd",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                "12345678910111asd",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
                 .FIRST_NAME.value: "FIRST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .LAST_NAME.value: 1,
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .NICKNAME.value: "NICKNAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                1,
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                "NICKNAME",
           };
 
           // given
@@ -547,14 +546,14 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants.EMAIL.value:
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
                 "email@valid.com",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .PASSWORD.value: "12345678910111asd",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                "12345678910111asd",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
                 .FIRST_NAME.value: "FIRST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .LAST_NAME.value: "LAST_NAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                "LAST_NAME",
           };
 
           // given
@@ -589,16 +588,16 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants.EMAIL.value:
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
                 "email@valid.com",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .PASSWORD.value: "12345678910111asd",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                "12345678910111asd",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
                 .FIRST_NAME.value: "FIRST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .LAST_NAME.value: "LAST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .NICKNAME.value: 1,
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                "LAST_NAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                1,
           };
 
           // given
@@ -632,16 +631,16 @@ void main() {
         () async {
           // setup
           final requestMap = {
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants.EMAIL.value:
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
                 "email@valid.com",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .PASSWORD.value: "12345678910111asd",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                "12345678910111asd",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
                 .FIRST_NAME.value: "FIRST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .LAST_NAME.value: "LAST_NAME",
-            RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-                .NICKNAME.value: "NICKNAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                "LAST_NAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                "NICKNAME",
           };
 
           // given

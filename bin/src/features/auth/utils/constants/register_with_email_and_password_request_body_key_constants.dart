@@ -1,10 +1,10 @@
-enum RegisterWithUsernameAndPasswordRequestBodyKeyConstants {
+enum RegisterWithEmailAndPasswordRequestBodyKeyConstants {
   EMAIL._("email"),
   PASSWORD._("password"),
   FIRST_NAME._("first_name"),
   LAST_NAME._("last_name"),
   NICKNAME._("nickname");
 
-  const RegisterWithUsernameAndPasswordRequestBodyKeyConstants._(this.value);
+  const RegisterWithEmailAndPasswordRequestBodyKeyConstants._(this.value);
   final String value;
 }

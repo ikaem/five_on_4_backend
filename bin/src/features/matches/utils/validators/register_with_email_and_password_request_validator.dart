@@ -3,18 +3,18 @@ import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 
-import '../../../auth/utils/constants/register_with_username_and_password_request_body_key_constants.dart';
+import '../../../auth/utils/constants/register_with_email_and_password_request_body_key_constants.dart';
 import '../../../core/utils/constants/reg_exp_constants.dart';
 import '../../../core/utils/extensions/request_extension.dart';
 import '../../../core/utils/helpers/response_generator.dart';
 
-class RegisterWithUsernameAndPasswordRequestValidator {
+class RegisterWithEmailAndPasswordRequestValidator {
   FutureOr<Response?> validate(Request request) async {
     final body = await request.parseBody();
 
     // email
-    final email = body[
-        RegisterWithUsernameAndPasswordRequestBodyKeyConstants.EMAIL.value];
+    final email =
+        body[RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value];
     if (email == null) {
       return generateResponse(
         statusCode: HttpStatus.badRequest,
@@ -42,7 +42,7 @@ class RegisterWithUsernameAndPasswordRequestValidator {
 
     // password
     final password = body[
-        RegisterWithUsernameAndPasswordRequestBodyKeyConstants.PASSWORD.value];
+        RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value];
     if (password == null) {
       return generateResponse(
         statusCode: HttpStatus.badRequest,
@@ -84,8 +84,7 @@ class RegisterWithUsernameAndPasswordRequestValidator {
 
     // first name
     final firstName = body[
-        RegisterWithUsernameAndPasswordRequestBodyKeyConstants
-            .FIRST_NAME.value];
+        RegisterWithEmailAndPasswordRequestBodyKeyConstants.FIRST_NAME.value];
     if (firstName == null) {
       return generateResponse(
         statusCode: HttpStatus.badRequest,
@@ -103,7 +102,7 @@ class RegisterWithUsernameAndPasswordRequestValidator {
 
     // last name
     final lastName = body[
-        RegisterWithUsernameAndPasswordRequestBodyKeyConstants.LAST_NAME.value];
+        RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value];
     if (lastName == null) {
       return generateResponse(
         statusCode: HttpStatus.badRequest,
@@ -121,7 +120,7 @@ class RegisterWithUsernameAndPasswordRequestValidator {
 
     // nickname
     final nickname = body[
-        RegisterWithUsernameAndPasswordRequestBodyKeyConstants.NICKNAME.value];
+        RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value];
     if (nickname == null) {
       return generateResponse(
         statusCode: HttpStatus.badRequest,
