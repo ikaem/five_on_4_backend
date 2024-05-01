@@ -60,6 +60,7 @@ Response _generateSuccessResponse({
       },
     ),
     headers: {
+      // TODO this needs updating the cookie too - the access token cookie
       "content-type": "application/json",
     },
   );
