@@ -14,6 +14,23 @@ Response generateTestBadRequestResponse({
     ),
     headers: {
       "content-type": "application/json",
+      // TODO cookies will need to come here
+    },
+  );
+}
+
+Response generateTestNonExistentResponse({
+  required String responseMessage,
+}) {
+  return Response.notFound(
+    jsonEncode(
+      {
+        "ok": false,
+        "message": responseMessage,
+      },
+    ),
+    headers: {
+      "Content-Type": "application/json",
     },
   );
 }

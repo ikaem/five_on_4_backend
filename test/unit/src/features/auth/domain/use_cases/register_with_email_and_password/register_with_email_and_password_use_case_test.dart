@@ -9,7 +9,7 @@ void main() {
 
   // tested class
   final registerWithEmailAndPassowordUseCase =
-      RegisterWithEmailAndPassowordUseCase(
+      RegisterWithEmailAndPasswordUseCase(
     authRepository: authRepository,
   );
 
@@ -17,7 +17,7 @@ void main() {
     reset(authRepository);
   });
 
-  group("$RegisterWithEmailAndPassowordUseCase", () {
+  group("$RegisterWithEmailAndPasswordUseCase", () {
     group(".call()", () {
       test(
         "given valid arguments"

@@ -1,7 +1,7 @@
 import '../../repositories/auth_repository.dart';
 
-class RegisterWithEmailAndPassowordUseCase {
-  RegisterWithEmailAndPassowordUseCase({
+class RegisterWithEmailAndPasswordUseCase {
+  RegisterWithEmailAndPasswordUseCase({
     required AuthRepository authRepository,
   }) : _authRepository = authRepository;
 
