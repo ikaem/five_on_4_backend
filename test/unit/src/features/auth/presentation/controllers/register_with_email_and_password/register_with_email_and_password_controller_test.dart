@@ -7,6 +7,8 @@ void main() {
     group(".call()", () {
       // should return expected response when user with email already exists
 
+      // should call register use case with hashed password
+
       // should return expected response when player with created authId is not found
 
       // should return expected response when player with created authId is found
