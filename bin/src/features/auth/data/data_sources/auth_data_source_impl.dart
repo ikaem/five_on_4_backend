@@ -29,7 +29,7 @@ class AuthDataSourceImpl implements AuthDataSource {
         final password = authValue.password;
         final hashedPassword = password == null
             ? null
-            : _cryptWrapper.getHashedPassword(password: password);
+            : _cryptWrapper.getHashedValue(value: password);
 
         final createdAt = DateTime.now().normalizedToSeconds;
         final updatedAt = createdAt;
@@ -76,7 +76,7 @@ class AuthDataSourceImpl implements AuthDataSource {
     required String email,
     required String password,
   }) async {
-    final hashedPassword = _cryptWrapper.getHashedPassword(password: password);
+    final hashedPassword = _cryptWrapper.getHashedValue(value: password);
     // TODO password will be hashed
     final select = _databaseWrapper.authRepo.select();
     final findAuth = select

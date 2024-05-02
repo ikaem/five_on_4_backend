@@ -7,21 +7,21 @@ class CryptWrapper {
 
   final String passwordSalt;
 
-  String getHashedPassword({required String password}) {
-    final Crypt crypt = Crypt.sha256(password, salt: passwordSalt);
+  String getHashedValue({required String value}) {
+    final Crypt crypt = Crypt.sha256(value, salt: passwordSalt);
     final hash = crypt.hash;
 
     return hash;
   }
 
-  bool checkIfPasswordsMatch({
-    required String providedPassword,
-    required String hashedPassword,
+  bool verifyValue({
+    required String value,
+    required String hashedValue,
   }) {
-    final Crypt crypt = Crypt.sha256(providedPassword, salt: passwordSalt);
-    final providedPassHash = crypt.hash;
+    final Crypt crypt = Crypt.sha256(value, salt: passwordSalt);
+    final providedValueHash = crypt.hash;
 
-    final isMatch = providedPassHash == hashedPassword;
+    final isMatch = providedValueHash == hashedValue;
     return isMatch;
 
     // TODO lets try like this

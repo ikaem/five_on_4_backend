@@ -28,7 +28,7 @@ Future<void> main() async {
   });
 
   setUp(() {
-    when(() => cryptWrapper.getHashedPassword(password: any(named: "password")))
+    when(() => cryptWrapper.getHashedValue(value: any(named: "password")))
         .thenReturn("hashedPassword");
   });
 
