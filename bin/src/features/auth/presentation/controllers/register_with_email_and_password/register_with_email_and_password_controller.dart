@@ -3,12 +3,14 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 
 import '../../../../core/domain/use_cases/get_hashed_value/get_hashed_value_use_case.dart';
+import '../../../../core/domain/values/response_body_value.dart';
 import '../../../../core/utils/extensions/request_extension.dart';
 import '../../../../core/utils/helpers/response_generator.dart';
 import '../../../../players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
 import '../../../domain/use_cases/get_auth_by_email/get_auth_by_email_use_case.dart';
 import '../../../domain/use_cases/register_with_email_and_password/register_with_email_and_password_use_case.dart';
 import '../../../utils/constants/register_with_email_and_password_request_body_key_constants.dart';
+import '../../../utils/helpers/generate_auth_response_payload.dart';
 
 class RegisterWithEmailAndPasswordController {
   RegisterWithEmailAndPasswordController({
@@ -41,10 +43,12 @@ class RegisterWithEmailAndPasswordController {
     final auth = await _getAuthByEmailUseCase(email: email);
 
     if (auth != null) {
+      final responseBody = ResponseBodyValue(
+          message: "Invalid request - email already in use.", ok: false);
       return generateResponse(
         statusCode: HttpStatus.badRequest,
-        isOk: false,
-        message: "Invalid request - email already in use.",
+        body: responseBody,
+        cookies: [],
       );
     }
 
@@ -71,13 +75,34 @@ class RegisterWithEmailAndPasswordController {
     final player = await _getPlayerByAuthIdUseCase(authId: authId);
     if (player == null) {
       // TODO this is major error - log it, and test it, and do something about it
+
+// TODO these could have factory or named constrcutors
+      final responseBody = ResponseBodyValue(
+        message: "Authenticated player not found.",
+        ok: false,
+      );
       return generateResponse(
         statusCode: HttpStatus.notFound,
-        isOk: false,
-        message: "Authenticated player not found.",
+        body: responseBody,
+        cookies: [],
       );
     }
 
-    // return Response(200, body: "Success");
+    final responseBody = ResponseBodyValue(
+      message: "User authenticated successfully.",
+      ok: true,
+      data: generateAuthOkResponseData(
+        playerId: player.id,
+        playerName: player.name,
+        playerNickname: player.nickname,
+      ),
+    );
+
+    return generateResponse(
+      statusCode: HttpStatus.ok,
+      body: responseBody,
+      // TODO this will need proper cookies
+      cookies: [],
+    );
   }
 }

@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 
 import '../../../../core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
+import '../../../../core/domain/values/response_body_value.dart';
 import '../../../../core/utils/extensions/request_extension.dart';
 import '../../../../core/utils/helpers/response_generator.dart';
 import '../../../../players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
@@ -75,10 +76,26 @@ class GoogleLoginController {
       expiresIn: Duration(days: 7),
     );
 
-    final responseData = generateAuthOkResponseData(
-      playerId: player.id,
-      playerName: player.name,
-      playerNickname: player.nickname,
+    // final responseData = generateAuthOkResponseData(
+    //   playerId: player.id,
+    //   playerName: player.name,
+    //   playerNickname: player.nickname,
+    // );
+
+    final responseBody = ResponseBodyValue(
+      message: "User authenticated successfully.",
+      ok: true,
+      data: generateAuthOkResponseData(
+        playerId: player.id,
+        playerNickname: player.nickname,
+        playerName: player.name,
+      ),
+    );
+
+    return generateResponse(
+      statusCode: HttpStatus.ok,
+      body: responseBody,
+      cookies: [authCookie],
     );
 
     /* 
@@ -99,6 +116,7 @@ class GoogleLoginController {
     
      */
 
+// TODO leave commented out for now to know how to handle cookies
     // final response = generateResponse(
     //   statusCode: HttpStatus.ok,
     //   isOk: true,

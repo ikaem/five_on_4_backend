@@ -41,8 +41,8 @@ Response generateTestOkResponse({
 }) {
   final payload = {
     "ok": true,
-    "data": responseData,
     "message": responseMessage,
+    "data": responseData,
   };
 
   return Response.ok(

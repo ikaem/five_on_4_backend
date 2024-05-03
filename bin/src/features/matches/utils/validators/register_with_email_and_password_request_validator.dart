@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 
 import '../../../auth/utils/constants/register_with_email_and_password_request_body_key_constants.dart';
+import '../../../core/domain/values/response_body_value.dart';
 import '../../../core/utils/constants/reg_exp_constants.dart';
 import '../../../core/utils/extensions/request_extension.dart';
 import '../../../core/utils/helpers/response_generator.dart';
@@ -16,27 +17,40 @@ class RegisterWithEmailAndPasswordRequestValidator {
     final email =
         body[RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value];
     if (email == null) {
+      final responseBody = ResponseBodyValue(
+        message: "Email is required.",
+        ok: false,
+      );
       return generateResponse(
         statusCode: HttpStatus.badRequest,
-        isOk: false,
-        message: "Email is required.",
+        body: responseBody,
+        // TODO no need for cookies if we haven't registered
+        cookies: [],
       );
     }
 
     if (email is! String) {
+      final responseBody = ResponseBodyValue(
+        message: "Invalid data type supplied for email.",
+        ok: false,
+      );
       return generateResponse(
         statusCode: HttpStatus.badRequest,
-        isOk: false,
-        message: "Invalid data type supplied for email.",
+        body: responseBody,
+        cookies: [],
       );
     }
 
     final isValidEmail = _checkIsValidEmail(email);
     if (!isValidEmail) {
+      final responseBody = ResponseBodyValue(
+        message: "Invalid email.",
+        ok: false,
+      );
       return generateResponse(
         statusCode: HttpStatus.badRequest,
-        isOk: false,
-        message: "Invalid email.",
+        body: responseBody,
+        cookies: [],
       );
     }
 
@@ -44,41 +58,61 @@ class RegisterWithEmailAndPasswordRequestValidator {
     final password = body[
         RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value];
     if (password == null) {
+      final responseBody = ResponseBodyValue(
+        message: "Password is required.",
+        ok: false,
+      );
       return generateResponse(
         statusCode: HttpStatus.badRequest,
-        isOk: false,
-        message: "Password is required.",
+        body: responseBody,
+        cookies: [],
       );
     }
     if (password is! String) {
+      final responseBody = ResponseBodyValue(
+        message: "Invalid data type supplied for password.",
+        ok: false,
+      );
       return generateResponse(
         statusCode: HttpStatus.badRequest,
-        isOk: false,
-        message: "Invalid data type supplied for password.",
+        body: responseBody,
+        cookies: [],
       );
     }
     if (password.length < 6) {
+      final responseBody = ResponseBodyValue(
+        message: "Password must be at least 6 characters long.",
+        ok: false,
+      );
       return generateResponse(
         statusCode: HttpStatus.badRequest,
-        isOk: false,
-        message: "Password must be at least 6 characters long.",
+        body: responseBody,
+        cookies: [],
       );
     }
     if (password.length > 20) {
+      final responseBody = ResponseBodyValue(
+        message: "Password cannot be longer than 20 characters.",
+        ok: false,
+      );
       return generateResponse(
         statusCode: HttpStatus.badRequest,
-        isOk: false,
-        message: "Password cannot be longer than 20 characters.",
+        body: responseBody,
+        cookies: [],
       );
     }
 
     final isLettersAndNumbersPassword =
         _checkIfContainsLettersAndNumbers(password);
     if (!isLettersAndNumbersPassword) {
+      final responseBody = ResponseBodyValue(
+        message: "Password has to contain both letters and numbers.",
+        ok: false,
+      );
       return generateResponse(
         statusCode: HttpStatus.badRequest,
-        isOk: false,
-        message: "Password has to contain both letters and numbers.",
+        body: responseBody,
+        cookies: [],
       );
     }
 
@@ -86,17 +120,26 @@ class RegisterWithEmailAndPasswordRequestValidator {
     final firstName = body[
         RegisterWithEmailAndPasswordRequestBodyKeyConstants.FIRST_NAME.value];
     if (firstName == null) {
+      final responseBody = ResponseBodyValue(
+        message: "First name is required.",
+        ok: false,
+      );
+
       return generateResponse(
         statusCode: HttpStatus.badRequest,
-        isOk: false,
-        message: "First name is required.",
+        body: responseBody,
+        cookies: [],
       );
     }
     if (firstName is! String) {
+      final responseBody = ResponseBodyValue(
+        message: "Invalid data type supplied for first name.",
+        ok: false,
+      );
       return generateResponse(
         statusCode: HttpStatus.badRequest,
-        isOk: false,
-        message: "Invalid data type supplied for first name.",
+        body: responseBody,
+        cookies: [],
       );
     }
 
@@ -104,17 +147,25 @@ class RegisterWithEmailAndPasswordRequestValidator {
     final lastName = body[
         RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value];
     if (lastName == null) {
+      final responseBody = ResponseBodyValue(
+        message: "Last name is required.",
+        ok: false,
+      );
       return generateResponse(
         statusCode: HttpStatus.badRequest,
-        isOk: false,
-        message: "Last name is required.",
+        body: responseBody,
+        cookies: [],
       );
     }
     if (lastName is! String) {
+      final responseBody = ResponseBodyValue(
+        message: "Invalid data type supplied for last name.",
+        ok: false,
+      );
       return generateResponse(
         statusCode: HttpStatus.badRequest,
-        isOk: false,
-        message: "Invalid data type supplied for last name.",
+        body: responseBody,
+        cookies: [],
       );
     }
 
@@ -122,17 +173,25 @@ class RegisterWithEmailAndPasswordRequestValidator {
     final nickname = body[
         RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value];
     if (nickname == null) {
+      final responseBody = ResponseBodyValue(
+        message: "Nickname is required.",
+        ok: false,
+      );
       return generateResponse(
         statusCode: HttpStatus.badRequest,
-        isOk: false,
-        message: "Nickname is required.",
+        body: responseBody,
+        cookies: [],
       );
     }
     if (nickname is! String) {
+      final responseBody = ResponseBodyValue(
+        message: "Invalid data type supplied for nickname.",
+        ok: false,
+      );
       return generateResponse(
         statusCode: HttpStatus.badRequest,
-        isOk: false,
-        message: "Invalid data type supplied for nickname.",
+        body: responseBody,
+        cookies: [],
       );
     }
 
