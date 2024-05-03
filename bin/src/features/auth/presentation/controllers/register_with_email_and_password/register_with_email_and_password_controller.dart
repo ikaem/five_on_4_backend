@@ -63,14 +63,21 @@ class RegisterWithEmailAndPasswordController {
     final authId = await _registerWithEmailAndPasswordUseCase(
       email: email,
       password: hashedPassword,
-      firstName: bodyMap[RegisterWithEmailAndPasswordRequestBodyKeyConstants
-          .FIRST_NAME.value] as String,
-      lastName: bodyMap[RegisterWithEmailAndPasswordRequestBodyKeyConstants
-          .LAST_NAME.value] as String,
-      nickname: bodyMap[RegisterWithEmailAndPasswordRequestBodyKeyConstants
-          .NICKNAME.value] as String,
+      firstName: firstName,
+      lastName: lastName,
+      nickname: nickname,
     );
 
-    return Response(200, body: "Success");
+    final player = await _getPlayerByAuthIdUseCase(authId: authId);
+    if (player == null) {
+      // TODO this is major error - log it, and test it, and do something about it
+      return generateResponse(
+        statusCode: HttpStatus.notFound,
+        isOk: false,
+        message: "Authenticated player not found.",
+      );
+    }
+
+    // return Response(200, body: "Success");
   }
 }

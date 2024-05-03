@@ -94,7 +94,7 @@ void main() {
       test(
         "given a valid request "
         "when .call() is called"
-        "then should call RegisterWithEmailAndPasswordUseCase.call with expected hashed password",
+        "then should call RegisterWithEmailAndPasswordUseCase.call with expected arguments",
         () async {
           // setup
           when(() => getAuthByEmailUseCase(email: any(named: "email")))
@@ -108,6 +108,8 @@ void main() {
                 lastName: any(named: "lastName"),
                 nickname: any(named: "nickname"),
               )).thenAnswer((_) async => 1);
+          when(() => getPlayerByAuthIdUseCase(authId: 1))
+              .thenAnswer((_) async => _testPlayerModel);
 
           // given
           when(() => request.readAsString())
@@ -170,12 +172,66 @@ void main() {
           final responseString = await response.readAsString();
 
           // then
+          final expectedResponse = generateTestNotFoundResponse(
+              responseMessage: "Authenticated player not found.");
+          final expectedResponseString = await expectedResponse.readAsString();
+
+          expect(responseString, equals(expectedResponseString));
+          expect(response.statusCode, equals(expectedResponse.statusCode));
 
           // cleanup
         },
       );
 
       // should return expected response when player with created authId is found
+      test(
+        "given valid request"
+        "when call() is called"
+        "then should return response with expected values",
+        () async {
+          // setup
+          when(() => getAuthByEmailUseCase(email: any(named: "email")))
+              .thenAnswer((_) async => null);
+          when(() => getHashedValueUseCase(value: any(named: "value")))
+              .thenReturn("hashedPassword");
+          when(() => registerWithEmailAndPasswordUseCase.call(
+                email: any(named: "email"),
+                password: any(named: "password"),
+                firstName: any(named: "firstName"),
+                lastName: any(named: "lastName"),
+                nickname: any(named: "nickname"),
+              )).thenAnswer((_) async => 1);
+          when(() => getPlayerByAuthIdUseCase(authId: 1))
+              .thenAnswer((_) async => _testPlayerModel);
+
+          // given
+          when(() => request.readAsString())
+              .thenAnswer((_) async => jsonEncode(requestBody));
+
+          // when
+          final response = await registerWithEmailAndPasswordController.call(
+            request,
+          );
+          final responseString = await response.readAsString();
+
+          // then
+          final expectedResponseData = {
+            "id": _testPlayerModel.id,
+            "name": _testPlayerModel.name,
+            "nickname": _testPlayerModel.nickname,
+          };
+          final expectedResponse = generateTestOkResponse(
+            responseData: expectedResponseData,
+            responseMessage: "User authenticated successfully.",
+          );
+          final expectedResponseString = await expectedResponse.readAsString();
+
+          expect(responseString, equals(expectedResponseString));
+          expect(response.statusCode, equals(expectedResponse.statusCode));
+
+          // cleanup
+        },
+      );
 
       // should return response with expected access token cookie when player with created authId is found
 

@@ -7,7 +7,7 @@ class RegisterWithEmailAndPasswordUseCase {
 
   final AuthRepository _authRepository;
 
-  Future<int?> call({
+  Future<int> call({
     required String email,
     required String password,
     required String firstName,
