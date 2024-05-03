@@ -203,7 +203,9 @@ void main() {
 
           // then
           final responseHeaders = response.headers;
-          final responseCookies = responseHeaders["Set-Cookie"];
+          // TODO just in case caps matter
+          // final responseCookies = responseHeaders["Set-Cookie"];
+          final responseCookies = responseHeaders[HttpHeaders.setCookieHeader];
 
           final cookieStrings = responseCookies?.split(",") ?? [];
 

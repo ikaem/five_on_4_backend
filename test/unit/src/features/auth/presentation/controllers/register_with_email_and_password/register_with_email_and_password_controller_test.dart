@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
@@ -9,6 +10,7 @@ import '../../../../../../../../bin/src/features/auth/domain/use_cases/register_
 import '../../../../../../../../bin/src/features/auth/presentation/controllers/register_with_email_and_password/register_with_email_and_password_controller.dart';
 import '../../../../../../../../bin/src/features/auth/utils/constants/register_with_email_and_password_request_body_key_constants.dart';
 import '../../../../../../../../bin/src/features/core/domain/models/auth/auth_model.dart';
+import '../../../../../../../../bin/src/features/core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
 import '../../../../../../../../bin/src/features/core/domain/use_cases/get_hashed_value/get_hashed_value_use_case.dart';
 import '../../../../../../../../bin/src/features/players/domain/models/player_model.dart';
 import '../../../../../../../../bin/src/features/players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
@@ -20,6 +22,8 @@ void main() {
   final registerWithEmailAndPasswordUseCase =
       _MockRegisterWithEmailAndPasswordUseCase();
   final getPlayerByAuthIdUseCase = _MockGetPlayerByAuthIdUseCase();
+  final createJWTAccessTokenCookieUseCase =
+      _MockCreateJWTAccessTokenCookieUseCase();
 
   final request = _MockRequest();
 
@@ -30,13 +34,19 @@ void main() {
     getHashedValueUseCase: getHashedValueUseCase,
     registerWithEmailAndPasswordUseCase: registerWithEmailAndPasswordUseCase,
     getPlayerByAuthIdUseCase: getPlayerByAuthIdUseCase,
+    createJWTAccessTokenCookieUseCase: createJWTAccessTokenCookieUseCase,
   );
+
+  setUpAll(() {
+    registerFallbackValue(Duration.zero);
+  });
 
   tearDown(() {
     reset(getAuthByEmailUseCase);
     reset(getHashedValueUseCase);
     reset(registerWithEmailAndPasswordUseCase);
     reset(getPlayerByAuthIdUseCase);
+    reset(createJWTAccessTokenCookieUseCase);
     reset(request);
   });
 
@@ -110,6 +120,12 @@ void main() {
               )).thenAnswer((_) async => 1);
           when(() => getPlayerByAuthIdUseCase(authId: 1))
               .thenAnswer((_) async => _testPlayerModel);
+          when(
+            () => createJWTAccessTokenCookieUseCase.call(
+              payload: any(named: "payload"),
+              expiresIn: any(named: "expiresIn"),
+            ),
+          ).thenReturn(testAuthCookie);
 
           // given
           when(() => request.readAsString())
@@ -203,6 +219,12 @@ void main() {
               )).thenAnswer((_) async => 1);
           when(() => getPlayerByAuthIdUseCase(authId: 1))
               .thenAnswer((_) async => _testPlayerModel);
+          when(
+            () => createJWTAccessTokenCookieUseCase.call(
+              payload: any(named: "payload"),
+              expiresIn: any(named: "expiresIn"),
+            ),
+          ).thenReturn(testAuthCookie);
 
           // given
           when(() => request.readAsString())
@@ -234,6 +256,54 @@ void main() {
       );
 
       // should return response with expected access token cookie when player with created authId is found
+      test(
+        "given valid request"
+        "when call() is called"
+        "then should return response with expected cookie",
+        () async {
+          // setup
+          when(() => getAuthByEmailUseCase(email: any(named: "email")))
+              .thenAnswer((_) async => null);
+          when(() => getHashedValueUseCase(value: any(named: "value")))
+              .thenReturn("hashedPassword");
+          when(() => registerWithEmailAndPasswordUseCase.call(
+                email: any(named: "email"),
+                password: any(named: "password"),
+                firstName: any(named: "firstName"),
+                lastName: any(named: "lastName"),
+                nickname: any(named: "nickname"),
+              )).thenAnswer((_) async => 1);
+          when(() => getPlayerByAuthIdUseCase(authId: 1))
+              .thenAnswer((_) async => _testPlayerModel);
+          when(
+            () => createJWTAccessTokenCookieUseCase.call(
+              payload: any(named: "payload"),
+              expiresIn: any(named: "expiresIn"),
+            ),
+          ).thenReturn(testAuthCookie);
+
+          // given
+          when(() => request.readAsString())
+              .thenAnswer((_) async => jsonEncode(requestBody));
+
+          // when
+          final response = await registerWithEmailAndPasswordController.call(
+            request,
+          );
+
+          // then
+          final responseCookies = response.headers[HttpHeaders.setCookieHeader];
+          final cookieStrings = responseCookies?.split(",") ?? [];
+          final cookies = cookieStrings.map((cookieString) {
+            return Cookie.fromSetCookieValue(cookieString);
+          }).toList();
+
+          expect(cookies, hasLength(1));
+          expect(cookies.first.toString(), equals(testAuthCookie.toString()));
+
+          // cleanup
+        },
+      );
 
       // should return response with expected access token in cookie when player with created authId is found
     });
@@ -254,6 +324,9 @@ class _MockGetPlayerByAuthIdUseCase extends Mock
 class _MockRegisterWithEmailAndPasswordUseCase extends Mock
     implements RegisterWithEmailAndPasswordUseCase {}
 
+class _MockCreateJWTAccessTokenCookieUseCase extends Mock
+    implements CreateJWTAccessTokenCookieUseCase {}
+
 final _testAuthModel = AuthModel(
   id: 1,
   email: "email",
@@ -266,4 +339,8 @@ final _testPlayerModel = PlayerModel(
   authId: 1,
   nickname: "nickname",
   name: "name",
+);
+
+final testAuthCookie = Cookie.fromSetCookieValue(
+  "accessToken=token; HttpOnly; Secure; Path=/",
 );

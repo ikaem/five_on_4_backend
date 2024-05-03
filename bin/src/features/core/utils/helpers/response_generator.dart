@@ -29,8 +29,10 @@ Response generateResponse({
     statusCode,
     body: jsonEncode(body.toJson()),
     headers: {
-      "Content-Type": "application/json",
-      "Set-Cookie": cookies.map((cookie) => cookie.toString()).toList(),
+      HttpHeaders.contentTypeHeader: "application/json",
+      // "Set-Cookie": cookies.map((cookie) => cookie.toString()).toList(),
+      HttpHeaders.setCookieHeader:
+          cookies.map((cookie) => cookie.toString()).toList(),
     },
   );
 
