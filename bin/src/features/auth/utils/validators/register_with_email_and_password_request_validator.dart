@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 
-import '../../../auth/utils/constants/register_with_email_and_password_request_body_key_constants.dart';
+import '../constants/register_with_email_and_password_request_body_key_constants.dart';
 import '../../../core/domain/values/response_body_value.dart';
 import '../../../core/utils/constants/reg_exp_constants.dart';
 import '../../../core/utils/extensions/request_extension.dart';

@@ -87,7 +87,10 @@ void main() {
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
-              responseMessage: "Invalid request - email already in use.");
+            responseMessage: "Invalid request - email already in use.",
+            // TODO this needs to be asserted as well
+            cookies: [],
+          );
           final expectedResponseString = await expectedResponse.readAsString();
 
           expect(responseString, equals(expectedResponseString));

@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 
 Response generateTestBadRequestResponse({
   required String responseMessage,
+  required List<Cookie> cookies,
 }) {
   return Response.badRequest(
     body: jsonEncode(
@@ -13,8 +15,11 @@ Response generateTestBadRequestResponse({
       },
     ),
     headers: {
-      "content-type": "application/json",
+      // "content-type": "application/json",
+      HttpHeaders.contentTypeHeader: "application/json",
       // TODO cookies will need to come here
+      HttpHeaders.setCookieHeader:
+          cookies.map((cookie) => cookie.toString()).toList(),
     },
   );
 }

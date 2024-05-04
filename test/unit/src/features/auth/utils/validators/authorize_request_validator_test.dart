@@ -52,7 +52,7 @@ void main() {
           // given
           when(() => request.headers).thenReturn({});
 
-          // // when
+          // when
           final response =
               await requestAuthorizationValidator.validate(request);
 
