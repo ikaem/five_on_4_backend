@@ -6,7 +6,7 @@ import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
 import '../../../../../../../bin/src/features/auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
-import '../../../../../../../bin/src/features/auth/utils/validators/request_authorization_validator.dart';
+import '../../../../../../../bin/src/features/auth/utils/validators/authorize_request_validator.dart';
 import '../../../../../../../bin/src/features/core/domain/models/auth/auth_model.dart';
 import '../../../../../../../bin/src/features/core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
 import '../../../../../../../bin/src/features/core/domain/use_cases/get_cookie_by_name_in_string/get_cookie_by_name_in_string_use_case.dart';
@@ -23,7 +23,7 @@ void main() {
   final getAuthByIdUseCase = _MockGetAuthByIdUseCase();
 
   // tested class
-  final requestAuthorizationValidator = RequestAuthorizationValidator(
+  final requestAuthorizationValidator = AuthorizeRequestValidator(
     getCookieByNameInStringUseCase: getCookieByNameInStringUseCase,
     getAccessTokenDataFromAccessJwtUseCase:
         getAccessTokenDataFromAccessJwtUseCase,
@@ -38,7 +38,7 @@ void main() {
     reset(getAuthByIdUseCase);
   });
 
-  group("$RequestAuthorizationValidator", () {
+  group("$AuthorizeRequestValidator", () {
     group(".validate()", () {
       // final validResponse = Response.ok("ok");
 

@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/auth/utils/middlewares/request_authorization_middleware_wrapper.dart';
+import '../../../../../../../bin/src/features/auth/utils/middlewares/authorize_request_middleware_wrapper.dart';
 // TODO this can go away
 
 void main() {

@@ -8,8 +8,8 @@ import '../../../features/auth/domain/use_cases/get_auth_by_id/get_auth_by_id_us
 import '../../../features/auth/domain/use_cases/google_login/google_login_use_case.dart';
 import '../../../features/auth/presentation/controllers/google_login/google_login_controller.dart';
 import '../../../features/auth/presentation/router/auth_router.dart';
-import '../../../features/auth/utils/middlewares/request_authorization_middleware_wrapper.dart';
-import '../../../features/auth/utils/validators/request_authorization_validator.dart';
+import '../../../features/auth/utils/middlewares/authorize_request_middleware_wrapper.dart';
+import '../../../features/auth/utils/validators/authorize_request_validator.dart';
 import '../../../features/core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
 import '../../../features/core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
 import '../../../features/core/domain/use_cases/get_cookie_by_name_in_string/get_cookie_by_name_in_string_use_case.dart';
@@ -137,7 +137,7 @@ class DependenciesInitializerWrapper {
         CreateMatchController(createMatchUseCase: createMatchUseCase);
 
     // validators
-    final requestAuthorizationValidator = RequestAuthorizationValidator(
+    final requestAuthorizationValidator = AuthorizeRequestValidator(
       getCookieByNameInStringUseCase: getCookieByNameInStringUseCase,
       getAccessTokenDataFromAccessJwtUseCase:
           getAccessTokenDataFromAccessJwtUseCase,
