@@ -42,13 +42,13 @@ Response generateTestNotFoundResponse({
 }
 
 Response generateTestOkResponse({
-  required Map<String, dynamic> responseData,
+  required Map<String, dynamic>? responseData,
   required String responseMessage,
 }) {
   final payload = {
     "ok": true,
     "message": responseMessage,
-    "data": responseData,
+    if (responseData != null) "data": responseData,
   };
 
   return Response.ok(

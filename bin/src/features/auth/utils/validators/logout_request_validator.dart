@@ -9,6 +9,7 @@ import '../../../core/domain/values/access_token_data_value.dart';
 import '../../../core/domain/values/response_body_value.dart';
 import '../../../core/utils/helpers/response_generator.dart';
 
+// TODO this is porbably not needed - this and matching middleware can be repalced by exiting authoriuzeRequest middleware and validator
 class LogoutRequestValidator {
   const LogoutRequestValidator({
     required GetCookieByNameInStringUseCase getCookieByNameInStringUseCase,

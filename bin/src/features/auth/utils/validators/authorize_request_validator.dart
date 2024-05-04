@@ -11,6 +11,8 @@ import '../../../core/domain/use_cases/get_access_token_data_from_access_jwt/get
 import '../../../core/domain/use_cases/get_cookie_by_name_in_string/get_cookie_by_name_in_string_use_case.dart';
 import '../../../core/domain/values/access_token_data_value.dart';
 
+// TODO this middleware and validator should be used on logout too
+
 // TODO this needs to be tested
 // TODO create validator interface somewhere
 class AuthorizeRequestValidator {
@@ -46,6 +48,7 @@ class AuthorizeRequestValidator {
       cookieName: "accessToken",
     );
     if (accessTokenCookie == null) {
+      // TODO this should never retrun cookie because this is not authoirized then anyway
       return _generateBadRequestResponse(
         responseMessage: "No accessToken cookie found in request.",
       );
