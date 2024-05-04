@@ -10,13 +10,14 @@ import '../../../../../../../bin/src/features/matches/presentation/router/matche
 import '../../../../../../../bin/src/features/matches/utils/middlewares/match_create_request_middleware_wrapper.dart';
 import '../../../../../../../bin/src/wrappers/local/custom_middleware/custom_middleware_wrapper.dart';
 
-Middleware function = (innerHandler) {
-  return (request) {
-    return Future.sync(() => innerHandler(request)).then((response) {
-      return response;
-    });
-  };
-};
+// TODO stay here as a reference
+// Middleware function = (innerHandler) {
+//   return (request) {
+//     return Future.sync(() => innerHandler(request)).then((response) {
+//       return response;
+//     });
+//   };
+// };
 
 void main() {
   // controllers
