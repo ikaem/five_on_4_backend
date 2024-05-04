@@ -1,11 +1,15 @@
-import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 import '../controllers/google_login/google_login_controller.dart';
+import '../controllers/logout/logout_controller.dart';
+import '../controllers/register_with_email_and_password/register_with_email_and_password_controller.dart';
 
 class AuthRouter {
   AuthRouter({
     required GoogleLoginController googleLoginController,
+    required RegisterWithEmailAndPasswordController
+        registerWithEmailAndPasswordController,
+    required LogoutController logoutController,
   }) {
     final authRouter = Router();
 
