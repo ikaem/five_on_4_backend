@@ -126,19 +126,58 @@ Future<void> main() async {
       // when email and password auth is created
     });
 
-    group(".getAuthByEmailAndPassword", () {
+    group(".getAuthByEmailAndHashedPassword", () {
       test(
-        "given <pre-condition to the test>"
-        "when <behavior we are specifying>"
-        "then should <state we expect to happen>",
+        "given auth does NOT exist in db"
+        "when .getAuthByEmailAndHashedPassword() is called with valid email and password"
+        "then should return null",
         () async {
           // setup
+          final email = testAuthCompanion.email.value;
+          final hashedPassword = testAuthCompanion.password.value;
 
           // given
 
           // when
+          final auth = await authDataSource.getAuthByEmailAndHashedPassword(
+            email: email,
+            hashedPassword: hashedPassword!,
+          );
 
           // then
+          expect(
+            auth,
+            isNull,
+          );
+
+          // cleanup
+        },
+      );
+
+      test(
+        "given auth exists in db"
+        "when .getAuthByEmailAndHashedPassword() is called with valid email and password"
+        "then should return expected auth",
+        () async {
+          // setup
+          final email = testAuthCompanion.email.value;
+          final hashedPassword = testAuthCompanion.password.value;
+
+          // given
+          await testDatabaseWrapper.databaseWrapper.authRepo
+              .insertOne(testAuthCompanion);
+
+          // when
+          final auth = await authDataSource.getAuthByEmailAndHashedPassword(
+            email: email,
+            hashedPassword: hashedPassword!,
+          );
+
+          // then
+          expect(
+            auth,
+            equals(testAuthEntityData),
+          );
 
           // cleanup
         },
