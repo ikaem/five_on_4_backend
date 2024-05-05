@@ -3,13 +3,13 @@ import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 
+import '../../../../../../test/unit/src/features/matches/utils/mixins/string_checker_mixin.dart';
 import '../constants/register_with_email_and_password_request_body_key_constants.dart';
 import '../../../core/domain/values/response_body_value.dart';
-import '../../../core/utils/constants/reg_exp_constants.dart';
 import '../../../core/utils/extensions/request_extension.dart';
 import '../../../core/utils/helpers/response_generator.dart';
 
-class RegisterWithEmailAndPasswordRequestValidator {
+class RegisterWithEmailAndPasswordRequestValidator with StringCheckerMixin {
   FutureOr<Response?> validate(Request request) async {
     final body = await request.parseBody();
 
@@ -41,7 +41,7 @@ class RegisterWithEmailAndPasswordRequestValidator {
       );
     }
 
-    final isValidEmail = _checkIsValidEmail(email);
+    final isValidEmail = checkIsValidEmail(email);
     if (!isValidEmail) {
       final responseBody = ResponseBodyValue(
         message: "Invalid email.",
@@ -103,7 +103,7 @@ class RegisterWithEmailAndPasswordRequestValidator {
     }
 
     final isLettersAndNumbersPassword =
-        _checkIfContainsLettersAndNumbers(password);
+        checkIfContainsLettersAndNumbers(password);
     if (!isLettersAndNumbersPassword) {
       final responseBody = ResponseBodyValue(
         message: "Password has to contain both letters and numbers.",
@@ -198,21 +198,21 @@ class RegisterWithEmailAndPasswordRequestValidator {
     return null;
   }
 
-  bool _checkIsValidEmail(String email) {
-    final emailRegExp = RegExp(
-      RegExpConstants.EMAIL.value,
-    );
+  // bool _checkIsValidEmail(String email) {
+  //   final emailRegExp = RegExp(
+  //     RegExpConstants.EMAIL.value,
+  //   );
 
-    final isValid = emailRegExp.hasMatch(email);
-    return isValid;
-  }
+  //   final isValid = emailRegExp.hasMatch(email);
+  //   return isValid;
+  // }
 
-  bool _checkIfContainsLettersAndNumbers(String value) {
-    final alphaNumericRegExp = RegExp(
-      RegExpConstants.LETTERS_AND_NUMBERS.value,
-    );
+  // bool _checkIfContainsLettersAndNumbers(String value) {
+  //   final alphaNumericRegExp = RegExp(
+  //     RegExpConstants.LETTERS_AND_NUMBERS.value,
+  //   );
 
-    final isValid = alphaNumericRegExp.hasMatch(value);
-    return isValid;
-  }
+  //   final isValid = alphaNumericRegExp.hasMatch(value);
+  //   return isValid;
+  // }
 }
