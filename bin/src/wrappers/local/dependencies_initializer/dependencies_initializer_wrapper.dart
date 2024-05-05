@@ -7,14 +7,17 @@ import '../../../features/auth/data/data_sources/auth_data_source_impl.dart';
 import '../../../features/auth/domain/repositories/auth_repository.dart';
 import '../../../features/auth/domain/repositories/auth_repository_impl.dart';
 import '../../../features/auth/domain/use_cases/get_auth_by_email/get_auth_by_email_use_case.dart';
+import '../../../features/auth/domain/use_cases/get_auth_by_email_and_hashed_password/get_auth_by_email_and_hashed_password_use_case.dart';
 import '../../../features/auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
 import '../../../features/auth/domain/use_cases/google_login/google_login_use_case.dart';
 import '../../../features/auth/domain/use_cases/register_with_email_and_password/register_with_email_and_password_use_case.dart';
 import '../../../features/auth/presentation/controllers/google_login/google_login_controller.dart';
+import '../../../features/auth/presentation/controllers/login/login_controller.dart';
 import '../../../features/auth/presentation/controllers/logout/logout_controller.dart';
 import '../../../features/auth/presentation/controllers/register_with_email_and_password/register_with_email_and_password_controller.dart';
 import '../../../features/auth/presentation/router/auth_router.dart';
 import '../../../features/auth/utils/middlewares/authorize_request_middleware_wrapper.dart';
+import '../../../features/auth/utils/middlewares/login_request_middleware_wrapper.dart';
 import '../../../features/auth/utils/middlewares/register_with_email_and_password_request_middleware_wrapper.dart';
 import '../../../features/auth/utils/validators/authorize_request_validator.dart';
 import '../../../features/core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
@@ -249,6 +252,7 @@ typedef InitializedUseCases = (
   GetAuthByEmailUseCase getAuthByEmailUseCase,
   GetHashedValueUseCase getHashedValueUseCase,
   RegisterWithEmailAndPasswordUseCase registerWithEmailAndPasswordUseCase,
+  GetAuthByEmailAndHashedPasswordUseCase getAuthByEmailAndHashedPasswordUseCase,
 );
 InitializedUseCases getInitializedUseCases({
   required InitializedRepositories initializedRepositories,
@@ -298,6 +302,10 @@ InitializedUseCases getInitializedUseCases({
       RegisterWithEmailAndPasswordUseCase(
     authRepository: authRepository,
   );
+  final getAuthByEmailAndHashedPasswordUseCase =
+      GetAuthByEmailAndHashedPasswordUseCase(
+    authRepository: authRepository,
+  );
 
   return (
     googleLoginUseCase,
@@ -312,6 +320,7 @@ InitializedUseCases getInitializedUseCases({
     getAuthByEmailUseCase,
     getHashedValueUseCase,
     registerWithEmailAndPasswordUseCase,
+    getAuthByEmailAndHashedPasswordUseCase,
   );
 }
 
@@ -321,6 +330,7 @@ typedef InitializedControllers = (
   CreateMatchController createMatchController,
   LogoutController logoutController,
   RegisterWithEmailAndPasswordController registerWithEmailAndPasswordController,
+  LoginController loginController,
 );
 InitializedControllers getInitializedControllers({
   required InitializedUseCases initializedUseCases,
@@ -338,6 +348,7 @@ InitializedControllers getInitializedControllers({
     getAuthByEmailUseCase,
     getHashedValueUseCase,
     registerWithEmailAndPasswordUseCase,
+    getAuthByEmailAndHashedPasswordUseCase,
   ) = initializedUseCases;
 
   final googleLoginController = GoogleLoginController(
@@ -359,6 +370,13 @@ InitializedControllers getInitializedControllers({
     getPlayerByAuthIdUseCase: getPlayerByAuthIdUseCase,
     createJWTAccessTokenCookieUseCase: createJWTAccessTokenCookieUseCase,
   );
+  final loginController = LoginController(
+    getAuthByEmailAndHashedPasswordUseCase:
+        getAuthByEmailAndHashedPasswordUseCase,
+    getPlayerByAuthIdUseCase: getPlayerByAuthIdUseCase,
+    getHashedValueUseCase: getHashedValueUseCase,
+    createJWTAccessTokenCookieUseCase: createJWTAccessTokenCookieUseCase,
+  );
 
   return (
     googleLoginController,
@@ -366,6 +384,7 @@ InitializedControllers getInitializedControllers({
     createMatchController,
     logoutController,
     registerWithEmailAndPasswordController,
+    loginController,
   );
 }
 
@@ -389,6 +408,7 @@ InitializedValidators getInitializedValidators({
     _,
     _,
     _,
+    _,
   ) = initializedUseCases;
 
   final requestAuthorizationValidator = AuthorizeRequestValidator(
@@ -406,10 +426,12 @@ InitializedValidators getInitializedValidators({
   );
 }
 
+// TODO maybe replace these patterns with classes
 typedef InitializedMiddlewareWrappers = (
   AuthorizeRequestMiddlewareWrapper requestAuthorizationMiddleware,
   MatchCreateRequestMiddlewareWrapper matchCreateRequestMiddleware,
   RegisterWithEmailAndPasswordRequestMiddlewareWrapper registerWithEmailAndPasswordRequestMiddleware,
+  LoginRequestMiddlewareWrapper loginRequestMiddlewareWrapper,
 );
 InitializedMiddlewareWrappers getInitializedMiddlewareWrappers({
   required InitializedValidators initializedValidators,
@@ -431,10 +453,15 @@ InitializedMiddlewareWrappers getInitializedMiddlewareWrappers({
     requestHandler: requestAuthorizationValidator.validate,
   );
 
+  final loginRequestMiddlewareWrapper = LoginRequestMiddlewareWrapper(
+    requestHandler: requestAuthorizationValidator.validate,
+  );
+
   return (
     requestAuthorizationMiddleware,
     matchCreateRequestMiddleware,
     registerWithEmailAndPasswordRequestMiddleware,
+    loginRequestMiddlewareWrapper,
   );
 }
 
@@ -452,12 +479,14 @@ InitializedRouters getInitializedRouters({
     createMatchController,
     logoutController,
     registerWithEmailAndPasswordController,
+    loginController,
   ) = initializedControllers;
 
   final (
     requestAuthorizationMiddleware,
     matchCreateRequestMiddleware,
     registerWithEmailAndPasswordRequestMiddleware,
+    loginRequestMiddlewareWrapper,
   ) = initializedMiddlewareWrappers;
 
   final authRouter = AuthRouter(
@@ -465,9 +494,11 @@ InitializedRouters getInitializedRouters({
     registerWithEmailAndPasswordController:
         registerWithEmailAndPasswordController,
     logoutController: logoutController,
+    loginController: loginController,
     authorizeRequestMiddlewareWrapper: requestAuthorizationMiddleware,
     registerWithEmailAndPasswordRequestMiddlewareWrapper:
         registerWithEmailAndPasswordRequestMiddleware,
+    loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
   );
 
   final matchesRouter = MatchesRouter(
