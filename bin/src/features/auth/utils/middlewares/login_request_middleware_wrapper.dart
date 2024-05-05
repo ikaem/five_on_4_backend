@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:shelf/shelf.dart';
-import 'package:shelf/src/middleware.dart';
 
 import '../../../../wrappers/local/custom_middleware/custom_middleware_wrapper.dart';
 

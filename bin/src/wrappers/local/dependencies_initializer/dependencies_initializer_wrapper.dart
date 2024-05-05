@@ -20,6 +20,7 @@ import '../../../features/auth/utils/middlewares/authorize_request_middleware_wr
 import '../../../features/auth/utils/middlewares/login_request_middleware_wrapper.dart';
 import '../../../features/auth/utils/middlewares/register_with_email_and_password_request_middleware_wrapper.dart';
 import '../../../features/auth/utils/validators/authorize_request_validator.dart';
+import '../../../features/auth/utils/validators/login_request_validator.dart';
 import '../../../features/core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
 import '../../../features/core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
 import '../../../features/core/domain/use_cases/get_cookie_by_name_in_string/get_cookie_by_name_in_string_use_case.dart';
@@ -391,6 +392,7 @@ InitializedControllers getInitializedControllers({
 typedef InitializedValidators = (
   AuthorizeRequestValidator requestAuthorizationValidator,
   MatchCreateRequestValidator matchCreateRequestValidator,
+  LoginRequestValidator loginRequestValidator,
 );
 InitializedValidators getInitializedValidators({
   required InitializedUseCases initializedUseCases,
@@ -419,10 +421,12 @@ InitializedValidators getInitializedValidators({
     getAuthByIdUseCase: getAuthByIdUseCase,
   );
   final matchCreateRequestValidator = MatchCreateRequestValidator();
+  final loginRequestValidator = LoginRequestValidator();
 
   return (
     requestAuthorizationValidator,
     matchCreateRequestValidator,
+    loginRequestValidator,
   );
 }
 
@@ -439,6 +443,7 @@ InitializedMiddlewareWrappers getInitializedMiddlewareWrappers({
   final (
     requestAuthorizationValidator,
     matchCreateRequestValidator,
+    loginRequestValidator,
   ) = initializedValidators;
 
   final requestAuthorizationMiddleware = AuthorizeRequestMiddlewareWrapper(
@@ -454,7 +459,7 @@ InitializedMiddlewareWrappers getInitializedMiddlewareWrappers({
   );
 
   final loginRequestMiddlewareWrapper = LoginRequestMiddlewareWrapper(
-    requestHandler: requestAuthorizationValidator.validate,
+    requestHandler: loginRequestValidator.validate,
   );
 
   return (
