@@ -27,6 +27,7 @@ Response generateTestBadRequestResponse({
 
 Response generateTestNotFoundResponse({
   required String responseMessage,
+  required List<Cookie>? cookies,
 }) {
   return Response.notFound(
     jsonEncode(
@@ -36,7 +37,10 @@ Response generateTestNotFoundResponse({
       },
     ),
     headers: {
-      "Content-Type": "application/json",
+      HttpHeaders.contentTypeHeader: "application/json",
+      if (cookies != null)
+        HttpHeaders.setCookieHeader:
+            cookies.map((cookie) => cookie.toString()).toList(),
     },
   );
 }
@@ -55,6 +59,26 @@ Response generateTestOkResponse({
     jsonEncode(payload),
     headers: {
       "Content-Type": "application/json",
+    },
+  );
+}
+
+Response generateTestUnauthorizedResponse({
+  required String responseMessage,
+  required List<Cookie>? cookies,
+}) {
+  return Response.unauthorized(
+    jsonEncode(
+      {
+        "ok": false,
+        "message": responseMessage,
+      },
+    ),
+    headers: {
+      HttpHeaders.contentTypeHeader: "application/json",
+      if (cookies != null)
+        HttpHeaders.setCookieHeader:
+            cookies.map((cookie) => cookie.toString()).toList(),
     },
   );
 }

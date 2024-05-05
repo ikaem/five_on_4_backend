@@ -54,6 +54,7 @@ class RegisterWithEmailAndPasswordController {
       return generateResponse(
         statusCode: HttpStatus.badRequest,
         body: responseBody,
+        // TODO these should always be null really
         cookies: [],
       );
     }
@@ -99,6 +100,7 @@ class RegisterWithEmailAndPasswordController {
     );
     final authCookie = _createJWTAccessTokenCookieUseCase(
       payload: authAcessTokenPayload,
+      // TODO this is liable to mistake when used in different places - abstract it better
       expiresIn: const Duration(days: 7),
     );
 

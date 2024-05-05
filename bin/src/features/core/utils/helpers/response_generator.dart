@@ -11,7 +11,7 @@ import '../../domain/values/response_body_value.dart';
 Response generateResponse({
   required int statusCode,
   required ResponseBodyValue body,
-  required List<Cookie> cookies,
+  required List<Cookie>? cookies,
   // required bool isOk,
   // required String message,
   // Map<String, Object>? data,
@@ -31,8 +31,9 @@ Response generateResponse({
     headers: {
       HttpHeaders.contentTypeHeader: "application/json",
       // "Set-Cookie": cookies.map((cookie) => cookie.toString()).toList(),
-      HttpHeaders.setCookieHeader:
-          cookies.map((cookie) => cookie.toString()).toList(),
+      if (cookies != null)
+        HttpHeaders.setCookieHeader:
+            cookies.map((cookie) => cookie.toString()).toList(),
     },
   );
 

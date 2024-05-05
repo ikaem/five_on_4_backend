@@ -192,7 +192,9 @@ void main() {
 
           // then
           final expectedResponse = generateTestNotFoundResponse(
-              responseMessage: "Authenticated player not found.");
+            responseMessage: "Authenticated player not found.",
+            cookies: null,
+          );
           final expectedResponseString = await expectedResponse.readAsString();
 
           expect(responseString, equals(expectedResponseString));
@@ -307,8 +309,6 @@ void main() {
           // cleanup
         },
       );
-
-      // should return response with expected access token in cookie when player with created authId is found
     });
   });
 }
