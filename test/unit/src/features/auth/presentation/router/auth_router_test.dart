@@ -84,7 +84,82 @@ void main() {
   });
 
   group("$AuthRouter", () {
-    group("post /logout", () => null)
+    group(
+      "post /logout",
+      () {
+        final realRequest =
+            Request("post", Uri.parse("https://example.com/logout"));
+
+        test(
+          "given LogoutController instance"
+          "when a request to the endpoint is made"
+          "then should call the LogoutController's request handler",
+          () async {
+            // setup
+            final authRouter = AuthRouter(
+              googleLoginController: googleLoginController,
+              registerWithEmailAndPasswordController:
+                  registerWithEmailAndPasswordController,
+              logoutController: logoutController,
+              registerWithEmailAndPasswordRequestMiddlewareWrapper:
+                  registerWithEmailAndPasswordRequestMiddlewareWrapper,
+              authorizeRequestMiddlewareWrapper:
+                  authorizeRequestMiddlewareWrapper,
+            );
+
+            // given
+
+            // when
+            await authRouter.router(realRequest);
+
+            // then
+            final captured =
+                verify(() => logoutController.call(captureAny())).captured;
+            final capturedRequest = captured.first as Request;
+
+            expect(capturedRequest.method, equals(realRequest.method));
+            expect(capturedRequest.url, equals(realRequest.url));
+
+            // cleanup
+          },
+        );
+
+        test(
+          "given AuthorizeRequestMiddlewareWrapper instance"
+          "when a request to the endpoint is made"
+          "then should call the AuthorizeRequestMiddlewareWrapper's request handler",
+          () async {
+            // setup
+            final authRouter = AuthRouter(
+              googleLoginController: googleLoginController,
+              registerWithEmailAndPasswordController:
+                  registerWithEmailAndPasswordController,
+              logoutController: logoutController,
+              registerWithEmailAndPasswordRequestMiddlewareWrapper:
+                  registerWithEmailAndPasswordRequestMiddlewareWrapper,
+              authorizeRequestMiddlewareWrapper:
+                  authorizeRequestMiddlewareWrapper,
+            );
+
+            // given
+
+            // when
+            await authRouter.router(realRequest);
+
+            // then
+            final captured = verify(
+              () => authorizeRequestHandler.call(captureAny()),
+            ).captured;
+            final capturedRequest = captured.first as Request;
+
+            expect(capturedRequest.method, equals(realRequest.method));
+            expect(capturedRequest.url, equals(realRequest.url));
+
+            // cleanup
+          },
+        );
+      },
+    );
     group(
       "post /register",
       () {

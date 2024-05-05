@@ -37,6 +37,17 @@ class AuthRouter {
           ),
     );
 
+    authRouter.post(
+      "/logout",
+      Pipeline()
+          .addMiddleware(
+            authorizeRequestMiddlewareWrapper(),
+          )
+          .addHandler(
+            logoutController.call,
+          ),
+    );
+
     _router = authRouter;
   }
 
