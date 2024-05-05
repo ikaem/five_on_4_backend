@@ -5,7 +5,7 @@ import '../../utils/constants/auth_type_constants.dart';
 sealed class NewAuthDataValue extends Equatable {
   const NewAuthDataValue({
     required this.email,
-    required this.password,
+    required this.hashedPassword,
     required this.authType,
     // required this.createdAt,
     // required this.updatedAt,
@@ -15,7 +15,7 @@ sealed class NewAuthDataValue extends Equatable {
   });
 
   final String email;
-  final String? password;
+  final String? hashedPassword;
   final AuthTypeConstants authType;
   // final DateTime createdAt;
   // final DateTime updatedAt;
@@ -28,7 +28,7 @@ sealed class NewAuthDataValue extends Equatable {
   @override
   List<Object?> get props => [
         email,
-        password,
+        hashedPassword,
         authType,
         // createdAt,
         // updatedAt,
@@ -41,7 +41,7 @@ sealed class NewAuthDataValue extends Equatable {
 class NewAuthDataValueEmailPassword extends NewAuthDataValue {
   const NewAuthDataValueEmailPassword({
     required super.email,
-    required String super.password,
+    required String super.hashedPassword,
     // required super.authType,
     // required super.createdAt,
     // required super.updatedAt,
@@ -62,7 +62,7 @@ class NewAuthDataValueGoogle extends NewAuthDataValue {
     required super.lastName,
     required super.nickname,
   }) : super(
-          password: null,
+          hashedPassword: null,
           authType: AuthTypeConstants.google,
         );
 }

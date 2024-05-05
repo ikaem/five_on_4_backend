@@ -72,7 +72,7 @@ class RegisterWithEmailAndPasswordController {
 
     final authId = await _registerWithEmailAndPasswordUseCase(
       email: email,
-      password: hashedPassword,
+      hashedPassword: hashedPassword,
       firstName: firstName,
       lastName: lastName,
       nickname: nickname,

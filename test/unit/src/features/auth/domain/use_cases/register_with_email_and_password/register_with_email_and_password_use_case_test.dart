@@ -27,7 +27,7 @@ void main() {
           // setup
           when(() => authRepository.register(
                 email: any(named: "email"),
-                password: any(named: "password"),
+                hashedPassword: any(named: "password"),
                 firstName: any(named: "firstName"),
                 lastName: any(named: "lastName"),
                 nickname: any(named: "nickname"),
@@ -44,7 +44,7 @@ void main() {
           // when
           final authId = await registerWithEmailAndPassowordUseCase.call(
             email: email,
-            password: password,
+            hashedPassword: password,
             firstName: firstName,
             lastName: lastName,
             nickname: nickname,
@@ -53,7 +53,7 @@ void main() {
           // then
           verify(() => authRepository.register(
                 email: email,
-                password: password,
+                hashedPassword: password,
                 firstName: firstName,
                 lastName: lastName,
                 nickname: nickname,

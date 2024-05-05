@@ -116,7 +116,7 @@ void main() {
               .thenReturn("hashedPassword");
           when(() => registerWithEmailAndPasswordUseCase.call(
                 email: any(named: "email"),
-                password: any(named: "password"),
+                hashedPassword: any(named: "password"),
                 firstName: any(named: "firstName"),
                 lastName: any(named: "lastName"),
                 nickname: any(named: "nickname"),
@@ -143,7 +143,7 @@ void main() {
                 email: requestBody[
                     RegisterWithEmailAndPasswordRequestBodyKeyConstants
                         .EMAIL.value]!,
-                password: "hashedPassword",
+                hashedPassword: "hashedPassword",
                 firstName: requestBody[
                     RegisterWithEmailAndPasswordRequestBodyKeyConstants
                         .FIRST_NAME.value]!,
@@ -174,7 +174,7 @@ void main() {
               .thenReturn("hashedPassword");
           when(() => registerWithEmailAndPasswordUseCase.call(
                 email: any(named: "email"),
-                password: any(named: "password"),
+                hashedPassword: any(named: "password"),
                 firstName: any(named: "firstName"),
                 lastName: any(named: "lastName"),
                 nickname: any(named: "nickname"),
@@ -215,7 +215,7 @@ void main() {
               .thenReturn("hashedPassword");
           when(() => registerWithEmailAndPasswordUseCase.call(
                 email: any(named: "email"),
-                password: any(named: "password"),
+                hashedPassword: any(named: "password"),
                 firstName: any(named: "firstName"),
                 lastName: any(named: "lastName"),
                 nickname: any(named: "nickname"),
@@ -271,7 +271,7 @@ void main() {
               .thenReturn("hashedPassword");
           when(() => registerWithEmailAndPasswordUseCase.call(
                 email: any(named: "email"),
-                password: any(named: "password"),
+                hashedPassword: any(named: "password"),
                 firstName: any(named: "firstName"),
                 lastName: any(named: "lastName"),
                 nickname: any(named: "nickname"),

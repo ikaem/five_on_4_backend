@@ -174,13 +174,14 @@ InitializedDataSources getInitializedDataSources({
     _,
     _,
     _,
-    cryptWrapper,
+    // cryptWrapper,
+    _,
     _,
   ) = initializedWrappers;
 
   final authDataSource = AuthDataSourceImpl(
     databaseWrapper: databaseWrapper,
-    cryptWrapper: cryptWrapper,
+    // cryptWrapper: cryptWrapper,
   );
   final playersDataSource = PlayersDataSourceImpl(
     databaseWrapper: databaseWrapper,

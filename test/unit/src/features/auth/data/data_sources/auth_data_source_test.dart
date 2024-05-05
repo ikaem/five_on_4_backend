@@ -12,7 +12,7 @@ import '../../../../../../../bin/src/wrappers/libraries/drift/app_database.dart'
 import '../../../../../../helpers/database/test_database.dart';
 
 Future<void> main() async {
-  final cryptWrapper = _MockCryptWrapper();
+  // final cryptWrapper = _MockCryptWrapper();
   late TestDatabaseWrapper testDatabaseWrapper;
 
   // tested class
@@ -23,17 +23,17 @@ Future<void> main() async {
 
     authDataSource = AuthDataSourceImpl(
       databaseWrapper: testDatabaseWrapper.databaseWrapper,
-      cryptWrapper: cryptWrapper,
+      // cryptWrapper: cryptWrapper,
     );
   });
 
   setUp(() {
-    when(() => cryptWrapper.getHashedValue(value: any(named: "password")))
-        .thenReturn("hashedPassword");
+    // when(() => cryptWrapper.getHashedValue(value: any(named: "password")))
+    //     .thenReturn("hashedPassword");
   });
 
   tearDown(() async {
-    reset(cryptWrapper);
+    // reset(cryptWrapper);
     await testDatabaseWrapper.databaseWrapper.close();
   });
 
@@ -124,6 +124,25 @@ Future<void> main() async {
         },
       );
       // when email and password auth is created
+    });
+
+    group(".getAuthByEmailAndPassword", () {
+      test(
+        "given <pre-condition to the test>"
+        "when <behavior we are specifying>"
+        "then should <state we expect to happen>",
+        () async {
+          // setup
+
+          // given
+
+          // when
+
+          // then
+
+          // cleanup
+        },
+      );
     });
 
     group(".getAuthByEmail()", () {

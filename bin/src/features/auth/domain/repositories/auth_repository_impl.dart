@@ -62,14 +62,14 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<int> register({
     required String email,
-    required String password,
+    required String hashedPassword,
     required String firstName,
     required String lastName,
     required String nickname,
   }) async {
     final newAuthEntityValue = NewAuthDataValueEmailPassword(
       email: email,
-      password: password,
+      hashedPassword: hashedPassword,
       firstName: firstName,
       lastName: lastName,
       nickname: nickname,

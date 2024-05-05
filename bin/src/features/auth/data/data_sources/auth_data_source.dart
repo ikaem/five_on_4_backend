@@ -6,9 +6,9 @@ abstract class AuthDataSource {
     required String email,
   });
 
-  Future<AuthEntityData?> getAuthByEmailAndPassword({
+  Future<AuthEntityData?> getAuthByEmailAndHashedPassword({
     required String email,
-    required String password,
+    required String hashedPassword,
   });
 
   Future<AuthEntityData?> getAuthById({

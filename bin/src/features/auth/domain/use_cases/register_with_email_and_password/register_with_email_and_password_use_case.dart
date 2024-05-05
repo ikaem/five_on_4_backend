@@ -9,14 +9,14 @@ class RegisterWithEmailAndPasswordUseCase {
 
   Future<int> call({
     required String email,
-    required String password,
+    required String hashedPassword,
     required String firstName,
     required String lastName,
     required String nickname,
   }) async {
     return await _authRepository.register(
       email: email,
-      password: password,
+      hashedPassword: hashedPassword,
       firstName: firstName,
       lastName: lastName,
       nickname: nickname,

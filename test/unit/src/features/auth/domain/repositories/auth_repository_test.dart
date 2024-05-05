@@ -54,7 +54,7 @@ void main() {
             // when
             final result = await authRepositoryImpl.register(
               email: email,
-              password: password,
+              hashedPassword: password,
               firstName: firstName,
               lastName: lastName,
               nickname: nickname,
@@ -63,7 +63,7 @@ void main() {
             // then
             final expectedNewAuthEntityValue = NewAuthDataValueEmailPassword(
               email: email,
-              password: password,
+              hashedPassword: password,
               firstName: firstName,
               lastName: lastName,
               nickname: nickname,

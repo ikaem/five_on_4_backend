@@ -12,12 +12,12 @@ import 'auth_data_source.dart';
 class AuthDataSourceImpl implements AuthDataSource {
   AuthDataSourceImpl({
     required DatabaseWrapper databaseWrapper,
-    required CryptWrapper cryptWrapper,
-  })  : _databaseWrapper = databaseWrapper,
-        _cryptWrapper = cryptWrapper;
+    // required CryptWrapper cryptWrapper,
+  }) : _databaseWrapper = databaseWrapper;
+  // _cryptWrapper = cryptWrapper;
 
   final DatabaseWrapper _databaseWrapper;
-  final CryptWrapper _cryptWrapper;
+  // final CryptWrapper _cryptWrapper;
 
   @override
   Future<int> createAuth({
@@ -26,17 +26,17 @@ class AuthDataSourceImpl implements AuthDataSource {
     final authId = await _databaseWrapper.transaction(
       () async {
         // TODO extract this to a helper here
-        final password = authValue.password;
-        final hashedPassword = password == null
-            ? null
-            : _cryptWrapper.getHashedValue(value: password);
+        // final password = authValue.password;
+        // final hashedPassword = password == null
+        //     ? null
+        //     : _cryptWrapper.getHashedValue(value: password);
 
         final createdAt = DateTime.now().normalizedToSeconds;
         final updatedAt = createdAt;
 
         final authCompanion = AuthEntityCompanion.insert(
           email: authValue.email,
-          password: Value(hashedPassword),
+          password: Value(authValue.hashedPassword),
           authType: authValue.authType.name,
           createdAt: createdAt,
           updatedAt: updatedAt,
@@ -72,11 +72,11 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Future<AuthEntityData?> getAuthByEmailAndPassword({
+  Future<AuthEntityData?> getAuthByEmailAndHashedPassword({
     required String email,
-    required String password,
+    required String hashedPassword,
   }) async {
-    final hashedPassword = _cryptWrapper.getHashedValue(value: password);
+    // final hashedPassword = _cryptWrapper.getHashedValue(value: password);
     // TODO password will be hashed
     final select = _databaseWrapper.authRepo.select();
     final findAuth = select
