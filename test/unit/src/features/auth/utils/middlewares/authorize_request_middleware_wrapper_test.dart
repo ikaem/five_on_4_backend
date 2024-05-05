@@ -8,7 +8,7 @@ import '../../../../../../../bin/src/features/auth/utils/middlewares/authorize_r
 // TODO this can go away
 
 void main() {
-  group("$RequestAuthorizationMiddlewareWrapper", () {
+  group("$AuthorizeRequestMiddlewareWrapper", () {
     group(".call()", () {
       test(
         "given a requestHandler "
@@ -31,7 +31,7 @@ void main() {
           );
 
           // setup middleware
-          final middlewareWrapper = RequestAuthorizationMiddlewareWrapper(
+          final middlewareWrapper = AuthorizeRequestMiddlewareWrapper(
             requestHandler: requestHandler.validate,
           );
           // get middleware from the wrapper

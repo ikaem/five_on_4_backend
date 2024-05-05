@@ -8,8 +8,8 @@ import '../../../../wrappers/local/custom_middleware/custom_middleware_wrapper.d
 
 // import '../../../../wrappers/local/custom_middleware/custom_middleware.dart';
 
-class RequestAuthorizationMiddlewareWrapper implements CustomMiddlewareWrapper {
-  const RequestAuthorizationMiddlewareWrapper({
+class AuthorizeRequestMiddlewareWrapper implements CustomMiddlewareWrapper {
+  const AuthorizeRequestMiddlewareWrapper({
     required FutureOr<Response?> Function(Request request)? requestHandler,
   }) : _requestHandler = requestHandler;
 

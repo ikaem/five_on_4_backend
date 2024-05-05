@@ -15,6 +15,7 @@ import '../../../features/auth/presentation/controllers/logout/logout_controller
 import '../../../features/auth/presentation/controllers/register_with_email_and_password/register_with_email_and_password_controller.dart';
 import '../../../features/auth/presentation/router/auth_router.dart';
 import '../../../features/auth/utils/middlewares/authorize_request_middleware_wrapper.dart';
+import '../../../features/auth/utils/middlewares/register_with_email_and_password_request_middleware_wrapper_.dart';
 import '../../../features/auth/utils/validators/authorize_request_validator.dart';
 import '../../../features/core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
 import '../../../features/core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
@@ -405,8 +406,9 @@ InitializedValidators getInitializedValidators({
 }
 
 typedef InitializedMiddlewareWrappers = (
-  RequestAuthorizationMiddlewareWrapper requestAuthorizationMiddleware,
+  AuthorizeRequestMiddlewareWrapper requestAuthorizationMiddleware,
   MatchCreateRequestMiddlewareWrapper matchCreateRequestMiddleware,
+  RegisterWithEmailAndPasswordRequestMiddlewareWrapper registerWithEmailAndPasswordRequestMiddleware,
 );
 InitializedMiddlewareWrappers getInitializedMiddlewareWrappers({
   required InitializedValidators initializedValidators,
@@ -416,16 +418,22 @@ InitializedMiddlewareWrappers getInitializedMiddlewareWrappers({
     matchCreateRequestValidator,
   ) = initializedValidators;
 
-  final requestAuthorizationMiddleware = RequestAuthorizationMiddlewareWrapper(
+  final requestAuthorizationMiddleware = AuthorizeRequestMiddlewareWrapper(
     requestHandler: requestAuthorizationValidator.validate,
   );
   final matchCreateRequestMiddleware = MatchCreateRequestMiddlewareWrapper(
     requestHandler: matchCreateRequestValidator.validate,
   );
 
+  final registerWithEmailAndPasswordRequestMiddleware =
+      RegisterWithEmailAndPasswordRequestMiddlewareWrapper(
+    requestHandler: requestAuthorizationValidator.validate,
+  );
+
   return (
     requestAuthorizationMiddleware,
     matchCreateRequestMiddleware,
+    registerWithEmailAndPasswordRequestMiddleware,
   );
 }
 
@@ -448,6 +456,7 @@ InitializedRouters getInitializedRouters({
   final (
     requestAuthorizationMiddleware,
     matchCreateRequestMiddleware,
+    registerWithEmailAndPasswordRequestMiddleware,
   ) = initializedMiddlewareWrappers;
 
   final authRouter = AuthRouter(
@@ -455,6 +464,9 @@ InitializedRouters getInitializedRouters({
     registerWithEmailAndPasswordController:
         registerWithEmailAndPasswordController,
     logoutController: logoutController,
+    authorizeRequestMiddlewareWrapper: requestAuthorizationMiddleware,
+    registerWithEmailAndPasswordRequestMiddlewareWrapper:
+        registerWithEmailAndPasswordRequestMiddleware,
   );
 
   final matchesRouter = MatchesRouter(
