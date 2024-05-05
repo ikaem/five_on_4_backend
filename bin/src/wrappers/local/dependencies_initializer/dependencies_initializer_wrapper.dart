@@ -15,7 +15,7 @@ import '../../../features/auth/presentation/controllers/logout/logout_controller
 import '../../../features/auth/presentation/controllers/register_with_email_and_password/register_with_email_and_password_controller.dart';
 import '../../../features/auth/presentation/router/auth_router.dart';
 import '../../../features/auth/utils/middlewares/authorize_request_middleware_wrapper.dart';
-import '../../../features/auth/utils/middlewares/register_with_email_and_password_request_middleware_wrapper_.dart';
+import '../../../features/auth/utils/middlewares/register_with_email_and_password_request_middleware_wrapper.dart';
 import '../../../features/auth/utils/validators/authorize_request_validator.dart';
 import '../../../features/core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
 import '../../../features/core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';

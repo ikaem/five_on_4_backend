@@ -4,15 +4,15 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/auth/utils/middlewares/register_with_email_and_password_request_middleware_wrapper.dart';
+import '../../../../../../../bin/src/features/auth/utils/middlewares/login_request_middleware_wrapper.dart';
 
 void main() {
-  group("$RegisterWithEmailAndPasswordRequestMiddlewareWrapper", () {
+  group("$LoginRequestMiddlewareWrapper", () {
     group(".call()", () {
       test(
-        "given <pre-condition to the test>"
-        "when <behavior we are specifying>"
-        "then should <state we expect to happen>",
+        "given a request handler (validator)"
+        "when request is passed to the middleware"
+        "then should call the provider request handler (validator)",
         () async {
           // setup
           final request = Request("post", Uri.parse("https://example.com/"));
@@ -30,8 +30,7 @@ void main() {
           });
 
           // setup middleware wrapper
-          final middlewareWrapper =
-              RegisterWithEmailAndPasswordRequestMiddlewareWrapper(
+          final middlewareWrapper = LoginRequestMiddlewareWrapper(
             requestHandler: requestHandler.validate,
           );
 

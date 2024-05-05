@@ -9,7 +9,7 @@ import '../../../../../../../bin/src/features/auth/presentation/controllers/logo
 import '../../../../../../../bin/src/features/auth/presentation/controllers/register_with_email_and_password/register_with_email_and_password_controller.dart';
 import '../../../../../../../bin/src/features/auth/presentation/router/auth_router.dart';
 import '../../../../../../../bin/src/features/auth/utils/middlewares/authorize_request_middleware_wrapper.dart';
-import '../../../../../../../bin/src/features/auth/utils/middlewares/register_with_email_and_password_request_middleware_wrapper_.dart';
+import '../../../../../../../bin/src/features/auth/utils/middlewares/register_with_email_and_password_request_middleware_wrapper.dart';
 
 void main() {
 // controllers
