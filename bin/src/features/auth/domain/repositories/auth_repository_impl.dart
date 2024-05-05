@@ -111,4 +111,23 @@ class AuthRepositoryImpl implements AuthRepository {
     final authModel = AuthConverter.modelFromEntity(entity: authEntityData);
     return authModel;
   }
+
+  @override
+  Future<AuthModel?> getAuthByEmailAndHashedPassword({
+    required String email,
+    required String hashedPassword,
+  }) async {
+    final authEntityData =
+        await _authDataSource.getAuthByEmailAndHashedPassword(
+      email: email,
+      hashedPassword: hashedPassword,
+    );
+
+    if (authEntityData == null) {
+      return null;
+    }
+
+    final authModel = AuthConverter.modelFromEntity(entity: authEntityData);
+    return authModel;
+  }
 }

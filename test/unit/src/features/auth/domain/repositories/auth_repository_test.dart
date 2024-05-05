@@ -206,6 +206,70 @@ void main() {
         },
       );
 
+      group(".getAuthByEmailAndHashedPassword", () {
+        test(
+          "given email and password with existing auth "
+          "when .getAuthByEmailAndHashedPassword() is called "
+          "then should return expected auth",
+          () async {
+            // setup
+            when(() => authDataSource.getAuthByEmailAndHashedPassword(
+                    email: any(named: "email"),
+                    hashedPassword: any(named: "hashedPassword")))
+                .thenAnswer((i) async => testAuthEntityData);
+
+            // given
+            final email = "email";
+            final hashedPassword = "password";
+
+            // when
+            final result =
+                await authRepositoryImpl.getAuthByEmailAndHashedPassword(
+              email: email,
+              hashedPassword: hashedPassword,
+            );
+
+            // then
+            final expectedResult = AuthConverter.modelFromEntity(
+              entity: testAuthEntityData,
+            );
+
+            expect(result, expectedResult);
+
+            // cleanup
+          },
+        );
+
+        test(
+          "given email and password with no existing auth "
+          "when .getAuthByEmailAndHashedPassword() is called "
+          "then should return null",
+          () async {
+            // setup
+            when(() => authDataSource.getAuthByEmailAndHashedPassword(
+                    email: any(named: "email"),
+                    hashedPassword: any(named: "hashedPassword")))
+                .thenAnswer((i) async => null);
+
+            // given
+            final email = "email";
+            final hashedPassword = "password";
+
+            // when
+            final result =
+                await authRepositoryImpl.getAuthByEmailAndHashedPassword(
+              email: email,
+              hashedPassword: hashedPassword,
+            );
+
+            // then
+            expect(result, null);
+
+            // cleanup
+          },
+        );
+      });
+
       group(".getAuthByEmail()", () {
         test(
           "given email with existing auth "

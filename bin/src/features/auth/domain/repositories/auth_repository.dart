@@ -27,4 +27,9 @@ abstract class AuthRepository {
   Future<AuthModel?> getAuthByEmail({
     required String email,
   });
+
+  Future<AuthModel?> getAuthByEmailAndHashedPassword({
+    required String email,
+    required String hashedPassword,
+  });
 }
