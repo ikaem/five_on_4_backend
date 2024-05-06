@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:shelf/shelf.dart';
 
+import '../constants/request_constants.dart';
+
 extension RequestExtension on Request {
   Future<Map<String, dynamic>> parseBody() async {
     try {
@@ -38,5 +40,22 @@ extension RequestExtension on Request {
 
       return null;
     }
+  }
+
+  Request getChangedRequestWithValidatedBodyData(Map<String, Object?> data) {
+    final changedRequest = change(
+      context: {
+        RequestConstants.VALIDATED_BODY_DATA.value: data,
+      },
+    );
+
+    return changedRequest;
+  }
+
+  Map<String, Object>? getValidatedBodyData() {
+    final data = context[RequestConstants.VALIDATED_BODY_DATA.value]
+        as Map<String, Object>?;
+
+    return data;
   }
 }

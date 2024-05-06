@@ -11,6 +11,7 @@ import '../../../../../../../../bin/src/features/auth/utils/constants/login_requ
 import '../../../../../../../../bin/src/features/core/domain/models/auth/auth_model.dart';
 import '../../../../../../../../bin/src/features/core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
 import '../../../../../../../../bin/src/features/core/domain/use_cases/get_hashed_value/get_hashed_value_use_case.dart';
+import '../../../../../../../../bin/src/features/core/utils/constants/request_constants.dart';
 import '../../../../../../../../bin/src/features/players/domain/models/player_model.dart';
 import '../../../../../../../../bin/src/features/players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
 import '../../../../../../../helpers/response.dart';
@@ -58,6 +59,48 @@ void main() {
           LoginRequestBodyKeyConstants.EMAIL.value: email,
           LoginRequestBodyKeyConstants.PASSWORD.value: password,
         };
+
+        test(
+          "given request validation has not been done"
+          "when .call() is called"
+          "then should return expected response",
+          () async {
+            // setup
+            when(() => getHashedValueUseCase(value: password))
+                .thenReturn(hashedPassword);
+
+            when(() => getAuthByEmailAndHashedPasswordUseCase(
+                  email: any(named: "email"),
+                  hashedPassword: any(named: "hashedPassword"),
+                )).thenAnswer((_) async => null);
+
+            when(() => request.context).thenReturn({});
+
+            // given
+            when(() => request.readAsString())
+                .thenAnswer((_) async => jsonEncode(requestMap));
+
+            // when
+            final response = await loginController(request);
+            final responseString = await response.readAsString();
+
+            // then
+            final expectedResponse = generateTestInternalServerErrorResponse(
+              responseMessage: "Request body not validated.",
+              cookies: null,
+            );
+            final expectedResponseString =
+                await expectedResponse.readAsString();
+
+            expect(responseString, equals(expectedResponseString));
+            expect(response.statusCode, equals(expectedResponse.statusCode));
+            expect(response.headers[HttpHeaders.setCookieHeader],
+                equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
+
+            // cleanup
+          },
+        );
+
         // if no auth with this email and hashed password, return expected response
         test(
           "given request with email and password not associated with an auth in db"
@@ -72,6 +115,13 @@ void main() {
                   email: any(named: "email"),
                   hashedPassword: any(named: "hashedPassword"),
                 )).thenAnswer((_) async => null);
+
+            when(() => request.context).thenReturn({
+              RequestConstants.VALIDATED_BODY_DATA.value: {
+                LoginRequestBodyKeyConstants.EMAIL.value: email,
+                LoginRequestBodyKeyConstants.PASSWORD.value: password,
+              }
+            });
 
             // given
             when(() => request.readAsString())
@@ -117,6 +167,13 @@ void main() {
             when(() => getPlayerByAuthIdUseCase(authId: _testAuthModel.id))
                 .thenAnswer((_) async => null);
 
+            when(() => request.context).thenReturn({
+              RequestConstants.VALIDATED_BODY_DATA.value: {
+                LoginRequestBodyKeyConstants.EMAIL.value: email,
+                LoginRequestBodyKeyConstants.PASSWORD.value: password,
+              }
+            });
+
             // given
             when(() => request.readAsString())
                 .thenAnswer((_) async => jsonEncode(requestMap));
@@ -142,7 +199,7 @@ void main() {
           },
         );
 
-        // if player and auth found, return expected respionse
+        //   // if player and auth found, return expected respionse
         test(
           "given retrieved authId from db is associated with a player in db"
           "when .call() is called"
@@ -165,6 +222,13 @@ void main() {
                 expiresIn: any(named: "expiresIn"),
               ),
             ).thenReturn(testAuthCookie);
+
+            when(() => request.context).thenReturn({
+              RequestConstants.VALIDATED_BODY_DATA.value: {
+                LoginRequestBodyKeyConstants.EMAIL.value: email,
+                LoginRequestBodyKeyConstants.PASSWORD.value: password,
+              }
+            });
 
             // given
             when(() => request.readAsString())
@@ -194,7 +258,7 @@ void main() {
           },
         );
 
-        // if success response returned, it should container expected access token cookie with expected values inside the jwt
+        //   // if success response returned, it should container expected access token cookie with expected values inside the jwt
         test(
           "given retrieved authId from db is associated with a player in db"
           "when .call() is called"
@@ -218,6 +282,13 @@ void main() {
               ),
             ).thenReturn(testAuthCookie);
 
+            when(() => request.context).thenReturn({
+              RequestConstants.VALIDATED_BODY_DATA.value: {
+                LoginRequestBodyKeyConstants.EMAIL.value: email,
+                LoginRequestBodyKeyConstants.PASSWORD.value: password,
+              }
+            });
+
             // given
             when(() => request.readAsString())
                 .thenAnswer((_) async => jsonEncode(requestMap));
@@ -238,7 +309,7 @@ void main() {
           },
         );
 
-        // TODO should test calls to use cases - that proper arguments are passed
+        //   // TODO should test calls to use cases - that proper arguments are passed
       });
     },
   );

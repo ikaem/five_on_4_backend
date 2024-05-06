@@ -2,9 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart' hide Response;
 
-import '../../../features/auth/data/data_sources/auth_data_source.dart';
 import '../../../features/auth/data/data_sources/auth_data_source_impl.dart';
-import '../../../features/auth/domain/repositories/auth_repository.dart';
 import '../../../features/auth/domain/repositories/auth_repository_impl.dart';
 import '../../../features/auth/domain/use_cases/get_auth_by_email/get_auth_by_email_use_case.dart';
 import '../../../features/auth/domain/use_cases/get_auth_by_email_and_hashed_password/get_auth_by_email_and_hashed_password_use_case.dart';
@@ -21,14 +19,13 @@ import '../../../features/auth/utils/middlewares/login_request_middleware_wrappe
 import '../../../features/auth/utils/middlewares/register_with_email_and_password_request_middleware_wrapper.dart';
 import '../../../features/auth/utils/validators/authorize_request_validator.dart';
 import '../../../features/auth/utils/validators/login_request_validator.dart';
+import '../../../features/auth/utils/validators/register_with_email_and_password_request_validator.dart';
 import '../../../features/core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
 import '../../../features/core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
 import '../../../features/core/domain/use_cases/get_cookie_by_name_in_string/get_cookie_by_name_in_string_use_case.dart';
 import '../../../features/core/domain/use_cases/get_hashed_value/get_hashed_value_use_case.dart';
 import '../../../features/core/presentation/router/app_router.dart';
-import '../../../features/matches/data/data_sources/matches_data_source.dart';
 import '../../../features/matches/data/data_sources/matches_data_source_impl.dart';
-import '../../../features/matches/domain/repositories/matches_repository.dart';
 import '../../../features/matches/domain/repositories/matches_repository_impl.dart';
 import '../../../features/matches/domain/use_cases/create_match/create_match_use_case.dart';
 import '../../../features/matches/domain/use_cases/get_match/get_match_use_case.dart';
@@ -37,9 +34,7 @@ import '../../../features/matches/presentation/controllers/get_match_controller.
 import '../../../features/matches/presentation/router/matches_router.dart';
 import '../../../features/matches/utils/middlewares/match_create_request_middleware_wrapper.dart';
 import '../../../features/matches/utils/validators/match_create_request_validator.dart';
-import '../../../features/players/data/data_sources/players_data_source.dart';
 import '../../../features/players/data/data_sources/players_data_source_impl.dart';
-import '../../../features/players/domain/repositories/players_repository.dart';
 import '../../../features/players/domain/repositories/players_repository_impl.dart';
 import '../../../features/players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
 import '../../../features/players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
@@ -50,6 +45,7 @@ import '../cookies_handler/cookies_handler_wrapper.dart';
 import '../database/database_wrapper.dart';
 import '../env_vars/env_vars_wrapper.dart';
 import '../google_apis/google_apis_wrapper.dart';
+import 'dependencies_values.dart';
 
 class DependenciesInitializerWrapper {
   DependenciesInitializerWrapper({
@@ -85,7 +81,7 @@ class DependenciesInitializerWrapper {
 
     // data sources
     final initializedDataSources = getInitializedDataSources(
-        initializedWrappers: initializedWrappers,
+        // initializedWrappers: initializedWrappers,
         databaseWrapper: _databaseWrapper);
 
     // repositories
@@ -121,27 +117,16 @@ class DependenciesInitializerWrapper {
       initializedControllers: initializedControllers,
       initializedMiddlewareWrappers: initializedMiddlewareWrappers,
     );
-    final (
-      authRouter,
-      matchesRouter,
-    ) = initializedRouters;
 
     final AppRouter appRouter = AppRouter(
-      authRouter: authRouter,
-      matchesRouter: matchesRouter,
+      authRouter: initializedRouters.authRouter,
+      matchesRouter: initializedRouters.matchesRouter,
     );
     _appRouter = appRouter;
   }
 }
 
-typedef InitializedWrappers = (
-  DioWrapper dioWrapper,
-  DartJsonWebTokenWrapper dartJsonWebTokenWrapper,
-  GoogleApisWrapper googleApisWrapper,
-  CryptWrapper cryptWrapper,
-  CookiesHandlerWrapper cookiesHandlerWrapper,
-);
-InitializedWrappers getInitializedWrappers({
+InitializedWrappersDependenciesValues getInitializedWrappers({
   required EnvVarsWrapper envVarsWrapper,
 }) {
   final dio = Dio();
@@ -156,36 +141,20 @@ InitializedWrappers getInitializedWrappers({
   );
   final cookiesHandlerWrapper = CookiesHandlerWrapper();
 
-  return (
-    dioWrapper,
-    dartJsonWebTokenWrapper,
-    googleApisWrapper,
-    cryptWrapper,
-    cookiesHandlerWrapper,
+  return InitializedWrappersDependenciesValues(
+    dioWrapper: dioWrapper,
+    dartJsonWebTokenWrapper: dartJsonWebTokenWrapper,
+    googleApisWrapper: googleApisWrapper,
+    cryptWrapper: cryptWrapper,
+    cookiesHandlerWrapper: cookiesHandlerWrapper,
   );
 }
 
-typedef InitializedDataSources = (
-  AuthDataSource authDataSource,
-  PlayersDataSource playersDataSource,
-  MatchesDataSource matchesDataSource,
-);
-InitializedDataSources getInitializedDataSources({
-  required InitializedWrappers initializedWrappers,
+InitializedDataSourcesDependenciesValues getInitializedDataSources({
   required DatabaseWrapper databaseWrapper,
 }) {
-  final (
-    _,
-    _,
-    _,
-    // cryptWrapper,
-    _,
-    _,
-  ) = initializedWrappers;
-
   final authDataSource = AuthDataSourceImpl(
     databaseWrapper: databaseWrapper,
-    // cryptWrapper: cryptWrapper,
   );
   final playersDataSource = PlayersDataSourceImpl(
     databaseWrapper: databaseWrapper,
@@ -193,328 +162,241 @@ InitializedDataSources getInitializedDataSources({
   final matchesDataSource =
       MatchesDataSourceImpl(databaseWrapper: databaseWrapper);
 
-  return (
-    authDataSource,
-    playersDataSource,
-    matchesDataSource,
-  );
-}
-
-typedef InitializedRepositories = (
-  AuthRepository authRepository,
-  PlayersRepository playersRepository,
-  MatchesRepository matchesRepository,
-);
-InitializedRepositories getInitializedRepositories({
-  required InitializedDataSources initializedDataSources,
-  required InitializedWrappers initializedWrappers,
-}) {
-  final (
-    _,
-    _,
-    googleApisWrapper,
-    _,
-    _,
-  ) = initializedWrappers;
-  final (
-    authDataSource,
-    playersDataSource,
-    matchesDataSource,
-  ) = initializedDataSources;
-
-  final authRepository = AuthRepositoryImpl(
+  return InitializedDataSourcesDependenciesValues(
     authDataSource: authDataSource,
-    googleApisWrapper: googleApisWrapper,
-  );
-  final playersRepository = PlayersRepositoryImpl(
     playersDataSource: playersDataSource,
-  );
-  final matchesRespository = MatchesRepositoryImpl(
     matchesDataSource: matchesDataSource,
   );
+}
 
-  return (
-    authRepository,
-    playersRepository,
-    matchesRespository,
+InitializedRepositoriesDependenciesValues getInitializedRepositories({
+  required InitializedDataSourcesDependenciesValues initializedDataSources,
+  required InitializedWrappersDependenciesValues initializedWrappers,
+}) {
+  final authRepository = AuthRepositoryImpl(
+    authDataSource: initializedDataSources.authDataSource,
+    googleApisWrapper: initializedWrappers.googleApisWrapper,
+  );
+
+  final playersRepository = PlayersRepositoryImpl(
+    playersDataSource: initializedDataSources.playersDataSource,
+  );
+
+  final matchesRepository = MatchesRepositoryImpl(
+    matchesDataSource: initializedDataSources.matchesDataSource,
+  );
+
+  return InitializedRepositoriesDependenciesValues(
+    authRepository: authRepository,
+    playersRepository: playersRepository,
+    matchesRepository: matchesRepository,
   );
 }
 
-typedef InitializedUseCases = (
-  GoogleLoginUseCase googleLoginUseCase,
-  GetPlayerByAuthIdUseCase getPlayerByAuthIdUseCase,
-  CreateJWTAccessTokenCookieUseCase createJWTAccessTokenCookieUseCase,
-  GetMatchUseCase getMatchUseCase,
-  GetPlayerByIdUseCase getPlayerByIdUseCase,
-  GetAuthByIdUseCase getAuthByIdUseCase,
-  GetCookieByNameInStringUseCase getCookieByNameInStringUseCase,
-  GetAccessTokenDataFromAccessJwtUseCase getAccessTokenDataFromAccessJwtUseCase,
-  CreateMatchUseCase createMatchUseCase,
-  GetAuthByEmailUseCase getAuthByEmailUseCase,
-  GetHashedValueUseCase getHashedValueUseCase,
-  RegisterWithEmailAndPasswordUseCase registerWithEmailAndPasswordUseCase,
-  GetAuthByEmailAndHashedPasswordUseCase getAuthByEmailAndHashedPasswordUseCase,
-);
-InitializedUseCases getInitializedUseCases({
-  required InitializedRepositories initializedRepositories,
-  required InitializedWrappers initializedWrappers,
+InitializedUseCasesDependenciesValues getInitializedUseCases({
+  required InitializedRepositoriesDependenciesValues initializedRepositories,
+  required InitializedWrappersDependenciesValues initializedWrappers,
 }) {
-  final (
-    authRepository,
-    playersRepository,
-    matchesRespository,
-  ) = initializedRepositories;
-  final (
-    _,
-    dartJsonWebTokenWrapper,
-    _,
-    cryptWrapper,
-    cookiesHandlerWrapper,
-  ) = initializedWrappers;
-
-  final googleLoginUseCase = GoogleLoginUseCase(authRepository: authRepository);
-  final getPlayerByAuthIdUseCase =
-      GetPlayerByAuthIdUseCase(playersRepository: playersRepository);
-  final createJWTAccessTokenCookieUseCase = CreateJWTAccessTokenCookieUseCase(
-    dartJsonWebTokenWrapper: dartJsonWebTokenWrapper,
+  final googleLoginUseCase = GoogleLoginUseCase(
+    authRepository: initializedRepositories.authRepository,
   );
-  final getMatchUseCase =
-      GetMatchUseCase(matchesRepository: matchesRespository);
-  final getPlayerByIdUseCase =
-      GetPlayerByIdUseCase(playersRepository: playersRepository);
-  final getAuthByIdUseCase = GetAuthByIdUseCase(authRepository: authRepository);
+  final getPlayerByAuthIdUseCase = GetPlayerByAuthIdUseCase(
+    playersRepository: initializedRepositories.playersRepository,
+  );
+  final createJWTAccessTokenCookieUseCase = CreateJWTAccessTokenCookieUseCase(
+    dartJsonWebTokenWrapper: initializedWrappers.dartJsonWebTokenWrapper,
+  );
+  final getMatchUseCase = GetMatchUseCase(
+    matchesRepository: initializedRepositories.matchesRepository,
+  );
+  final getPlayerByIdUseCase = GetPlayerByIdUseCase(
+    playersRepository: initializedRepositories.playersRepository,
+  );
+  final getAuthByIdUseCase = GetAuthByIdUseCase(
+    authRepository: initializedRepositories.authRepository,
+  );
   final getCookieByNameInStringUseCase = GetCookieByNameInStringUseCase(
-    cookiesHandlerWrapper: cookiesHandlerWrapper,
+    cookiesHandlerWrapper: initializedWrappers.cookiesHandlerWrapper,
   );
   final getAccessTokenDataFromAccessJwtUseCase =
       GetAccessTokenDataFromAccessJwtUseCase(
-    dartJsonWebTokenWrapper: dartJsonWebTokenWrapper,
+    dartJsonWebTokenWrapper: initializedWrappers.dartJsonWebTokenWrapper,
   );
   final createMatchUseCase = CreateMatchUseCase(
-    matchesRepository: matchesRespository,
+    matchesRepository: initializedRepositories.matchesRepository,
   );
   final getAuthByEmailUseCase = GetAuthByEmailUseCase(
-    authRepository: authRepository,
+    authRepository: initializedRepositories.authRepository,
   );
   final getHashedValueUseCase = GetHashedValueUseCase(
-    cryptWrapper: cryptWrapper,
+    cryptWrapper: initializedWrappers.cryptWrapper,
   );
   final registerWithEmailAndPasswordUseCase =
       RegisterWithEmailAndPasswordUseCase(
-    authRepository: authRepository,
+    authRepository: initializedRepositories.authRepository,
   );
   final getAuthByEmailAndHashedPasswordUseCase =
       GetAuthByEmailAndHashedPasswordUseCase(
-    authRepository: authRepository,
+    authRepository: initializedRepositories.authRepository,
   );
 
-  return (
-    googleLoginUseCase,
-    getPlayerByAuthIdUseCase,
-    createJWTAccessTokenCookieUseCase,
-    getMatchUseCase,
-    getPlayerByIdUseCase,
-    getAuthByIdUseCase,
-    getCookieByNameInStringUseCase,
-    getAccessTokenDataFromAccessJwtUseCase,
-    createMatchUseCase,
-    getAuthByEmailUseCase,
-    getHashedValueUseCase,
-    registerWithEmailAndPasswordUseCase,
-    getAuthByEmailAndHashedPasswordUseCase,
-  );
-}
-
-typedef InitializedControllers = (
-  GoogleLoginController googleLoginController,
-  GetMatchController getMatchController,
-  CreateMatchController createMatchController,
-  LogoutController logoutController,
-  RegisterWithEmailAndPasswordController registerWithEmailAndPasswordController,
-  LoginController loginController,
-);
-InitializedControllers getInitializedControllers({
-  required InitializedUseCases initializedUseCases,
-}) {
-  final (
-    googleLoginUseCase,
-    getPlayerByAuthIdUseCase,
-    createJWTAccessTokenCookieUseCase,
-    getMatchUseCase,
-    _,
-    _,
-    _,
-    _,
-    createMatchUseCase,
-    getAuthByEmailUseCase,
-    getHashedValueUseCase,
-    registerWithEmailAndPasswordUseCase,
-    getAuthByEmailAndHashedPasswordUseCase,
-  ) = initializedUseCases;
-
-  final googleLoginController = GoogleLoginController(
+  return InitializedUseCasesDependenciesValues(
     googleLoginUseCase: googleLoginUseCase,
     getPlayerByAuthIdUseCase: getPlayerByAuthIdUseCase,
     createJWTAccessTokenCookieUseCase: createJWTAccessTokenCookieUseCase,
-  );
-  final getMatchController = GetMatchController(
     getMatchUseCase: getMatchUseCase,
-  );
-  final createMatchController =
-      CreateMatchController(createMatchUseCase: createMatchUseCase);
-  final logoutController = LogoutController();
-  final registerWithEmailAndPasswordController =
-      RegisterWithEmailAndPasswordController(
-    getAuthByEmailUseCase: getAuthByEmailUseCase,
-    getHashedValueUseCase: getHashedValueUseCase,
-    registerWithEmailAndPasswordUseCase: registerWithEmailAndPasswordUseCase,
-    getPlayerByAuthIdUseCase: getPlayerByAuthIdUseCase,
-    createJWTAccessTokenCookieUseCase: createJWTAccessTokenCookieUseCase,
-  );
-  final loginController = LoginController(
-    getAuthByEmailAndHashedPasswordUseCase:
-        getAuthByEmailAndHashedPasswordUseCase,
-    getPlayerByAuthIdUseCase: getPlayerByAuthIdUseCase,
-    getHashedValueUseCase: getHashedValueUseCase,
-    createJWTAccessTokenCookieUseCase: createJWTAccessTokenCookieUseCase,
-  );
-
-  return (
-    googleLoginController,
-    getMatchController,
-    createMatchController,
-    logoutController,
-    registerWithEmailAndPasswordController,
-    loginController,
-  );
-}
-
-typedef InitializedValidators = (
-  AuthorizeRequestValidator requestAuthorizationValidator,
-  MatchCreateRequestValidator matchCreateRequestValidator,
-  LoginRequestValidator loginRequestValidator,
-);
-InitializedValidators getInitializedValidators({
-  required InitializedUseCases initializedUseCases,
-}) {
-  final (
-    _,
-    _,
-    _,
-    _,
-    getPlayerByIdUseCase,
-    getAuthByIdUseCase,
-    getCookieByNameInStringUseCase,
-    getAccessTokenDataFromAccessJwtUseCase,
-    _,
-    _,
-    _,
-    _,
-    _,
-  ) = initializedUseCases;
-
-  final requestAuthorizationValidator = AuthorizeRequestValidator(
+    getPlayerByIdUseCase: getPlayerByIdUseCase,
+    getAuthByIdUseCase: getAuthByIdUseCase,
     getCookieByNameInStringUseCase: getCookieByNameInStringUseCase,
     getAccessTokenDataFromAccessJwtUseCase:
         getAccessTokenDataFromAccessJwtUseCase,
-    getPlayerByIdUseCase: getPlayerByIdUseCase,
-    getAuthByIdUseCase: getAuthByIdUseCase,
+    createMatchUseCase: createMatchUseCase,
+    getAuthByEmailUseCase: getAuthByEmailUseCase,
+    getHashedValueUseCase: getHashedValueUseCase,
+    registerWithEmailAndPasswordUseCase: registerWithEmailAndPasswordUseCase,
+    getAuthByEmailAndHashedPasswordUseCase:
+        getAuthByEmailAndHashedPasswordUseCase,
+  );
+}
+
+InitialiazedControllersDependenciesValues getInitializedControllers({
+  required InitializedUseCasesDependenciesValues initializedUseCases,
+}) {
+  final googleLoginController = GoogleLoginController(
+    googleLoginUseCase: initializedUseCases.googleLoginUseCase,
+    getPlayerByAuthIdUseCase: initializedUseCases.getPlayerByAuthIdUseCase,
+    createJWTAccessTokenCookieUseCase:
+        initializedUseCases.createJWTAccessTokenCookieUseCase,
+  );
+  final getMatchController = GetMatchController(
+    getMatchUseCase: initializedUseCases.getMatchUseCase,
+  );
+  final createMatchController = CreateMatchController(
+    createMatchUseCase: initializedUseCases.createMatchUseCase,
+  );
+  final logoutController = LogoutController();
+
+  final registerWithEmailAndPasswordController =
+      RegisterWithEmailAndPasswordController(
+    getAuthByEmailUseCase: initializedUseCases.getAuthByEmailUseCase,
+    getHashedValueUseCase: initializedUseCases.getHashedValueUseCase,
+    registerWithEmailAndPasswordUseCase:
+        initializedUseCases.registerWithEmailAndPasswordUseCase,
+    getPlayerByAuthIdUseCase: initializedUseCases.getPlayerByAuthIdUseCase,
+    createJWTAccessTokenCookieUseCase:
+        initializedUseCases.createJWTAccessTokenCookieUseCase,
+  );
+
+  final loginController = LoginController(
+    getAuthByEmailAndHashedPasswordUseCase:
+        initializedUseCases.getAuthByEmailAndHashedPasswordUseCase,
+    getPlayerByAuthIdUseCase: initializedUseCases.getPlayerByAuthIdUseCase,
+    getHashedValueUseCase: initializedUseCases.getHashedValueUseCase,
+    createJWTAccessTokenCookieUseCase:
+        initializedUseCases.createJWTAccessTokenCookieUseCase,
+  );
+
+  return InitialiazedControllersDependenciesValues(
+    googleLoginController: googleLoginController,
+    getMatchController: getMatchController,
+    createMatchController: createMatchController,
+    logoutController: logoutController,
+    registerWithEmailAndPasswordController:
+        registerWithEmailAndPasswordController,
+    loginController: loginController,
+  );
+}
+
+InitializedValidatorsDependenciesValues getInitializedValidators({
+  required InitializedUseCasesDependenciesValues initializedUseCases,
+}) {
+  final requestAuthorizationValidator = AuthorizeRequestValidator(
+    getCookieByNameInStringUseCase:
+        initializedUseCases.getCookieByNameInStringUseCase,
+    getAccessTokenDataFromAccessJwtUseCase:
+        initializedUseCases.getAccessTokenDataFromAccessJwtUseCase,
+    getPlayerByIdUseCase: initializedUseCases.getPlayerByIdUseCase,
+    getAuthByIdUseCase: initializedUseCases.getAuthByIdUseCase,
   );
   final matchCreateRequestValidator = MatchCreateRequestValidator();
   final loginRequestValidator = LoginRequestValidator();
 
-  return (
-    requestAuthorizationValidator,
-    matchCreateRequestValidator,
-    loginRequestValidator,
+  final registerWithEmailAndPasswordRequestValidator =
+      RegisterWithEmailAndPasswordRequestValidator();
+
+  return InitializedValidatorsDependenciesValues(
+    requestAuthorizationValidator: requestAuthorizationValidator,
+    matchCreateRequestValidator: matchCreateRequestValidator,
+    loginRequestValidator: loginRequestValidator,
+    registerWithEmailAndPasswordRequestValidator:
+        registerWithEmailAndPasswordRequestValidator,
   );
 }
 
-// TODO maybe replace these patterns with classes
-typedef InitializedMiddlewareWrappers = (
-  AuthorizeRequestMiddlewareWrapper requestAuthorizationMiddleware,
-  MatchCreateRequestMiddlewareWrapper matchCreateRequestMiddleware,
-  RegisterWithEmailAndPasswordRequestMiddlewareWrapper registerWithEmailAndPasswordRequestMiddleware,
-  LoginRequestMiddlewareWrapper loginRequestMiddlewareWrapper,
-);
-InitializedMiddlewareWrappers getInitializedMiddlewareWrappers({
-  required InitializedValidators initializedValidators,
+InitializedMiddlewareWrappersDependenciesValues
+    getInitializedMiddlewareWrappers({
+  required InitializedValidatorsDependenciesValues initializedValidators,
 }) {
-  final (
-    requestAuthorizationValidator,
-    matchCreateRequestValidator,
-    loginRequestValidator,
-  ) = initializedValidators;
-
   final requestAuthorizationMiddleware = AuthorizeRequestMiddlewareWrapper(
-    requestHandler: requestAuthorizationValidator.validate,
+    authorizeRequestValidator:
+        initializedValidators.requestAuthorizationValidator,
   );
+
   final matchCreateRequestMiddleware = MatchCreateRequestMiddlewareWrapper(
-    requestHandler: matchCreateRequestValidator.validate,
+    matchCreateRequestValidator:
+        initializedValidators.matchCreateRequestValidator,
   );
 
   final registerWithEmailAndPasswordRequestMiddleware =
       RegisterWithEmailAndPasswordRequestMiddlewareWrapper(
-    requestHandler: requestAuthorizationValidator.validate,
+    registerWithEmailAndPasswordRequestValidator:
+        initializedValidators.registerWithEmailAndPasswordRequestValidator,
   );
 
   final loginRequestMiddlewareWrapper = LoginRequestMiddlewareWrapper(
-    requestHandler: loginRequestValidator.validate,
+    loginRequestValidator: initializedValidators.loginRequestValidator,
   );
 
-  return (
-    requestAuthorizationMiddleware,
-    matchCreateRequestMiddleware,
-    registerWithEmailAndPasswordRequestMiddleware,
-    loginRequestMiddlewareWrapper,
+  return InitializedMiddlewareWrappersDependenciesValues(
+    authorizeRequestMiddlewareWrapper: requestAuthorizationMiddleware,
+    loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
+    matchCreateRequestMiddlewareWrapper: matchCreateRequestMiddleware,
+    registerWithEmailAndPasswordRequestMiddlewareWrapper:
+        registerWithEmailAndPasswordRequestMiddleware,
   );
 }
 
-typedef InitializedRouters = (
-  AuthRouter authRouter,
-  MatchesRouter matchesRouter,
-);
-InitializedRouters getInitializedRouters({
-  required InitializedControllers initializedControllers,
-  required InitializedMiddlewareWrappers initializedMiddlewareWrappers,
+InitializedRoutersDependenciesValues getInitializedRouters({
+  required InitialiazedControllersDependenciesValues initializedControllers,
+  required InitializedMiddlewareWrappersDependenciesValues
+      initializedMiddlewareWrappers,
 }) {
-  final (
-    googleLoginController,
-    getMatchController,
-    createMatchController,
-    logoutController,
-    registerWithEmailAndPasswordController,
-    loginController,
-  ) = initializedControllers;
-
-  final (
-    requestAuthorizationMiddleware,
-    matchCreateRequestMiddleware,
-    registerWithEmailAndPasswordRequestMiddleware,
-    loginRequestMiddlewareWrapper,
-  ) = initializedMiddlewareWrappers;
-
   final authRouter = AuthRouter(
-    googleLoginController: googleLoginController,
+    googleLoginController: initializedControllers.googleLoginController,
     registerWithEmailAndPasswordController:
-        registerWithEmailAndPasswordController,
-    logoutController: logoutController,
-    loginController: loginController,
-    authorizeRequestMiddlewareWrapper: requestAuthorizationMiddleware,
+        initializedControllers.registerWithEmailAndPasswordController,
+    logoutController: initializedControllers.logoutController,
+    loginController: initializedControllers.loginController,
+    authorizeRequestMiddlewareWrapper:
+        initializedMiddlewareWrappers.authorizeRequestMiddlewareWrapper,
     registerWithEmailAndPasswordRequestMiddlewareWrapper:
-        registerWithEmailAndPasswordRequestMiddleware,
-    loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
+        initializedMiddlewareWrappers
+            .registerWithEmailAndPasswordRequestMiddlewareWrapper,
+    loginRequestMiddlewareWrapper:
+        initializedMiddlewareWrappers.loginRequestMiddlewareWrapper,
   );
 
   final matchesRouter = MatchesRouter(
-    getMatchController: getMatchController,
-    createMatchController: createMatchController,
-    requestAuthorizationMiddleware: requestAuthorizationMiddleware,
-    matchCreateRequestMiddleware: matchCreateRequestMiddleware,
+    getMatchController: initializedControllers.getMatchController,
+    createMatchController: initializedControllers.createMatchController,
+    requestAuthorizationMiddleware:
+        initializedMiddlewareWrappers.authorizeRequestMiddlewareWrapper,
+    matchCreateRequestMiddleware:
+        initializedMiddlewareWrappers.matchCreateRequestMiddlewareWrapper,
   );
 
-  return (
-    authRouter,
-    matchesRouter,
+  return InitializedRoutersDependenciesValues(
+    authRouter: authRouter,
+    matchesRouter: matchesRouter,
   );
 }

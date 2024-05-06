@@ -82,3 +82,23 @@ Response generateTestUnauthorizedResponse({
     },
   );
 }
+
+Response generateTestInternalServerErrorResponse({
+  required String responseMessage,
+  required List<Cookie>? cookies,
+}) {
+  return Response.internalServerError(
+    body: jsonEncode(
+      {
+        "ok": false,
+        "message": responseMessage,
+      },
+    ),
+    headers: {
+      HttpHeaders.contentTypeHeader: "application/json",
+      if (cookies != null)
+        HttpHeaders.setCookieHeader:
+            cookies.map((cookie) => cookie.toString()).toList(),
+    },
+  );
+}

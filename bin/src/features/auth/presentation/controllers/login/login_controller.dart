@@ -34,18 +34,24 @@ class LoginController {
   final CreateJWTAccessTokenCookieUseCase _createJWTAccessTokenCookieUseCase;
 
   Future<Response> call(Request request) async {
-    // final bodyString = await request.readAsString();
-    // final bodyMap = await request.parseBody();
+    final validatedBodyData = request.getValidatedBodyData();
+    if (validatedBodyData == null) {
+      final responseBody = ResponseBodyValue(
+        message: "Request body not validated.",
+        ok: false,
+      );
+      return generateResponse(
+        statusCode: HttpStatus.internalServerError,
+        body: responseBody,
+        cookies: null,
+      );
+    }
 
-    final bodyData = request.context["bodyData"] as Map<String, dynamic>;
-
-    // return Response.ok("ok");
-
-    // TODO temp disable
-
-    final email = bodyData[LoginRequestBodyKeyConstants.EMAIL.value] as String;
+    final email =
+        validatedBodyData[LoginRequestBodyKeyConstants.EMAIL.value] as String;
     final password =
-        bodyData[LoginRequestBodyKeyConstants.PASSWORD.value] as String;
+        validatedBodyData[LoginRequestBodyKeyConstants.PASSWORD.value]
+            as String;
 
     final hashedPassword = _getHashedValueUseCase(value: password);
 

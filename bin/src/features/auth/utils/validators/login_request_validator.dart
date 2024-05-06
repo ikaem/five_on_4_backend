@@ -5,6 +5,7 @@ import 'package:shelf/shelf.dart';
 
 import '../../../../../../test/unit/src/features/matches/utils/mixins/string_checker_mixin.dart';
 import '../../../core/domain/values/response_body_value.dart';
+import '../../../core/utils/constants/request_constants.dart';
 import '../../../core/utils/extensions/request_extension.dart';
 import '../../../core/utils/helpers/response_generator.dart';
 import '../constants/login_request_body_key_constants.dart';
@@ -84,12 +85,17 @@ class LoginRequestValidator with StringCheckerMixin {
         }
 
         // TODO there could be a function or a class to do this
-        final bodyData = {
+        final validatedBodyData = {
           LoginRequestBodyKeyConstants.EMAIL.value: "email",
           LoginRequestBodyKeyConstants.PASSWORD.value: "password",
         };
 
-        final changedRequest = request.change(context: {"bodyData": bodyData});
+        // final changedRequest = request.change(context: {
+        //   RequestConstants.VALIDATED_BODY_DATA.value: validatedBodyData,
+        // });
+        final changedRequest = request.getChangedRequestWithValidatedBodyData(
+          validatedBodyData,
+        );
 
         return validatedRequestHandler(changedRequest);
       };
