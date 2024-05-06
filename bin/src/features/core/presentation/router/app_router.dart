@@ -16,6 +16,7 @@ class AppRouter {
     _router.mount("/auth", authRouter.router.call);
     // _router.mount("/auth", authRouter.router.call);
     _router.mount("/matches", matchesRouter.router.call);
+
     // TODO test only
     // _router.get("/test/<greeting>", testGreeting);
   }

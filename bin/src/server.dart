@@ -78,6 +78,9 @@ final errorReturningMiddleware = createMiddleware(
           "message": "There was an issue on the server"
         },
       ),
+      headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+      },
     );
   },
   requestHandler: (Request request) {

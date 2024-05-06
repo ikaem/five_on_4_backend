@@ -34,11 +34,18 @@ class LoginController {
   final CreateJWTAccessTokenCookieUseCase _createJWTAccessTokenCookieUseCase;
 
   Future<Response> call(Request request) async {
-    final bodyMap = await request.parseBody();
+    // final bodyString = await request.readAsString();
+    // final bodyMap = await request.parseBody();
 
-    final email = bodyMap[LoginRequestBodyKeyConstants.EMAIL.value] as String;
+    final bodyData = request.context["bodyData"] as Map<String, dynamic>;
+
+    // return Response.ok("ok");
+
+    // TODO temp disable
+
+    final email = bodyData[LoginRequestBodyKeyConstants.EMAIL.value] as String;
     final password =
-        bodyMap[LoginRequestBodyKeyConstants.PASSWORD.value] as String;
+        bodyData[LoginRequestBodyKeyConstants.PASSWORD.value] as String;
 
     final hashedPassword = _getHashedValueUseCase(value: password);
 

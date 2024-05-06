@@ -11,7 +11,8 @@ import '../constants/login_request_body_key_constants.dart';
 
 class LoginRequestValidator with StringCheckerMixin {
   FutureOr<Response?> validate(Request request) async {
-    final body = await request.parseBody();
+    final requestCopy = request.change();
+    final body = await requestCopy.parseBody();
 
     // email
     final email = body[LoginRequestBodyKeyConstants.EMAIL.value];
@@ -77,6 +78,18 @@ class LoginRequestValidator with StringCheckerMixin {
         cookies: [],
       );
     }
+
+// TODO abstract this - have body map in contect?
+    // request.context["email"] = email;
+    // request.context["password"] = password;
+
+    // final newContext = {
+    //   "email": email,
+    //   "password": password,
+    // };
+
+    // final newRequest = request.change(context: map);
+    // request = request.change(context: newContext);
 
     return null;
   }
