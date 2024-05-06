@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -11,17 +12,25 @@ import '../../../../../../helpers/response.dart';
 
 void main() {
   final request = _MockRequest();
+  final validatedRequestHandler = _MockValidateRequestHandlderWrapper();
 
   // tested class
   final loginRequestValidator = LoginRequestValidator();
 
+  setUpAll(() {
+    registerFallbackValue(_FakeRequest());
+  });
+
   tearDown(() {
     reset(request);
+    reset(validatedRequestHandler);
   });
 
   group("$LoginRequestValidator", () {
     group(".validate()", () {
       // should return expected response when emaul is missing
+
+      final validatedRequestHandlerResponse = Response(200);
       test(
         "given a request with no email"
         "when .validate() is called"
@@ -32,15 +41,17 @@ void main() {
             LoginRequestBodyKeyConstants.PASSWORD.value: "password",
           };
 
-          // given
+          // // given
           when(() => request.readAsString())
               .thenAnswer((i) async => jsonEncode(requestMap));
 
-          // when
-          final response = await loginRequestValidator.validate(request);
-          final responseString = jsonDecode(await response!.readAsString());
+          // // when
+          final response = await loginRequestValidator.validate(
+            validatedRequestHandler: validatedRequestHandler.call,
+          )(request);
+          final responseString = jsonDecode(await response.readAsString());
 
-          // then
+          // // then
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Email is required.",
             cookies: [],
@@ -75,8 +86,10 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await loginRequestValidator.validate(request);
-          final responseString = jsonDecode(await response!.readAsString());
+          final response = await loginRequestValidator.validate(
+            validatedRequestHandler: validatedRequestHandler.call,
+          )(request);
+          final responseString = jsonDecode(await response.readAsString());
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -96,7 +109,7 @@ void main() {
         },
       );
 
-      // should return expected response when email is invalid
+      // // should return expected response when email is invalid
       test(
         "given a request with email being invalid"
         "when .validate() is called"
@@ -113,8 +126,10 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await loginRequestValidator.validate(request);
-          final responseString = jsonDecode(await response!.readAsString());
+          final response = await loginRequestValidator.validate(
+            validatedRequestHandler: validatedRequestHandler.call,
+          )(request);
+          final responseString = jsonDecode(await response.readAsString());
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -134,7 +149,7 @@ void main() {
         },
       );
 
-      // should return expected response when password is missing
+      // // should return expected response when password is missing
       test(
         "given a request with no password"
         "when .validate() is called"
@@ -150,8 +165,10 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await loginRequestValidator.validate(request);
-          final responseString = jsonDecode(await response!.readAsString());
+          final response = await loginRequestValidator.validate(
+            validatedRequestHandler: validatedRequestHandler.call,
+          )(request);
+          final responseString = jsonDecode(await response.readAsString());
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -171,7 +188,7 @@ void main() {
         },
       );
 
-      // should return expected response when password is not a string
+      // // should return expected response when password is not a string
       test(
         "given a request with password not being a string"
         "when .validate() is called"
@@ -188,8 +205,10 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await loginRequestValidator.validate(request);
-          final responseString = jsonDecode(await response!.readAsString());
+          final response = await loginRequestValidator.validate(
+            validatedRequestHandler: validatedRequestHandler.call,
+          )(request);
+          final responseString = jsonDecode(await response.readAsString());
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -209,27 +228,37 @@ void main() {
         },
       );
 
-      // should return null when email and password are valid
       test(
         "given a request with valid email and password"
         "when .validate() is called"
-        "then should return null",
+        "then should return result of call to validatedRequestHandler",
         () async {
           // setup
+          final changedRequest = _FakeRequest();
+
           final requestMap = {
             LoginRequestBodyKeyConstants.EMAIL.value: "test@test.net",
             LoginRequestBodyKeyConstants.PASSWORD.value: "password",
           };
+          // TODO possibly not needed
+          when(() => validatedRequestHandler(any()))
+              .thenAnswer((i) async => validatedRequestHandlerResponse);
 
+          when(() => request.change(context: any(named: "context")))
+              .thenAnswer((i) => changedRequest);
           // given
           when(() => request.readAsString())
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await loginRequestValidator.validate(request);
+          final response = await loginRequestValidator.validate(
+            validatedRequestHandler: validatedRequestHandler.call,
+          )(request);
+          // final responseString = jsonDecode(await response.readAsString());
 
           // then
-          expect(response, isNull);
+          verify(() => validatedRequestHandler(changedRequest)).called(1);
+          expect(response, equals(validatedRequestHandlerResponse));
 
           // cleanup
         },
@@ -239,3 +268,10 @@ void main() {
 }
 
 class _MockRequest extends Mock implements Request {}
+
+class _MockValidateRequestHandlderWrapper extends Mock {
+  // FutureOr<Response?> call(Request request);
+  Future<Response> call(Request request);
+}
+
+class _FakeRequest extends Fake implements Request {}
