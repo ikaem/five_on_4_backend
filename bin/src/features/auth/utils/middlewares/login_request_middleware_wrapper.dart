@@ -8,13 +8,19 @@ import '../../../core/domain/values/response_body_value.dart';
 import '../../../core/utils/extensions/request_extension.dart';
 import '../../../core/utils/helpers/response_generator.dart';
 import '../constants/login_request_body_key_constants.dart';
+import '../validators/login_request_validator.dart';
 
 class LoginRequestMiddlewareWrapper implements CustomMiddlewareWrapper {
   const LoginRequestMiddlewareWrapper({
-    required FutureOr<Response?> Function(Request request)? requestHandler,
-  }) : _requestHandler = requestHandler;
+    // required FutureOr<Response?> Function(Request request)? requestHandler,
+    required LoginRequestValidator loginRequestValidator,
+  }) : _loginRequestValidator = loginRequestValidator;
 
-  final FutureOr<Response?> Function(Request request)? _requestHandler;
+  // _requestHandler = requestHandler;
+
+  // final FutureOr<Response?> Function(Request request)? _requestHandler;
+
+  final LoginRequestValidator _loginRequestValidator;
 
   @override
   Middleware call() {
@@ -33,7 +39,11 @@ class LoginRequestMiddlewareWrapper implements CustomMiddlewareWrapper {
         });
       }
 
-      return validator(validatedRequestHandler: validatedRequestHandler);
+      return _loginRequestValidator.validate(
+        validatedRequestHandler: validatedRequestHandler,
+      );
+
+      // return validator(validatedRequestHandler: validatedRequestHandler);
     }
 
 // TODO this works
