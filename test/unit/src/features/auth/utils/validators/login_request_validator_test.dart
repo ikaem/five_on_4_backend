@@ -30,7 +30,6 @@ void main() {
     group(".validate()", () {
       // should return expected response when emaul is missing
 
-      final validatedRequestHandlerResponse = Response(200);
       test(
         "given a request with no email"
         "when .validate() is called"
@@ -240,7 +239,8 @@ void main() {
             LoginRequestBodyKeyConstants.EMAIL.value: "test@test.net",
             LoginRequestBodyKeyConstants.PASSWORD.value: "password",
           };
-          // TODO possibly not needed
+
+          final validatedRequestHandlerResponse = Response(200);
           when(() => validatedRequestHandler(any()))
               .thenAnswer((i) async => validatedRequestHandlerResponse);
 

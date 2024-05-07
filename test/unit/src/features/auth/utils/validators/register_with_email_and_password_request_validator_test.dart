@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 
 import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
@@ -10,12 +12,18 @@ import '../../../../../../helpers/response.dart';
 
 void main() {
   final request = _MockRequest();
+  final validatedRequestHandler = _MockValidateRequestHandlderWrapper();
 
   // tested class
   final validator = RegisterWithEmailAndPasswordRequestValidator();
 
+  setUpAll(() {
+    registerFallbackValue(_FakeRequest());
+  });
+
   tearDown(() {
     reset(request);
+    reset(validatedRequestHandler);
   });
 
   group("$RegisterWithEmailAndPasswordRequestValidator", () {
@@ -43,13 +51,15 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await validator.validate(request);
-          final responseString = await response!.readAsString();
+          final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(request);
+          final responseString = await response.readAsString();
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Email is required.",
             // TODO this needs to be asserted as well
+            // TODO this should probably be null
             cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
@@ -59,6 +69,8 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
+          expect(response.headers[HttpHeaders.setCookieHeader],
+              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -87,8 +99,9 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await validator.validate(request);
-          final responseString = await response!.readAsString();
+          final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(request);
+          final responseString = await response.readAsString();
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -103,6 +116,8 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
+          expect(response.headers[HttpHeaders.setCookieHeader],
+              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -133,8 +148,9 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await validator.validate(request);
-          final responseString = await response!.readAsString();
+          final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(request);
+          final responseString = await response.readAsString();
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -149,12 +165,14 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
+          expect(response.headers[HttpHeaders.setCookieHeader],
+              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
       );
 
-      // should return expected response if password is not provided
+      // // should return expected response if password is not provided
       test(
         "given a request with no password"
         "when .validate() is called"
@@ -177,8 +195,9 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await validator.validate(request);
-          final responseString = await response!.readAsString();
+          final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(request);
+          final responseString = await response.readAsString();
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -193,11 +212,13 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
+          expect(response.headers[HttpHeaders.setCookieHeader],
+              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
       );
-      // should return expected response if password is not a string
+      // // should return expected response if password is not a string
       test(
         "given a request with password not being a string"
         "when .validate() is called"
@@ -222,8 +243,9 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await validator.validate(request);
-          final responseString = await response!.readAsString();
+          final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(request);
+          final responseString = await response.readAsString();
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -238,12 +260,14 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
+          expect(response.headers[HttpHeaders.setCookieHeader],
+              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
       );
 
-      // should return expected response if password is less than 6 characters
+      // // should return expected response if password is less than 6 characters
       test(
         "given password is less than 6 characters"
         "when .validate() is called"
@@ -268,8 +292,9 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await validator.validate(request);
-          final responseString = await response!.readAsString();
+          final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(request);
+          final responseString = await response.readAsString();
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -284,12 +309,14 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
+          expect(response.headers[HttpHeaders.setCookieHeader],
+              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
       );
 
-      // should return expected response if password is more than 20 characters
+      // // should return expected response if password is more than 20 characters
       test(
         "given password is longer than 20 characters"
         "when .validate() is called"
@@ -314,8 +341,9 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await validator.validate(request);
-          final responseString = await response!.readAsString();
+          final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(request);
+          final responseString = await response.readAsString();
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -330,12 +358,13 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
-
+          expect(response.headers[HttpHeaders.setCookieHeader],
+              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
           // cleanup
         },
       );
 
-      // should return expected response if password is not alphanumeric
+      // // should return expected response if password is not alphanumeric
       test(
         "given password does not contain both letters and numbers"
         "when .validate() is called"
@@ -360,8 +389,9 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await validator.validate(request);
-          final responseString = await response!.readAsString();
+          final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(request);
+          final responseString = await response.readAsString();
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -377,12 +407,14 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
+          expect(response.headers[HttpHeaders.setCookieHeader],
+              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
       );
 
-      // should return expected response if first name is not provided
+      // // should return expected response if first name is not provided
       test(
         "given a request with no first name"
         "when .validate() is called"
@@ -405,8 +437,9 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await validator.validate(request);
-          final responseString = await response!.readAsString();
+          final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(request);
+          final responseString = await response.readAsString();
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -421,12 +454,14 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
+          expect(response.headers[HttpHeaders.setCookieHeader],
+              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
       );
 
-      // should return expected response if first name is not a string
+      // // should return expected response if first name is not a string
       test(
         "given a request with first name not being a string"
         "when .validate() is called"
@@ -451,8 +486,9 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await validator.validate(request);
-          final responseString = await response!.readAsString();
+          final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(request);
+          final responseString = await response.readAsString();
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -467,12 +503,14 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
+          expect(response.headers[HttpHeaders.setCookieHeader],
+              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
       );
 
-      // should return expected response if last name is not provided
+      // // should return expected response if last name is not provided
       test(
         "given a request with no last name"
         "when .validate() is called"
@@ -495,8 +533,9 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await validator.validate(request);
-          final responseString = await response!.readAsString();
+          final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(request);
+          final responseString = await response.readAsString();
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -511,12 +550,14 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
+          expect(response.headers[HttpHeaders.setCookieHeader],
+              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
       );
 
-      // should return expected response if last name is not a string
+      // // should return expected response if last name is not a string
       test(
         "given a request with last name not being a string"
         "when .validate() is called"
@@ -541,8 +582,9 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await validator.validate(request);
-          final responseString = await response!.readAsString();
+          final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(request);
+          final responseString = await response.readAsString();
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -557,12 +599,14 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
+          expect(response.headers[HttpHeaders.setCookieHeader],
+              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
       );
 
-      // should return expected response if nickname is not provided
+      // // should return expected response if nickname is not provided
       test(
         "given a request with no nickname"
         "when .validate() is called"
@@ -585,8 +629,9 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await validator.validate(request);
-          final responseString = await response!.readAsString();
+          final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(request);
+          final responseString = await response.readAsString();
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -606,7 +651,7 @@ void main() {
         },
       );
 
-      // should return expected response if nickname is not a string
+      // // should return expected response if nickname is not a string
       test(
         "given a request with nickname not being a string"
         "when .validate() is called"
@@ -631,8 +676,9 @@ void main() {
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await validator.validate(request);
-          final responseString = await response!.readAsString();
+          final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(request);
+          final responseString = await response.readAsString();
 
           // then
           final expectedResponse = generateTestBadRequestResponse(
@@ -655,9 +701,10 @@ void main() {
       test(
         "given a valid request"
         "when .validate() is called"
-        "then should return null",
+        "then should return result of call to validatedRequestHandler",
         () async {
           // setup
+
           final requestMap = {
             RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
                 "email@valid.com",
@@ -671,15 +718,22 @@ void main() {
                 "NICKNAME",
           };
 
+          final validatedRequestHandlerResponse = Response(200);
+          when(() => validatedRequestHandler.call(any())).thenAnswer(
+            (i) async => validatedRequestHandlerResponse,
+          );
+
           // given
           when(() => request.readAsString())
               .thenAnswer((i) async => jsonEncode(requestMap));
 
           // when
-          final response = await validator.validate(request);
+          final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(request);
 
           // then
-          expect(response, isNull);
+          verify(() => validatedRequestHandler.call(any())).called(1);
+          expect(response, equals(validatedRequestHandlerResponse));
 
           // cleanup
         },
@@ -689,3 +743,10 @@ void main() {
 }
 
 class _MockRequest extends Mock implements Request {}
+
+class _MockValidateRequestHandlderWrapper extends Mock {
+  // FutureOr<Response?> call(Request request);
+  Future<Response> call(Request request);
+}
+
+class _FakeRequest extends Fake implements Request {}
