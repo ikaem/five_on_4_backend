@@ -24,8 +24,8 @@ void main() {
           final request = Request("post", Uri.parse("https://example.com/"));
 
           // given
-          final loginRequestHandler = _MockLoginRequestValidator();
-          when(() => loginRequestHandler.validate(
+          final loginRequestValidator = _MockLoginRequestValidator();
+          when(() => loginRequestValidator.validate(
               validatedRequestHandler:
                   any(named: "validatedRequestHandler"))).thenReturn(
               // (request) => loginRequestHandlerCallback.call(request));
@@ -37,7 +37,7 @@ void main() {
           });
 
           final middlewareWrapper = LoginRequestMiddlewareWrapper(
-            loginRequestValidator: loginRequestHandler,
+            loginRequestValidator: loginRequestValidator,
           );
 
           // get middleware from the wrapper
@@ -55,7 +55,7 @@ void main() {
 
           // then
           // verify that request handler was called
-          verify(() => loginRequestHandler.validate(
+          verify(() => loginRequestValidator.validate(
               validatedRequestHandler:
                   any(named: "validatedRequestHandler"))).called(1);
 

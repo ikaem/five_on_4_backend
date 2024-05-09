@@ -16,6 +16,8 @@ void main() {
   final getAccessTokenDataFromAccessJwtUseCase =
       _MockGetAccessTokenDataFromAccessJwtUseCase();
 
+  final validatedRequestHandler = _MockValidatedRequestHandlderWrapper();
+
 // tested class
   final validator = LogoutRequestValidator(
     getCookieByNameInStringUseCase: getCookieByNameInStringUseCase,
@@ -27,6 +29,7 @@ void main() {
     reset(request);
     reset(getCookieByNameInStringUseCase);
     reset(getAccessTokenDataFromAccessJwtUseCase);
+    reset(validatedRequestHandler);
   });
 
   group(
@@ -45,8 +48,10 @@ void main() {
             when(() => request.headers).thenReturn({});
 
             // when
-            final response = await validator.validate(request);
-            final responseString = await response!.readAsString();
+            final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call,
+            )(request);
+            final responseString = await response.readAsString();
 
             // then
             final expectedResponse = generateTestBadRequestResponse(
@@ -84,8 +89,10 @@ void main() {
             });
 
             // when
-            final response = await validator.validate(request);
-            final responseString = await response!.readAsString();
+            final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call,
+            )(request);
+            final responseString = await response.readAsString();
 
             // then
             final expectedResponse = generateTestBadRequestResponse(
@@ -132,8 +139,10 @@ void main() {
                 )).thenReturn(invalidAccessTokenData);
 
             // when
-            final response = await validator.validate(request);
-            final responseString = await response!.readAsString();
+            final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call,
+            )(request);
+            final responseString = await response.readAsString();
 
             // then
             final expectedResponse = generateTestBadRequestResponse(
@@ -180,8 +189,10 @@ void main() {
                 )).thenReturn(expiredAccessTokenData);
 
             // when
-            final response = await validator.validate(request);
-            final responseString = await response!.readAsString();
+            final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call,
+            )(request);
+            final responseString = await response.readAsString();
 
             // then
             final expectedResponse = generateTestBadRequestResponse(
@@ -200,6 +211,48 @@ void main() {
           },
         );
 
+        test(
+          "given a valid request"
+          "when .validate() is called"
+          "then should return result of call to validatedRequestHandler",
+          () async {
+            // setup
+            final cookie =
+                _generateTestCookie(name: "accessToken", value: "valid_jwt");
+
+            final validatedRequestHandlerResponse = Response.ok("ok");
+            when(() => validatedRequestHandler.call(request))
+                .thenAnswer((_) async => validatedRequestHandlerResponse);
+
+            when(() => getCookieByNameInStringUseCase(
+                  cookiesString: any(named: "cookiesString"),
+                  cookieName: any(named: "cookieName"),
+                )).thenReturn(cookie);
+
+            // given
+            when(() => request.headers).thenReturn({
+              HttpHeaders.cookieHeader: cookie.toString(),
+            });
+
+            final validAccessTokenData =
+                AccessTokenDataValueValid(authId: 1, playerId: 1);
+            when(() => getAccessTokenDataFromAccessJwtUseCase(
+                  jwt: any(named: "jwt"),
+                )).thenReturn(validAccessTokenData);
+
+            // when
+            final response = await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call,
+            )(request);
+
+            // then
+            verify(() => validatedRequestHandler.call(request)).called(1);
+            expect(response, equals(validatedRequestHandlerResponse));
+
+            // cleanup
+          },
+        );
+
         // should return null if all good
       });
     },
@@ -213,6 +266,11 @@ class _MockGetCookieByNameInStringUseCase extends Mock
 
 class _MockGetAccessTokenDataFromAccessJwtUseCase extends Mock
     implements GetAccessTokenDataFromAccessJwtUseCase {}
+
+class _MockValidatedRequestHandlderWrapper extends Mock {
+  // FutureOr<Response?> call(Request request);
+  Future<Response> call(Request request);
+}
 
 Cookie _generateTestCookie({required String name, required String value}) {
   return Cookie(name, value);
