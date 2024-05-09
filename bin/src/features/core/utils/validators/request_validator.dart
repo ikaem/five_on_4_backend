@@ -5,7 +5,7 @@ import 'package:shelf/shelf.dart';
 typedef ValidatedRequestHandler = FutureOr<Response> Function(
   Request validatedRequest,
 );
-typedef ValidationHandler = FutureOr<Response> Function(Request request);
+typedef ValidationHandler = Future<Response> Function(Request request);
 
 abstract interface class RequestValidator {
   ValidationHandler validate({

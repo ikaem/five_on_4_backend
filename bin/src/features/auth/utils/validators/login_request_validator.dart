@@ -15,6 +15,8 @@ import '../constants/login_request_body_key_constants.dart';
 class LoginRequestValidator
     with StringCheckerMixin
     implements RequestValidator {
+  const LoginRequestValidator();
+
   @override
   ValidationHandler validate({
     required ValidatedRequestHandler validatedRequestHandler,
@@ -90,8 +92,8 @@ class LoginRequestValidator
 
         // TODO there could be a function or a class to do this
         final validatedBodyData = {
-          LoginRequestBodyKeyConstants.EMAIL.value: "email",
-          LoginRequestBodyKeyConstants.PASSWORD.value: "password",
+          LoginRequestBodyKeyConstants.EMAIL.value: email,
+          LoginRequestBodyKeyConstants.PASSWORD.value: password,
         };
 
         final changedRequest = request.getChangedRequestWithValidatedBodyData(

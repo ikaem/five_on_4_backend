@@ -39,12 +39,20 @@ class LoginRequestMiddlewareWrapper implements CustomMiddlewareWrapper {
         });
       }
 
+      // return (Request request) {
+      //   return Future.sync(() => innerHandler(request)).then((response) {
+      //     return response;
+      //   });
+      // };
+
       return _loginRequestValidator.validate(
         validatedRequestHandler: validatedRequestHandler,
       );
 
       // return validator(validatedRequestHandler: validatedRequestHandler);
     }
+
+    return middleware;
 
 // TODO this works
     // Future<Response> Function(Request) middleware(
@@ -73,8 +81,6 @@ class LoginRequestMiddlewareWrapper implements CustomMiddlewareWrapper {
 
     //   return validator;
     // }
-
-    return middleware;
   }
 }
 

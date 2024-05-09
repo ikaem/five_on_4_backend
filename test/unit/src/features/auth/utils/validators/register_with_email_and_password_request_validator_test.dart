@@ -704,6 +704,7 @@ void main() {
         "then should return result of call to validatedRequestHandler",
         () async {
           // setup
+          final changedRequest = _FakeRequest();
 
           final requestMap = {
             RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
@@ -723,6 +724,9 @@ void main() {
             (i) async => validatedRequestHandlerResponse,
           );
 
+          when(() => request.change(context: any(named: "context")))
+              .thenReturn(changedRequest);
+
           // given
           when(() => request.readAsString())
               .thenAnswer((i) async => jsonEncode(requestMap));
@@ -732,7 +736,7 @@ void main() {
               validatedRequestHandler: validatedRequestHandler.call)(request);
 
           // then
-          verify(() => validatedRequestHandler.call(any())).called(1);
+          verify(() => validatedRequestHandler.call(changedRequest)).called(1);
           expect(response, equals(validatedRequestHandlerResponse));
 
           // cleanup

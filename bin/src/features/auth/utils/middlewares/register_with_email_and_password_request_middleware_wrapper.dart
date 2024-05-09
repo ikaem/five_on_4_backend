@@ -25,10 +25,38 @@ class RegisterWithEmailAndPasswordRequestMiddlewareWrapper
 
   @override
   Middleware call() {
-    final middleware = createMiddleware(
-      // requestHandler: _requestHandler,
-      requestHandler: _registerWithEmailAndPasswordRequestValidator.validate,
-    );
+    // TODO this is same everywhere - so there has to be a way to abstract this
+    Future<Response> Function(Request) middleware(
+      FutureOr<Response> Function(Request) innerHandler,
+    ) {
+      Future<Response> validatedRequestHandler(Request validatedRequest) async {
+        return Future.sync(() => innerHandler(validatedRequest))
+            .then((Response response) {
+          return response;
+        });
+      }
+
+      // return (Request request) {
+      //   return Future.sync(() => innerHandler(request)).then((response) {
+      //     return response;
+      //   });
+      // };
+
+      // TODO only this is different
+      return _registerWithEmailAndPasswordRequestValidator.validate(
+        validatedRequestHandler: validatedRequestHandler,
+      );
+
+      // return validator(validatedRequestHandler: validatedRequestHandler);
+    }
+
     return middleware;
+
+    // final middleware = createMiddleware(
+    //   // requestHandler: _requestHandler,
+    //   // requestHandler: _registerWithEmailAndPasswordRequestValidator.validate,
+
+    // );
+    // return middleware;
   }
 }

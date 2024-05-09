@@ -8,11 +8,12 @@ import 'package:test/test.dart';
 
 import '../../../../../../../bin/src/features/auth/utils/constants/login_request_body_key_constants.dart';
 import '../../../../../../../bin/src/features/auth/utils/validators/login_request_validator.dart';
+import '../../../../../../../bin/src/wrappers/local/google_apis/google_apis_wrapper.dart';
 import '../../../../../../helpers/response.dart';
 
 void main() {
   final request = _MockRequest();
-  final validatedRequestHandler = _MockValidateRequestHandlderWrapper();
+  final validatedRequestHandler = _MockValidatedRequestHandlderWrapper();
 
   // tested class
   final loginRequestValidator = LoginRequestValidator();
@@ -246,6 +247,7 @@ void main() {
 
           when(() => request.change(context: any(named: "context")))
               .thenAnswer((i) => changedRequest);
+
           // given
           when(() => request.readAsString())
               .thenAnswer((i) async => jsonEncode(requestMap));
@@ -263,13 +265,65 @@ void main() {
           // cleanup
         },
       );
+
+      test(
+        "given a request with valid email and password"
+        "when .validate() is called"
+        "then should have expected changedRequest passed to validatedRequestHandler",
+        () async {
+          // setup
+          // expected changedRequest passed to validatedRequestHandler is propagated all the way to the controller
+          // it is important to test that the request is changed as expected, to make sure that the controller has access to the expected context fields
+          final requestBody = {
+            LoginRequestBodyKeyConstants.EMAIL.value: "test@test.net",
+            LoginRequestBodyKeyConstants.PASSWORD.value: "password",
+          };
+
+          when(() => validatedRequestHandler(any()))
+              .thenAnswer((i) async => Response.ok("ok"));
+
+          // given
+          final originalRequest = Request(
+            "post",
+            Uri.parse("http://www.test.com/"),
+            // TODO this could work too
+            // body: Stream.fromIterable(
+            //   [utf8.encode(jsonEncode(requestBody))],
+            // ),
+            body: jsonEncode(requestBody),
+          );
+
+          // when
+          await loginRequestValidator.validate(
+            validatedRequestHandler: validatedRequestHandler.call,
+          )(originalRequest);
+
+          // then
+
+          final expectedValidatedBodyData = {
+            LoginRequestBodyKeyConstants.EMAIL.value: "test@test.net",
+            LoginRequestBodyKeyConstants.PASSWORD.value: "password",
+          };
+
+          final captured =
+              verify(() => validatedRequestHandler(captureAny())).captured;
+          final changedRequest = captured.first as Request;
+          final validatedBodyData = changedRequest.context["validatedBodyData"];
+
+          expect(validatedBodyData, equals(expectedValidatedBodyData));
+
+          print("hello");
+
+          // cleanup
+        },
+      );
     });
   });
 }
 
 class _MockRequest extends Mock implements Request {}
 
-class _MockValidateRequestHandlderWrapper extends Mock {
+class _MockValidatedRequestHandlderWrapper extends Mock {
   // FutureOr<Response?> call(Request request);
   Future<Response> call(Request request);
 }
