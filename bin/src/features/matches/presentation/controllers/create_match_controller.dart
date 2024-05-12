@@ -1,9 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 
+import '../../../core/domain/values/response_body_value.dart';
 import '../../../core/utils/extensions/date_time_extension.dart';
 import '../../../core/utils/extensions/request_extension.dart';
+import '../../../core/utils/helpers/response_generator.dart';
 import '../../domain/use_cases/create_match/create_match_use_case.dart';
 import '../../utils/constants/match_create_request_body_key_constants.dart';
 
@@ -18,16 +21,33 @@ class CreateMatchController {
     Request request,
   ) async {
     // TODO validation will be done by CreateMatchValidatorMiddleware
-    final bodyMap = await request.parseBody();
+    // final bodyMap = await request.parseBody();
+    final validatedBodyData = request.getValidatedBodyData();
+    if (validatedBodyData == null) {
+      final responseBody = ResponseBodyValue(
+        message: "Request body not validated.",
+        ok: false,
+      );
+      return generateResponse(
+        statusCode: HttpStatus.internalServerError,
+        body: responseBody,
+        // cookies: cookies,
+        // TODO will need cookies
+        cookies: [],
+      );
+    }
 
     final title =
-        bodyMap[MatchCreateRequestBodyKeyConstants.TITLE.value] as String;
-    final dateAndTime =
-        bodyMap[MatchCreateRequestBodyKeyConstants.DATE_AND_TIME.value] as int;
+        validatedBodyData[MatchCreateRequestBodyKeyConstants.TITLE.value]
+            as String;
+    final dateAndTime = validatedBodyData[
+        MatchCreateRequestBodyKeyConstants.DATE_AND_TIME.value] as int;
     final location =
-        bodyMap[MatchCreateRequestBodyKeyConstants.LOCATION.value] as String;
+        validatedBodyData[MatchCreateRequestBodyKeyConstants.LOCATION.value]
+            as String;
     final description =
-        bodyMap[MatchCreateRequestBodyKeyConstants.DESCRIPTION.value] as String;
+        validatedBodyData[MatchCreateRequestBodyKeyConstants.DESCRIPTION.value]
+            as String;
 
     final nowDate = DateTime.now().normalizedToSeconds.millisecondsSinceEpoch;
     final createdAt = nowDate;

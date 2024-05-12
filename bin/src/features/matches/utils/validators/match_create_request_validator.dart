@@ -29,6 +29,7 @@ class MatchCreateRequestValidator implements RequestValidator {
           return generateResponse(
             statusCode: HttpStatus.badRequest,
             body: responseBody,
+            // TODO this is incorrect  - cookies should be updated in the repsonse
             cookies: [],
           );
         }
