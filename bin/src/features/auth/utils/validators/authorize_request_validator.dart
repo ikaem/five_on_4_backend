@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 
 import '../../../core/domain/values/response_body_value.dart';
-import '../../../core/utils/helpers/generate_response.dart';
+import '../../../core/utils/helpers/response_generator.dart';
 import '../../../core/utils/validators/request_validator.dart';
 import '../../domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
 import '../../../players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
