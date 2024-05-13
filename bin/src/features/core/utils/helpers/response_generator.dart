@@ -4,6 +4,20 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 
 abstract class ResponseGenerator {
+  static Response failure({
+    required String message,
+    required int statusCode,
+  }) {
+    final response = _generateResponse(
+      message: message,
+      data: null,
+      statusCode: statusCode,
+      ok: false,
+    );
+
+    return response;
+  }
+
   static Response success({
     required String message,
     required Map<String, Object?>? data,
