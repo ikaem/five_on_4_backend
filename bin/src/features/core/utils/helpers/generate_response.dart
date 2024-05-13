@@ -8,6 +8,7 @@ import 'package:shelf/shelf.dart';
 
 import '../../domain/values/response_body_value.dart';
 
+// TODO this might be outdated
 Response generateResponse({
   required int statusCode,
   required ResponseBodyValue body,

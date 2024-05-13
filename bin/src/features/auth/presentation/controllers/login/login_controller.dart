@@ -6,7 +6,7 @@ import '../../../../core/domain/use_cases/create_jwt_access_token_cookie/create_
 import '../../../../core/domain/use_cases/get_hashed_value/get_hashed_value_use_case.dart';
 import '../../../../core/domain/values/response_body_value.dart';
 import '../../../../core/utils/extensions/request_extension.dart';
-import '../../../../core/utils/helpers/response_generator.dart';
+import '../../../../core/utils/helpers/generate_response.dart';
 import '../../../../players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
 import '../../../domain/use_cases/get_auth_by_email_and_hashed_password/get_auth_by_email_and_hashed_password_use_case.dart';
 import '../../../utils/constants/login_request_body_key_constants.dart';
