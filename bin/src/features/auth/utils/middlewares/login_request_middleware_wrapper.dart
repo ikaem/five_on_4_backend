@@ -6,7 +6,7 @@ import 'package:shelf/shelf.dart';
 import '../../../../wrappers/local/custom_middleware/custom_middleware_wrapper.dart';
 import '../../../core/domain/values/response_body_value.dart';
 import '../../../core/utils/extensions/request_extension.dart';
-import '../../../core/utils/helpers/response_generator.dart';
+import '../../../core/utils/helpers/generate_response.dart';
 import '../constants/login_request_body_key_constants.dart';
 import '../validators/login_request_validator.dart';
 
