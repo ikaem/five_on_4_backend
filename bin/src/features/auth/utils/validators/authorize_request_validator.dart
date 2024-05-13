@@ -20,6 +20,7 @@ import '../../../core/domain/values/access_token_data_value.dart';
 // TODO create validator interface somewhere
 class AuthorizeRequestValidator implements RequestValidator {
   const AuthorizeRequestValidator({
+    // TODO this will not be needed here anymore
     required GetCookieByNameInStringUseCase getCookieByNameInStringUseCase,
     required GetAccessTokenDataFromAccessJwtUseCase
         getAccessTokenDataFromAccessJwtUseCase,
