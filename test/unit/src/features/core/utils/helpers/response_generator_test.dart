@@ -8,7 +8,175 @@ import '../../../../../../../bin/src/features/core/utils/helpers/response_genera
 
 void main() {
   group("$ResponseGenerator", () {
-    group("failure", () {
+    group(".auth()", () {
+      // should return expected response
+      test(
+        "given required arguments"
+        "when .auth() is called"
+        "then should return expected response",
+        () async {
+          // setup
+
+          // given
+          final message = "message";
+          final data = {"data": "data"};
+
+          // when
+          final response = ResponseGenerator.auth(
+            message: message,
+            data: data,
+            accessToken: "accessToken",
+            refreshTokenCookie: Cookie("refresh_token", "refreshToken"),
+          );
+          final responseBodyString = await response.readAsString();
+
+          // then
+          final expectedResponse = Response(HttpStatus.ok,
+              body: jsonEncode({
+                "ok": true,
+                "message": message,
+                "data": data,
+              }));
+          final expectedResponseBodyString =
+              await expectedResponse.readAsString();
+
+          expect(response.statusCode, expectedResponse.statusCode);
+          expect(responseBodyString, expectedResponseBodyString);
+
+          // cleanup
+        },
+      );
+
+      // should return response with expected status code
+      test(
+        "given custom http status code is provided"
+        "when .auth() is called"
+        "then should return expected response",
+        () async {
+          // setup
+
+          // given
+          final message = "message";
+          final data = {"data": "data"};
+          final statusCode = HttpStatus.created;
+
+          // when
+          final response = ResponseGenerator.auth(
+            message: message,
+            data: data,
+            statusCode: statusCode,
+            accessToken: "accessToken",
+            refreshTokenCookie: Cookie("refresh_token", "refreshToken"),
+          );
+          final responseBodyString = await response.readAsString();
+
+          // then
+          final expectedResponse = Response(statusCode,
+              body: jsonEncode({
+                "ok": true,
+                "message": message,
+                "data": data,
+              }));
+          final expectedResponseBodyString =
+              await expectedResponse.readAsString();
+
+          expect(response.statusCode, expectedResponse.statusCode);
+          expect(responseBodyString, expectedResponseBodyString);
+
+          // cleanup
+        },
+      );
+
+      // should return response with json content type
+      test(
+        "given response is returned "
+        "when examine response headers "
+        "then should have content type set as json",
+        () async {
+          // setup
+          final message = "message";
+          final data = {"data": "data"};
+
+          // given
+          final response = ResponseGenerator.auth(
+            message: message,
+            data: data,
+            accessToken: "accessToken",
+            refreshTokenCookie: Cookie("refresh_token", "refreshToken"),
+          );
+
+          // when / then
+          expect(response.headers[HttpHeaders.contentTypeHeader],
+              "application/json");
+
+          // cleanup
+        },
+      );
+
+      // should include access token in response headers
+      test(
+        "given access token is provided"
+        "when .auth() is called"
+        "then should return response with expected access token in headers ",
+        () async {
+          // setup
+
+          // given
+          final message = "message";
+          final data = {"data": "data"};
+          final accessToken = "accessToken";
+          final refreshTokenCookie = Cookie("refresh_token", "refreshToken");
+
+          // when
+          final response = ResponseGenerator.auth(
+            message: message,
+            data: data,
+            accessToken: accessToken,
+            refreshTokenCookie: refreshTokenCookie,
+          );
+
+          // then
+          expect(
+            response.headers["five_on_4_access_token"],
+            accessToken,
+          );
+
+          // cleanup
+        },
+      );
+
+      // should include refresh token in http only cookie
+      test(
+        "given refresh token cookie is provided"
+        "when .auth() is called"
+        "then should return response with expected refresh token cookie",
+        () async {
+          // setup
+
+          // given
+          final message = "message";
+          final data = {"data": "data"};
+          final refreshTokenCookie = Cookie("refresh_token", "refreshToken");
+          final accessToken = "accessToken";
+
+          // when
+          final response = ResponseGenerator.auth(
+            message: message,
+            data: data,
+            accessToken: accessToken,
+            refreshTokenCookie: refreshTokenCookie,
+          );
+
+          // then
+          final cookies = response.headers[HttpHeaders.setCookieHeader];
+
+          expect(cookies, contains(refreshTokenCookie.toString()));
+
+          // cleanup
+        },
+      );
+    });
+    group(".failure()", () {
       // should return expected response
       test(
         "given required arguments"
