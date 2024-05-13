@@ -4,7 +4,7 @@ import 'package:shelf/shelf.dart';
 
 import '../../../core/domain/values/response_body_value.dart';
 import '../../../core/utils/extensions/request_extension.dart';
-import '../../../core/utils/helpers/generate_response.dart';
+import '../../../core/utils/helpers/response_generator.dart';
 import '../../../core/utils/validators/request_validator.dart';
 import '../constants/match_create_request_body_key_constants.dart';
 
