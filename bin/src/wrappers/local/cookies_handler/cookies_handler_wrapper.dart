@@ -11,6 +11,7 @@ class CookiesHandlerWrapper {
     required String cookieName,
   }) {
     // split all cookies into a list
+    // TODO this might not be correct - but this should be habndling cookies from "cookie" header, not from "set-cookie" header, so maybe it is ok. we will see
     final cookiesStrings = cookiesString.split(";");
     // trim result so no empty spaces
     final trimmedCookiesStrings =
