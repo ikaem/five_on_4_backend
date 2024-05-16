@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 
+// TODO remove cookie from everywhere expecpt auth response
 Response generateTestBadRequestResponse({
   required String responseMessage,
   required List<Cookie>? cookies,
@@ -65,7 +66,7 @@ Response generateTestOkResponse({
 
 Response generateTestUnauthorizedResponse({
   required String responseMessage,
-  required List<Cookie>? cookies,
+  // required List<Cookie>? cookies,
 }) {
   return Response.unauthorized(
     jsonEncode(
@@ -76,9 +77,9 @@ Response generateTestUnauthorizedResponse({
     ),
     headers: {
       HttpHeaders.contentTypeHeader: "application/json",
-      if (cookies != null)
-        HttpHeaders.setCookieHeader:
-            cookies.map((cookie) => cookie.toString()).toList(),
+      // if (cookies != null)
+      //   HttpHeaders.setCookieHeader:
+      //       cookies.map((cookie) => cookie.toString()).toList(),
     },
   );
 }
