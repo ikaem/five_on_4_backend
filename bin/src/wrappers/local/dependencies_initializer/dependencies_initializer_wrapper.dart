@@ -22,6 +22,7 @@ import '../../../features/auth/utils/validators/login_request_validator.dart';
 import '../../../features/auth/utils/validators/register_with_email_and_password_request_validator.dart';
 import '../../../features/core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
 import '../../../features/core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
+import '../../../features/core/domain/use_cases/get_authorization_bearer_token_from_request_headers/get_authorization_bearer_token_from_request_headers_use_case.dart';
 import '../../../features/core/domain/use_cases/get_cookie_by_name_in_string/get_cookie_by_name_in_string_use_case.dart';
 import '../../../features/core/domain/use_cases/get_hashed_value/get_hashed_value_use_case.dart';
 import '../../../features/core/presentation/router/app_router.dart';
@@ -239,6 +240,8 @@ InitializedUseCasesDependenciesValues getInitializedUseCases({
       GetAuthByEmailAndHashedPasswordUseCase(
     authRepository: initializedRepositories.authRepository,
   );
+  final getAuthorizationBearerTokenFromRequestHeadersUseCase =
+      GetAuthorizationBearerTokenFromRequestHeadersUseCase();
 
   return InitializedUseCasesDependenciesValues(
     googleLoginUseCase: googleLoginUseCase,
@@ -256,6 +259,8 @@ InitializedUseCasesDependenciesValues getInitializedUseCases({
     registerWithEmailAndPasswordUseCase: registerWithEmailAndPasswordUseCase,
     getAuthByEmailAndHashedPasswordUseCase:
         getAuthByEmailAndHashedPasswordUseCase,
+    getAuthorizationBearerTokenFromRequestHeadersUseCase:
+        getAuthorizationBearerTokenFromRequestHeadersUseCase,
   );
 }
 
@@ -311,12 +316,12 @@ InitializedValidatorsDependenciesValues getInitializedValidators({
   required InitializedUseCasesDependenciesValues initializedUseCases,
 }) {
   final requestAuthorizationValidator = AuthorizeRequestValidator(
-    getCookieByNameInStringUseCase:
-        initializedUseCases.getCookieByNameInStringUseCase,
     getAccessTokenDataFromAccessJwtUseCase:
         initializedUseCases.getAccessTokenDataFromAccessJwtUseCase,
     getPlayerByIdUseCase: initializedUseCases.getPlayerByIdUseCase,
     getAuthByIdUseCase: initializedUseCases.getAuthByIdUseCase,
+    getAuthorizationBearerTokenFromRequestHeadersUseCase: initializedUseCases
+        .getAuthorizationBearerTokenFromRequestHeadersUseCase,
   );
   final matchCreateRequestValidator = MatchCreateRequestValidator();
   final loginRequestValidator = LoginRequestValidator();

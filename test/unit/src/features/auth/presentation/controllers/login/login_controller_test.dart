@@ -134,7 +134,6 @@ void main() {
             // then
             final expectedResponse = generateTestUnauthorizedResponse(
               responseMessage: "Invalid credentials",
-              cookies: null,
             );
             final expectedResponseString =
                 await expectedResponse.readAsString();
