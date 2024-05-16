@@ -1,8 +1,8 @@
 import '../../../../../wrappers/libraries/dart_jsonwebtoken/dart_jsonwebtoken_wrapper.dart';
 import '../../../utils/constants/jwt_duration_constants.dart';
 
-class CreateJwtAccessTokenUseCase {
-  const CreateJwtAccessTokenUseCase({
+class CreateAccessJwtUseCase {
+  const CreateAccessJwtUseCase({
     required DartJsonWebTokenWrapper dartJsonWebTokenWrapper,
   }) : _dartJsonWebTokenWrapper = dartJsonWebTokenWrapper;
 

@@ -1,7 +1,7 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../../bin/src/features/auth/domain/use_cases/create_jwt_access_token/create_jwt_access_token_use_case.dart';
+import '../../../../../../../../bin/src/features/auth/domain/use_cases/create_access_jwt/create_access_jwt_use_case.dart';
 import '../../../../../../../../bin/src/features/auth/utils/constants/jwt_duration_constants.dart';
 import '../../../../../../../../bin/src/wrappers/libraries/dart_jsonwebtoken/dart_jsonwebtoken_wrapper.dart';
 
@@ -9,8 +9,8 @@ void main() {
   final dartJsonWebTokenWrapper = _MockDartJsonWebTokenWrapper();
 
   // tested class
-  final createJwtAccessTokenUseCase = CreateJwtAccessTokenUseCase(
-      dartJsonWebTokenWrapper: dartJsonWebTokenWrapper);
+  final createJwtAccessTokenUseCase =
+      CreateAccessJwtUseCase(dartJsonWebTokenWrapper: dartJsonWebTokenWrapper);
 
   setUpAll(() {
     registerFallbackValue(Duration());
@@ -21,7 +21,7 @@ void main() {
   });
 
 // TODO this should be called JWTAccess - no token in name
-  group("$CreateJwtAccessTokenUseCase", () {
+  group("$CreateAccessJwtUseCase", () {
     group(".call()", () {
       test(
         "given authId and playerId are provided"
