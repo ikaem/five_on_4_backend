@@ -1,15 +1,16 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
+import '../../../../../../../../bin/src/features/auth/domain/use_cases/create_access_jwt/create_access_jwt_use_case.dart';
+import '../../../../../../../../bin/src/features/auth/domain/use_cases/create_refresh_jwt_cookie/create_refresh_jwt_cookie_use_case.dart';
 import '../../../../../../../../bin/src/features/auth/domain/use_cases/get_auth_by_email_and_hashed_password/get_auth_by_email_and_hashed_password_use_case.dart';
 import '../../../../../../../../bin/src/features/auth/presentation/controllers/login/login_controller.dart';
+import '../../../../../../../../bin/src/features/auth/utils/constants/auth_response_constants.dart';
 import '../../../../../../../../bin/src/features/auth/utils/constants/login_request_body_key_constants.dart';
 import '../../../../../../../../bin/src/features/core/domain/models/auth/auth_model.dart';
-import '../../../../../../../../bin/src/features/core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
 import '../../../../../../../../bin/src/features/core/domain/use_cases/get_hashed_value/get_hashed_value_use_case.dart';
 import '../../../../../../../../bin/src/features/core/utils/constants/request_constants.dart';
 import '../../../../../../../../bin/src/features/players/domain/models/player_model.dart';
@@ -23,8 +24,8 @@ void main() {
       _MockGetAuthByEmailAndHashedPasswordUseCase();
   final getPlayerByAuthIdUseCase = _MockGetPlayerByAuthIdUseCase();
   final getHashedValueUseCase = _MockGetHashedValueUseCase();
-  final createJWTAccessTokenCookieUseCase =
-      _MockCreateJWTAccessTokenCookieUseCase();
+  final createAccessJwtUseCase = _MockCreateAccessJwtUseCase();
+  final createRefreshJwtCookieUseCase = _MockCreateRefreshJwtCookieUseCase();
 
   // tested controller
   final loginController = LoginController(
@@ -32,7 +33,8 @@ void main() {
         getAuthByEmailAndHashedPasswordUseCase,
     getPlayerByAuthIdUseCase: getPlayerByAuthIdUseCase,
     getHashedValueUseCase: getHashedValueUseCase,
-    createJWTAccessTokenCookieUseCase: createJWTAccessTokenCookieUseCase,
+    createAccessJwtUseCase: createAccessJwtUseCase,
+    createRefreshJwtCookieUseCase: createRefreshJwtCookieUseCase,
   );
 
   setUpAll(() {
@@ -44,7 +46,8 @@ void main() {
     reset(getAuthByEmailAndHashedPasswordUseCase);
     reset(getPlayerByAuthIdUseCase);
     reset(getHashedValueUseCase);
-    reset(createJWTAccessTokenCookieUseCase);
+    reset(createRefreshJwtCookieUseCase);
+    reset(createAccessJwtUseCase);
   });
 
   group(
@@ -55,7 +58,7 @@ void main() {
         final password = "password";
         final hashedPassword = "hashedPassword";
 
-        final requestMap = {
+        final validatedBodyMap = {
           LoginRequestBodyKeyConstants.EMAIL.value: email,
           LoginRequestBodyKeyConstants.PASSWORD.value: password,
         };
@@ -63,22 +66,12 @@ void main() {
         test(
           "given request validation has not been done"
           "when .call() is called"
-          "then should return expected response",
+          "then should return expeted response",
           () async {
             // setup
-            when(() => getHashedValueUseCase(value: password))
-                .thenReturn(hashedPassword);
-
-            when(() => getAuthByEmailAndHashedPasswordUseCase(
-                  email: any(named: "email"),
-                  hashedPassword: any(named: "hashedPassword"),
-                )).thenAnswer((_) async => null);
-
-            when(() => request.context).thenReturn({});
 
             // given
-            when(() => request.readAsString())
-                .thenAnswer((_) async => jsonEncode(requestMap));
+            when(() => request.context).thenReturn({});
 
             // when
             final response = await loginController(request);
@@ -87,45 +80,33 @@ void main() {
             // then
             final expectedResponse = generateTestInternalServerErrorResponse(
               responseMessage: "Request body not validated.",
-              cookies: null,
             );
             final expectedResponseString =
                 await expectedResponse.readAsString();
 
             expect(responseString, equals(expectedResponseString));
             expect(response.statusCode, equals(expectedResponse.statusCode));
-            expect(response.headers[HttpHeaders.setCookieHeader],
-                equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
             // cleanup
           },
         );
 
-        // if no auth with this email and hashed password, return expected response
         test(
           "given request with email and password not associated with an auth in db"
           "when .call() is called"
           "then should return expected response",
           () async {
             // setup
-            when(() => getHashedValueUseCase(value: password))
+            when(() => request.context).thenReturn(
+                {RequestConstants.VALIDATED_BODY_DATA.value: validatedBodyMap});
+            when(() => getHashedValueUseCase.call(value: any(named: "value")))
                 .thenReturn(hashedPassword);
 
-            when(() => getAuthByEmailAndHashedPasswordUseCase(
+            // given
+            when(() => getAuthByEmailAndHashedPasswordUseCase.call(
                   email: any(named: "email"),
                   hashedPassword: any(named: "hashedPassword"),
-                )).thenAnswer((_) async => null);
-
-            when(() => request.context).thenReturn({
-              RequestConstants.VALIDATED_BODY_DATA.value: {
-                LoginRequestBodyKeyConstants.EMAIL.value: email,
-                LoginRequestBodyKeyConstants.PASSWORD.value: password,
-              }
-            });
-
-            // given
-            when(() => request.readAsString())
-                .thenAnswer((_) async => jsonEncode(requestMap));
+                )).thenAnswer((invocation) async => null);
 
             // when
             final response = await loginController(request);
@@ -140,42 +121,30 @@ void main() {
 
             expect(responseString, equals(expectedResponseString));
             expect(response.statusCode, equals(expectedResponse.statusCode));
-            expect(response.headers[HttpHeaders.setCookieHeader],
-                equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
             // cleanup
           },
         );
 
-        // TODO this could be outdate
-        // if no player with this auth id, return expected response
         test(
           "given retrieved authId from db is not associated with a player in db"
           "when .call() is called"
           "then should return expected response",
           () async {
             // setup
-            when(() => getHashedValueUseCase(value: password))
+            when(() => request.context).thenReturn(
+                {RequestConstants.VALIDATED_BODY_DATA.value: validatedBodyMap});
+            when(() => getHashedValueUseCase.call(value: any(named: "value")))
                 .thenReturn(hashedPassword);
-
-            when(() => getAuthByEmailAndHashedPasswordUseCase(
+            when(() => getAuthByEmailAndHashedPasswordUseCase.call(
                   email: any(named: "email"),
                   hashedPassword: any(named: "hashedPassword"),
-                )).thenAnswer((_) async => _testAuthModel);
-
-            when(() => getPlayerByAuthIdUseCase(authId: _testAuthModel.id))
-                .thenAnswer((_) async => null);
-
-            when(() => request.context).thenReturn({
-              RequestConstants.VALIDATED_BODY_DATA.value: {
-                LoginRequestBodyKeyConstants.EMAIL.value: email,
-                LoginRequestBodyKeyConstants.PASSWORD.value: password,
-              }
-            });
+                )).thenAnswer((invocation) async => _testAuthModel);
 
             // given
-            when(() => request.readAsString())
-                .thenAnswer((_) async => jsonEncode(requestMap));
+            when(() =>
+                    getPlayerByAuthIdUseCase.call(authId: any(named: "authId")))
+                .thenAnswer((invocation) async => null);
 
             // when
             final response = await loginController(request);
@@ -184,67 +153,56 @@ void main() {
             // then
             final expectedResponse = generateTestNotFoundResponse(
               responseMessage: "Authenticated player not found.",
-              cookies: null,
             );
             final expectedResponseString =
                 await expectedResponse.readAsString();
 
             expect(responseString, equals(expectedResponseString));
             expect(response.statusCode, equals(expectedResponse.statusCode));
-            expect(response.headers[HttpHeaders.setCookieHeader],
-                equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
             // cleanup
           },
         );
 
-        //   // if player and auth found, return expected respionse
         test(
           "given retrieved authId from db is associated with a player in db"
           "when .call() is called"
           "then should return expected response",
           () async {
             // setup
-            when(() => getHashedValueUseCase(value: password))
+            when(() => request.context).thenReturn(
+                {RequestConstants.VALIDATED_BODY_DATA.value: validatedBodyMap});
+            when(() => getHashedValueUseCase.call(value: any(named: "value")))
                 .thenReturn(hashedPassword);
-
-            when(() => getAuthByEmailAndHashedPasswordUseCase(
+            when(() => getAuthByEmailAndHashedPasswordUseCase.call(
                   email: any(named: "email"),
                   hashedPassword: any(named: "hashedPassword"),
-                )).thenAnswer((_) async => _testAuthModel);
-
-            when(() => getPlayerByAuthIdUseCase(authId: _testAuthModel.id))
-                .thenAnswer((_) async => _testPlayerModel);
-            when(
-              () => createJWTAccessTokenCookieUseCase.call(
-                payload: any(named: "payload"),
-                expiresIn: any(named: "expiresIn"),
-              ),
-            ).thenReturn(testAuthCookie);
-
-            when(() => request.context).thenReturn({
-              RequestConstants.VALIDATED_BODY_DATA.value: {
-                LoginRequestBodyKeyConstants.EMAIL.value: email,
-                LoginRequestBodyKeyConstants.PASSWORD.value: password,
-              }
-            });
+                )).thenAnswer((invocation) async => _testAuthModel);
+            when(() => createAccessJwtUseCase.call(
+                  authId: any(named: "authId"),
+                  playerId: any(named: "playerId"),
+                )).thenReturn("jwt");
+            when(() => createRefreshJwtCookieUseCase.call(
+                  authId: any(named: "authId"),
+                  playerId: any(named: "playerId"),
+                )).thenReturn(testRefreshCookie);
 
             // given
-            when(() => request.readAsString())
-                .thenAnswer((_) async => jsonEncode(requestMap));
+            when(() =>
+                    getPlayerByAuthIdUseCase.call(authId: any(named: "authId")))
+                .thenAnswer((invocation) async => _testPlayerModel);
 
             // when
             final response = await loginController(request);
             final responseString = await response.readAsString();
 
             // then
-            final expectedResponseData = {
-              "id": _testPlayerModel.id,
-              "name": _testPlayerModel.name,
-              "nickname": _testPlayerModel.nickname,
-            };
             final expectedResponse = generateTestOkResponse(
-              responseData: expectedResponseData,
+              responseData: {
+                "id": _testPlayerModel.id,
+                "name": _testPlayerModel.name,
+                "nickname": _testPlayerModel.nickname,
+              },
               responseMessage: "User logged in successfully",
             );
             final expectedResponseString =
@@ -257,58 +215,89 @@ void main() {
           },
         );
 
-        //   // if success response returned, it should container expected access token cookie with expected values inside the jwt
         test(
           "given retrieved authId from db is associated with a player in db"
           "when .call() is called"
-          "then should return response with expected cookie",
+          "then should return response with expected access jwt in headers",
           () async {
             // setup
-            when(() => getHashedValueUseCase(value: password))
+            when(() => request.context).thenReturn(
+                {RequestConstants.VALIDATED_BODY_DATA.value: validatedBodyMap});
+            when(() => getHashedValueUseCase.call(value: any(named: "value")))
                 .thenReturn(hashedPassword);
-
-            when(() => getAuthByEmailAndHashedPasswordUseCase(
+            when(() => getAuthByEmailAndHashedPasswordUseCase.call(
                   email: any(named: "email"),
                   hashedPassword: any(named: "hashedPassword"),
-                )).thenAnswer((_) async => _testAuthModel);
-
-            when(() => getPlayerByAuthIdUseCase(authId: _testAuthModel.id))
-                .thenAnswer((_) async => _testPlayerModel);
-            when(
-              () => createJWTAccessTokenCookieUseCase.call(
-                payload: any(named: "payload"),
-                expiresIn: any(named: "expiresIn"),
-              ),
-            ).thenReturn(testAuthCookie);
-
-            when(() => request.context).thenReturn({
-              RequestConstants.VALIDATED_BODY_DATA.value: {
-                LoginRequestBodyKeyConstants.EMAIL.value: email,
-                LoginRequestBodyKeyConstants.PASSWORD.value: password,
-              }
-            });
+                )).thenAnswer((invocation) async => _testAuthModel);
+            when(() => createAccessJwtUseCase.call(
+                  authId: any(named: "authId"),
+                  playerId: any(named: "playerId"),
+                )).thenReturn("jwt");
+            when(() => createRefreshJwtCookieUseCase.call(
+                  authId: any(named: "authId"),
+                  playerId: any(named: "playerId"),
+                )).thenReturn(testRefreshCookie);
 
             // given
-            when(() => request.readAsString())
-                .thenAnswer((_) async => jsonEncode(requestMap));
+            when(() =>
+                    getPlayerByAuthIdUseCase.call(authId: any(named: "authId")))
+                .thenAnswer((invocation) async => _testPlayerModel);
 
             // when
             final response = await loginController(request);
 
-            // then
+            final accessToken = response
+                .headers[AuthResponseConstants.ACCESS_JWT_HEADER_KEY.value];
+            expect(accessToken, equals("jwt"));
+
+            // cleanup
+          },
+        );
+
+        test(
+          "given retrieved authId from db is associated with a player in db"
+          "when .call() is called"
+          "then should return response with expected refresh jwt in cookie",
+          () async {
+            // setup
+            when(() => request.context).thenReturn(
+                {RequestConstants.VALIDATED_BODY_DATA.value: validatedBodyMap});
+            when(() => getHashedValueUseCase.call(value: any(named: "value")))
+                .thenReturn(hashedPassword);
+            when(() => getAuthByEmailAndHashedPasswordUseCase.call(
+                  email: any(named: "email"),
+                  hashedPassword: any(named: "hashedPassword"),
+                )).thenAnswer((invocation) async => _testAuthModel);
+            when(() => createAccessJwtUseCase.call(
+                  authId: any(named: "authId"),
+                  playerId: any(named: "playerId"),
+                )).thenReturn("jwt");
+            when(() => createRefreshJwtCookieUseCase.call(
+                  authId: any(named: "authId"),
+                  playerId: any(named: "playerId"),
+                )).thenReturn(testRefreshCookie);
+
+            // given
+            when(() =>
+                    getPlayerByAuthIdUseCase.call(authId: any(named: "authId")))
+                .thenAnswer((invocation) async => _testPlayerModel);
+
+            // when
+            final response = await loginController(request);
+
             final responsCookies =
                 response.headers[HttpHeaders.setCookieHeader];
+
             final cookieStrings = responsCookies!.split(",");
             final cookies = cookieStrings.map((cookieString) {
               return Cookie.fromSetCookieValue(cookieString);
             }).toList();
 
             expect(cookies, hasLength(1));
-            expect(cookies.first.toString(), equals(testAuthCookie.toString()));
+            expect(
+                cookies.first.toString(), equals(testRefreshCookie.toString()));
           },
         );
-
-        //   // TODO should test calls to use cases - that proper arguments are passed
       });
     },
   );
@@ -325,8 +314,11 @@ class _MockGetPlayerByAuthIdUseCase extends Mock
 class _MockGetHashedValueUseCase extends Mock
     implements GetHashedValueUseCase {}
 
-class _MockCreateJWTAccessTokenCookieUseCase extends Mock
-    implements CreateJWTAccessTokenCookieUseCase {}
+class _MockCreateAccessJwtUseCase extends Mock
+    implements CreateAccessJwtUseCase {}
+
+class _MockCreateRefreshJwtCookieUseCase extends Mock
+    implements CreateRefreshJwtCookieUseCase {}
 
 final _testAuthModel = AuthModel(
   id: 1,
@@ -342,6 +334,6 @@ final _testPlayerModel = PlayerModel(
   name: "name",
 );
 
-final testAuthCookie = Cookie.fromSetCookieValue(
-  "accessToken=token; HttpOnly; Secure; Path=/",
+final testRefreshCookie = Cookie.fromSetCookieValue(
+  "refreshToken=token; HttpOnly; Secure; Path=/",
 );

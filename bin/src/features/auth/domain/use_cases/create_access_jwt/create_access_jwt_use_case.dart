@@ -9,8 +9,8 @@ class CreateAccessJwtUseCase {
   final DartJsonWebTokenWrapper _dartJsonWebTokenWrapper;
 
   String call({
-    required String authId,
-    required String playerId,
+    required int authId,
+    required int playerId,
     Duration? expiresIn,
   }) {
     final expiresInValue =

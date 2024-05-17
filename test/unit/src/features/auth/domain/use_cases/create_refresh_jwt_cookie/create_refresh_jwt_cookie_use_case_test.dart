@@ -37,8 +37,8 @@ void main() {
               )).thenReturn("jwt");
 
           // given
-          final authId = "authId";
-          final playerId = "playerId";
+          final authId = 1;
+          final playerId = 1;
 
           // when
           createRefreshJwtCookieUseCase(
@@ -71,8 +71,8 @@ void main() {
               )).thenReturn("jwt");
 
           // given
-          final authId = "authId";
-          final playerId = "playerId";
+          final authId = 1;
+          final playerId = 1;
           final customDuration = Duration(seconds: 1);
 
           // when
@@ -107,8 +107,8 @@ void main() {
               )).thenReturn("jwt");
 
           // given
-          final authId = "authId";
-          final playerId = "playerId";
+          final authId = 1;
+          final playerId = 1;
 
           // when
           final cookie = createRefreshJwtCookieUseCase(

@@ -28,7 +28,7 @@ Response generateTestBadRequestResponse({
 
 Response generateTestNotFoundResponse({
   required String responseMessage,
-  required List<Cookie>? cookies,
+  // required List<Cookie>? cookies,
 }) {
   return Response.notFound(
     jsonEncode(
@@ -39,9 +39,9 @@ Response generateTestNotFoundResponse({
     ),
     headers: {
       HttpHeaders.contentTypeHeader: "application/json",
-      if (cookies != null)
-        HttpHeaders.setCookieHeader:
-            cookies.map((cookie) => cookie.toString()).toList(),
+      // if (cookies != null)
+      //   HttpHeaders.setCookieHeader:
+      //       cookies.map((cookie) => cookie.toString()).toList(),
     },
   );
 }
@@ -86,7 +86,7 @@ Response generateTestUnauthorizedResponse({
 
 Response generateTestInternalServerErrorResponse({
   required String responseMessage,
-  required List<Cookie>? cookies,
+  // required List<Cookie>? cookies,
 }) {
   return Response.internalServerError(
     body: jsonEncode(
@@ -97,9 +97,9 @@ Response generateTestInternalServerErrorResponse({
     ),
     headers: {
       HttpHeaders.contentTypeHeader: "application/json",
-      if (cookies != null)
-        HttpHeaders.setCookieHeader:
-            cookies.map((cookie) => cookie.toString()).toList(),
+      // if (cookies != null)
+      //   HttpHeaders.setCookieHeader:
+      //       cookies.map((cookie) => cookie.toString()).toList(),
     },
   );
 }

@@ -11,8 +11,8 @@ class CreateRefreshJwtCookieUseCase {
   final DartJsonWebTokenWrapper _dartJsonWebTokenWrapper;
 
   Cookie call({
-    required String authId,
-    required String playerId,
+    required int authId,
+    required int playerId,
     Duration? expiresIn,
   }) {
     final expiresInValue =

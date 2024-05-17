@@ -35,8 +35,8 @@ void main() {
               )).thenReturn("jwt");
 
           // given
-          final authId = "authId";
-          final playerId = "playerId";
+          final authId = 1;
+          final playerId = 1;
 
           // when
           final jwt = createJwtAccessTokenUseCase(
@@ -71,8 +71,8 @@ void main() {
               )).thenReturn("jwt");
 
           // given
-          final authId = "authId";
-          final playerId = "playerId";
+          final authId = 1;
+          final playerId = 1;
           final customDuration = Duration(days: 1);
 
           // when
