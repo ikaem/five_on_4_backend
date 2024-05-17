@@ -4,6 +4,8 @@ import 'package:dio/dio.dart' hide Response;
 
 import '../../../features/auth/data/data_sources/auth_data_source_impl.dart';
 import '../../../features/auth/domain/repositories/auth_repository_impl.dart';
+import '../../../features/auth/domain/use_cases/create_access_jwt/create_access_jwt_use_case.dart';
+import '../../../features/auth/domain/use_cases/create_refresh_jwt_cookie/create_refresh_jwt_cookie_use_case.dart';
 import '../../../features/auth/domain/use_cases/get_auth_by_email/get_auth_by_email_use_case.dart';
 import '../../../features/auth/domain/use_cases/get_auth_by_email_and_hashed_password/get_auth_by_email_and_hashed_password_use_case.dart';
 import '../../../features/auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
@@ -242,6 +244,12 @@ InitializedUseCasesDependenciesValues getInitializedUseCases({
   );
   final getAuthorizationBearerTokenFromRequestHeadersUseCase =
       GetAuthorizationBearerTokenFromRequestHeadersUseCase();
+  final createAccessJwtUseCase = CreateAccessJwtUseCase(
+    dartJsonWebTokenWrapper: initializedWrappers.dartJsonWebTokenWrapper,
+  );
+  final createRefreshJwtCookieUseCase = CreateRefreshJwtCookieUseCase(
+    dartJsonWebTokenWrapper: initializedWrappers.dartJsonWebTokenWrapper,
+  );
 
   return InitializedUseCasesDependenciesValues(
     googleLoginUseCase: googleLoginUseCase,
@@ -261,6 +269,8 @@ InitializedUseCasesDependenciesValues getInitializedUseCases({
         getAuthByEmailAndHashedPasswordUseCase,
     getAuthorizationBearerTokenFromRequestHeadersUseCase:
         getAuthorizationBearerTokenFromRequestHeadersUseCase,
+    createAccessJwtUseCase: createAccessJwtUseCase,
+    createRefreshJwtCookieUseCase: createRefreshJwtCookieUseCase,
   );
 }
 
@@ -297,8 +307,9 @@ InitialiazedControllersDependenciesValues getInitializedControllers({
         initializedUseCases.getAuthByEmailAndHashedPasswordUseCase,
     getPlayerByAuthIdUseCase: initializedUseCases.getPlayerByAuthIdUseCase,
     getHashedValueUseCase: initializedUseCases.getHashedValueUseCase,
-    createJWTAccessTokenCookieUseCase:
-        initializedUseCases.createJWTAccessTokenCookieUseCase,
+    createAccessJwtUseCase: initializedUseCases.createAccessJwtUseCase,
+    createRefreshJwtCookieUseCase:
+        initializedUseCases.createRefreshJwtCookieUseCase,
   );
 
   return InitialiazedControllersDependenciesValues(

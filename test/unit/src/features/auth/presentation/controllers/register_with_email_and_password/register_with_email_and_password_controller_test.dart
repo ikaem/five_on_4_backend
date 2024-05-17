@@ -193,7 +193,6 @@ void main() {
           // then
           final expectedResponse = generateTestNotFoundResponse(
             responseMessage: "Authenticated player not found.",
-            cookies: null,
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
