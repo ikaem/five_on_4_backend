@@ -7,6 +7,7 @@ import '../../../../core/domain/use_cases/get_hashed_value/get_hashed_value_use_
 import '../../../../core/domain/values/response_body_value.dart';
 import '../../../../core/utils/extensions/request_extension.dart';
 import '../../../../core/utils/helpers/generate_response.dart';
+import '../../../../core/utils/helpers/response_generator.dart';
 import '../../../../players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
 import '../../../domain/use_cases/get_auth_by_email/get_auth_by_email_use_case.dart';
 import '../../../domain/use_cases/register_with_email_and_password/register_with_email_and_password_use_case.dart';
@@ -47,16 +48,20 @@ class RegisterWithEmailAndPasswordController {
             as String;
 
     final auth = await _getAuthByEmailUseCase(email: email);
-
     if (auth != null) {
-      final responseBody = ResponseBodyValue(
-          message: "Invalid request - email already in use.", ok: false);
-      return generateResponse(
+      final response = ResponseGenerator.failure(
+        message: "Invalid request - email already in use.",
         statusCode: HttpStatus.badRequest,
-        body: responseBody,
-        // TODO these should always be null really
-        cookies: [],
       );
+      return response;
+      // final responseBody = ResponseBodyValue(
+      //     message: "Invalid request - email already in use.", ok: false);
+      // return generateResponse(
+      //   statusCode: HttpStatus.badRequest,
+      //   body: responseBody,
+      //   // TODO these should always be null really
+      //   cookies: [],
+      // );
     }
 
     final password = bodyMap[RegisterWithEmailAndPasswordRequestBodyKeyConstants
