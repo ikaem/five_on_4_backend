@@ -12,9 +12,11 @@ import '../../../features/auth/presentation/controllers/login/login_controller.d
 import '../../../features/auth/presentation/controllers/logout/logout_controller.dart';
 import '../../../features/auth/presentation/controllers/register_with_email_and_password/register_with_email_and_password_controller.dart';
 import '../../../features/auth/presentation/router/auth_router.dart';
+import '../../../features/auth/utils/middlewares/authenticate_with_google_request_middleware_wrapper.dart';
 import '../../../features/auth/utils/middlewares/authorize_request_middleware_wrapper.dart';
 import '../../../features/auth/utils/middlewares/login_request_middleware_wrapper.dart';
 import '../../../features/auth/utils/middlewares/register_with_email_and_password_request_middleware_wrapper.dart';
+import '../../../features/auth/utils/validators/authenticate_with_google_request_validator.dart';
 import '../../../features/auth/utils/validators/authorize_request_validator.dart';
 import '../../../features/auth/utils/validators/login_request_validator.dart';
 import '../../../features/auth/utils/validators/register_with_email_and_password_request_validator.dart';
@@ -149,6 +151,7 @@ class InitializedValidatorsDependenciesValues {
     required this.matchCreateRequestValidator,
     required this.loginRequestValidator,
     required this.registerWithEmailAndPasswordRequestValidator,
+    required this.authenticateWithGoogleRequestValidator,
   });
 
   final AuthorizeRequestValidator requestAuthorizationValidator;
@@ -156,6 +159,8 @@ class InitializedValidatorsDependenciesValues {
   final LoginRequestValidator loginRequestValidator;
   final RegisterWithEmailAndPasswordRequestValidator
       registerWithEmailAndPasswordRequestValidator;
+  final AuthenticateWithGoogleRequestValidator
+      authenticateWithGoogleRequestValidator;
 }
 
 class InitializedMiddlewareWrappersDependenciesValues {
@@ -164,6 +169,7 @@ class InitializedMiddlewareWrappersDependenciesValues {
     required this.loginRequestMiddlewareWrapper,
     required this.matchCreateRequestMiddlewareWrapper,
     required this.registerWithEmailAndPasswordRequestMiddlewareWrapper,
+    required this.authenticateWithGoogleRequestMiddlewareWrapper,
   });
 
   final AuthorizeRequestMiddlewareWrapper authorizeRequestMiddlewareWrapper;
@@ -171,6 +177,8 @@ class InitializedMiddlewareWrappersDependenciesValues {
   final MatchCreateRequestMiddlewareWrapper matchCreateRequestMiddlewareWrapper;
   final RegisterWithEmailAndPasswordRequestMiddlewareWrapper
       registerWithEmailAndPasswordRequestMiddlewareWrapper;
+  final AuthenticateWithGoogleRequestMiddlewareWrapper
+      authenticateWithGoogleRequestMiddlewareWrapper;
 }
 
 class InitializedRoutersDependenciesValues {

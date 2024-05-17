@@ -16,9 +16,11 @@ import '../../../features/auth/presentation/controllers/login/login_controller.d
 import '../../../features/auth/presentation/controllers/logout/logout_controller.dart';
 import '../../../features/auth/presentation/controllers/register_with_email_and_password/register_with_email_and_password_controller.dart';
 import '../../../features/auth/presentation/router/auth_router.dart';
+import '../../../features/auth/utils/middlewares/authenticate_with_google_request_middleware_wrapper.dart';
 import '../../../features/auth/utils/middlewares/authorize_request_middleware_wrapper.dart';
 import '../../../features/auth/utils/middlewares/login_request_middleware_wrapper.dart';
 import '../../../features/auth/utils/middlewares/register_with_email_and_password_request_middleware_wrapper.dart';
+import '../../../features/auth/utils/validators/authenticate_with_google_request_validator.dart';
 import '../../../features/auth/utils/validators/authorize_request_validator.dart';
 import '../../../features/auth/utils/validators/login_request_validator.dart';
 import '../../../features/auth/utils/validators/register_with_email_and_password_request_validator.dart';
@@ -337,9 +339,10 @@ InitializedValidatorsDependenciesValues getInitializedValidators({
   );
   final matchCreateRequestValidator = MatchCreateRequestValidator();
   final loginRequestValidator = LoginRequestValidator();
-
   final registerWithEmailAndPasswordRequestValidator =
       RegisterWithEmailAndPasswordRequestValidator();
+  final authenticateWithGoogleRequestValidator =
+      AuthenticateWithGoogleRequestValidator();
 
   return InitializedValidatorsDependenciesValues(
     requestAuthorizationValidator: requestAuthorizationValidator,
@@ -347,6 +350,8 @@ InitializedValidatorsDependenciesValues getInitializedValidators({
     loginRequestValidator: loginRequestValidator,
     registerWithEmailAndPasswordRequestValidator:
         registerWithEmailAndPasswordRequestValidator,
+    authenticateWithGoogleRequestValidator:
+        authenticateWithGoogleRequestValidator,
   );
 }
 
@@ -358,20 +363,22 @@ InitializedMiddlewareWrappersDependenciesValues
     authorizeRequestValidator:
         initializedValidators.requestAuthorizationValidator,
   );
-
   final matchCreateRequestMiddleware = MatchCreateRequestMiddlewareWrapper(
     matchCreateRequestValidator:
         initializedValidators.matchCreateRequestValidator,
   );
-
   final registerWithEmailAndPasswordRequestMiddleware =
       RegisterWithEmailAndPasswordRequestMiddlewareWrapper(
     registerWithEmailAndPasswordRequestValidator:
         initializedValidators.registerWithEmailAndPasswordRequestValidator,
   );
-
   final loginRequestMiddlewareWrapper = LoginRequestMiddlewareWrapper(
     loginRequestValidator: initializedValidators.loginRequestValidator,
+  );
+  final authenticateWithGoogleRequestMiddlewareWrapper =
+      AuthenticateWithGoogleRequestMiddlewareWrapper(
+    authenticateWithGoogleRequestValidator:
+        initializedValidators.authenticateWithGoogleRequestValidator,
   );
 
   return InitializedMiddlewareWrappersDependenciesValues(
@@ -380,6 +387,8 @@ InitializedMiddlewareWrappersDependenciesValues
     matchCreateRequestMiddlewareWrapper: matchCreateRequestMiddleware,
     registerWithEmailAndPasswordRequestMiddlewareWrapper:
         registerWithEmailAndPasswordRequestMiddleware,
+    authenticateWithGoogleRequestMiddlewareWrapper:
+        authenticateWithGoogleRequestMiddlewareWrapper,
   );
 }
 
@@ -401,6 +410,9 @@ InitializedRoutersDependenciesValues getInitializedRouters({
             .registerWithEmailAndPasswordRequestMiddlewareWrapper,
     loginRequestMiddlewareWrapper:
         initializedMiddlewareWrappers.loginRequestMiddlewareWrapper,
+    authenticateWithGoogleRequestMiddlewareWrapper:
+        initializedMiddlewareWrappers
+            .authenticateWithGoogleRequestMiddlewareWrapper,
   );
 
   final matchesRouter = MatchesRouter(
