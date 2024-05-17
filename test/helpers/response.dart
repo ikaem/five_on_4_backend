@@ -6,7 +6,7 @@ import 'package:shelf/shelf.dart';
 // TODO remove cookie from everywhere expecpt auth response
 Response generateTestBadRequestResponse({
   required String responseMessage,
-  required List<Cookie>? cookies,
+  // required List<Cookie>? cookies,
 }) {
   return Response.badRequest(
     body: jsonEncode(
@@ -19,9 +19,9 @@ Response generateTestBadRequestResponse({
       // "content-type": "application/json",
       HttpHeaders.contentTypeHeader: "application/json",
       // TODO cookies will need to come here
-      if (cookies != null)
-        HttpHeaders.setCookieHeader:
-            cookies.map((cookie) => cookie.toString()).toList(),
+      // if (cookies != null)
+      //   HttpHeaders.setCookieHeader:
+      //       cookies.map((cookie) => cookie.toString()).toList(),
     },
   );
 }
