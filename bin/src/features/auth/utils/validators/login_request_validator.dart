@@ -90,12 +90,10 @@ class LoginRequestValidator
           );
         }
 
-        // TODO there could be a function or a class to do this
         final validatedBodyData = {
           LoginRequestBodyKeyConstants.EMAIL.value: email,
           LoginRequestBodyKeyConstants.PASSWORD.value: password,
         };
-
         final changedRequest = request.getChangedRequestWithValidatedBodyData(
           validatedBodyData,
         );
