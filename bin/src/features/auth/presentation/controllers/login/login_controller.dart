@@ -2,18 +2,14 @@ import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 
-import '../../../../core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
 import '../../../../core/domain/use_cases/get_hashed_value/get_hashed_value_use_case.dart';
-import '../../../../core/domain/values/response_body_value.dart';
 import '../../../../core/utils/extensions/request_extension.dart';
-import '../../../../core/utils/helpers/generate_response.dart';
 import '../../../../core/utils/helpers/response_generator.dart';
 import '../../../../players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
 import '../../../domain/use_cases/create_access_jwt/create_access_jwt_use_case.dart';
 import '../../../domain/use_cases/create_refresh_jwt_cookie/create_refresh_jwt_cookie_use_case.dart';
 import '../../../domain/use_cases/get_auth_by_email_and_hashed_password/get_auth_by_email_and_hashed_password_use_case.dart';
 import '../../../utils/constants/login_request_body_key_constants.dart';
-import '../../../utils/helpers/generate_auth_access_token_payload.dart';
 import '../../../utils/helpers/generate_auth_response_payload.dart';
 
 class LoginController {
@@ -24,15 +20,12 @@ class LoginController {
     required GetHashedValueUseCase getHashedValueUseCase,
     required CreateAccessJwtUseCase createAccessJwtUseCase,
     required CreateRefreshJwtCookieUseCase createRefreshJwtCookieUseCase,
-    // required CreateJWTAccessTokenCookieUseCase
-    //     createJWTAccessTokenCookieUseCase,
   })  : _getAuthByEmailAndHashedPasswordUseCase =
             getAuthByEmailAndHashedPasswordUseCase,
         _getPlayerByAuthIdUseCase = getPlayerByAuthIdUseCase,
         _createRefreshJwtCookieUseCase = createRefreshJwtCookieUseCase,
         _createAccessJwtUseCase = createAccessJwtUseCase,
         _getHashedValueUseCase = getHashedValueUseCase;
-  // _createJWTAccessTokenCookieUseCase = createJWTAccessTokenCookieUseCase;
 
   final GetAuthByEmailAndHashedPasswordUseCase
       _getAuthByEmailAndHashedPasswordUseCase;
@@ -40,7 +33,6 @@ class LoginController {
   final GetHashedValueUseCase _getHashedValueUseCase;
   final CreateAccessJwtUseCase _createAccessJwtUseCase;
   final CreateRefreshJwtCookieUseCase _createRefreshJwtCookieUseCase;
-  // final CreateJWTAccessTokenCookieUseCase _createJWTAccessTokenCookieUseCase;
 
   Future<Response> call(Request request) async {
     final validatedBodyData = request.getValidatedBodyData();
@@ -86,7 +78,6 @@ class LoginController {
       authId: auth.id,
       playerId: player.id,
     );
-
     final refreshTokenCookie = _createRefreshJwtCookieUseCase(
       authId: auth.id,
       playerId: player.id,

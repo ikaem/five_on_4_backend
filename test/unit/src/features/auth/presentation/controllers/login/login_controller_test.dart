@@ -185,7 +185,7 @@ void main() {
             when(() => createRefreshJwtCookieUseCase.call(
                   authId: any(named: "authId"),
                   playerId: any(named: "playerId"),
-                )).thenReturn(testRefreshCookie);
+                )).thenReturn(_testRefreshCookie);
 
             // given
             when(() =>
@@ -236,7 +236,7 @@ void main() {
             when(() => createRefreshJwtCookieUseCase.call(
                   authId: any(named: "authId"),
                   playerId: any(named: "playerId"),
-                )).thenReturn(testRefreshCookie);
+                )).thenReturn(_testRefreshCookie);
 
             // given
             when(() =>
@@ -246,6 +246,7 @@ void main() {
             // when
             final response = await loginController(request);
 
+            // then
             final accessToken = response
                 .headers[AuthResponseConstants.ACCESS_JWT_HEADER_KEY.value];
             expect(accessToken, equals("jwt"));
@@ -275,7 +276,7 @@ void main() {
             when(() => createRefreshJwtCookieUseCase.call(
                   authId: any(named: "authId"),
                   playerId: any(named: "playerId"),
-                )).thenReturn(testRefreshCookie);
+                )).thenReturn(_testRefreshCookie);
 
             // given
             when(() =>
@@ -285,6 +286,7 @@ void main() {
             // when
             final response = await loginController(request);
 
+            // then
             final responsCookies =
                 response.headers[HttpHeaders.setCookieHeader];
 
@@ -294,8 +296,8 @@ void main() {
             }).toList();
 
             expect(cookies, hasLength(1));
-            expect(
-                cookies.first.toString(), equals(testRefreshCookie.toString()));
+            expect(cookies.first.toString(),
+                equals(_testRefreshCookie.toString()));
           },
         );
       });
@@ -334,6 +336,6 @@ final _testPlayerModel = PlayerModel(
   name: "name",
 );
 
-final testRefreshCookie = Cookie.fromSetCookieValue(
+final _testRefreshCookie = Cookie.fromSetCookieValue(
   "refreshToken=token; HttpOnly; Secure; Path=/",
 );

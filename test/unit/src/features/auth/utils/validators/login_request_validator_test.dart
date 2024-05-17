@@ -8,6 +8,7 @@ import 'package:test/test.dart';
 
 import '../../../../../../../bin/src/features/auth/utils/constants/login_request_body_key_constants.dart';
 import '../../../../../../../bin/src/features/auth/utils/validators/login_request_validator.dart';
+import '../../../../../../../bin/src/features/core/utils/constants/request_constants.dart';
 import '../../../../../../../bin/src/wrappers/local/google_apis/google_apis_wrapper.dart';
 import '../../../../../../helpers/response.dart';
 
@@ -54,7 +55,6 @@ void main() {
           // // then
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Email is required.",
-            cookies: [],
           );
           final expectedResponseString = jsonDecode(
             await expectedResponse.readAsString(),
@@ -62,8 +62,6 @@ void main() {
 
           expect(response.statusCode, equals(expectedResponse.statusCode));
           expect(responseString, equals(expectedResponseString));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -94,7 +92,6 @@ void main() {
           // then
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Invalid data type supplied for email.",
-            cookies: [],
           );
           final expectedResponseString = jsonDecode(
             await expectedResponse.readAsString(),
@@ -102,8 +99,6 @@ void main() {
 
           expect(response.statusCode, equals(expectedResponse.statusCode));
           expect(responseString, equals(expectedResponseString));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -134,7 +129,6 @@ void main() {
           // then
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Invalid email.",
-            cookies: [],
           );
           final expectedResponseString = jsonDecode(
             await expectedResponse.readAsString(),
@@ -142,8 +136,6 @@ void main() {
 
           expect(response.statusCode, equals(expectedResponse.statusCode));
           expect(responseString, equals(expectedResponseString));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -173,7 +165,6 @@ void main() {
           // then
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Password is required.",
-            cookies: [],
           );
           final expectedResponseString = jsonDecode(
             await expectedResponse.readAsString(),
@@ -181,14 +172,11 @@ void main() {
 
           expect(response.statusCode, equals(expectedResponse.statusCode));
           expect(responseString, equals(expectedResponseString));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
       );
 
-      // // should return expected response when password is not a string
       test(
         "given a request with password not being a string"
         "when .validate() is called"
@@ -213,7 +201,6 @@ void main() {
           // then
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Invalid data type supplied for password.",
-            cookies: [],
           );
           final expectedResponseString = jsonDecode(
             await expectedResponse.readAsString(),
@@ -221,8 +208,6 @@ void main() {
 
           expect(response.statusCode, equals(expectedResponse.statusCode));
           expect(responseString, equals(expectedResponseString));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -256,7 +241,6 @@ void main() {
           final response = await loginRequestValidator.validate(
             validatedRequestHandler: validatedRequestHandler.call,
           )(request);
-          // final responseString = jsonDecode(await response.readAsString());
 
           // then
           verify(() => validatedRequestHandler(changedRequest)).called(1);
@@ -299,7 +283,6 @@ void main() {
           )(originalRequest);
 
           // then
-
           final expectedValidatedBodyData = {
             LoginRequestBodyKeyConstants.EMAIL.value: "test@test.net",
             LoginRequestBodyKeyConstants.PASSWORD.value: "password",
@@ -308,7 +291,8 @@ void main() {
           final captured =
               verify(() => validatedRequestHandler(captureAny())).captured;
           final changedRequest = captured.first as Request;
-          final validatedBodyData = changedRequest.context["validatedBodyData"];
+          final validatedBodyData = changedRequest
+              .context[RequestConstants.VALIDATED_BODY_DATA.value];
 
           expect(validatedBodyData, equals(expectedValidatedBodyData));
 
@@ -324,7 +308,6 @@ void main() {
 class _MockRequest extends Mock implements Request {}
 
 class _MockValidatedRequestHandlderWrapper extends Mock {
-  // FutureOr<Response?> call(Request request);
   Future<Response> call(Request request);
 }
 

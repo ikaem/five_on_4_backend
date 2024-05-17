@@ -298,8 +298,9 @@ InitialiazedControllersDependenciesValues getInitializedControllers({
     registerWithEmailAndPasswordUseCase:
         initializedUseCases.registerWithEmailAndPasswordUseCase,
     getPlayerByAuthIdUseCase: initializedUseCases.getPlayerByAuthIdUseCase,
-    createJWTAccessTokenCookieUseCase:
-        initializedUseCases.createJWTAccessTokenCookieUseCase,
+    createAccessJwtUseCase: initializedUseCases.createAccessJwtUseCase,
+    createRefreshJwtCookieUseCase:
+        initializedUseCases.createRefreshJwtCookieUseCase,
   );
 
   final loginController = LoginController(

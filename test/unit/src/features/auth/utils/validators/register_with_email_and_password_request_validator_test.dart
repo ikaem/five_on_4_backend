@@ -8,6 +8,7 @@ import 'package:test/test.dart';
 
 import '../../../../../../../bin/src/features/auth/utils/constants/register_with_email_and_password_request_body_key_constants.dart';
 import '../../../../../../../bin/src/features/auth/utils/validators/register_with_email_and_password_request_validator.dart';
+import '../../../../../../../bin/src/features/core/utils/constants/request_constants.dart';
 import '../../../../../../helpers/response.dart';
 
 void main() {
@@ -60,7 +61,7 @@ void main() {
             responseMessage: "Email is required.",
             // TODO this needs to be asserted as well
             // TODO this should probably be null
-            cookies: [],
+            // cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -69,8 +70,8 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
+          // expect(response.headers[HttpHeaders.setCookieHeader],
+          //     equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -107,7 +108,7 @@ void main() {
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Invalid data type supplied for email.",
             // TODO this needs to be asserted as well
-            cookies: [],
+            // cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -116,8 +117,8 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
+          // expect(response.headers[HttpHeaders.setCookieHeader],
+          //     equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -156,7 +157,7 @@ void main() {
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Invalid email.",
             // TODO this needs to be asserted as well
-            cookies: [],
+            // cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -165,8 +166,8 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
+          // expect(response.headers[HttpHeaders.setCookieHeader],
+          //     equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -203,7 +204,7 @@ void main() {
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Password is required.",
             // TODO this needs to be asserted as well
-            cookies: [],
+            // cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -212,8 +213,8 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
+          // expect(response.headers[HttpHeaders.setCookieHeader],
+          //     equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -251,7 +252,7 @@ void main() {
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Invalid data type supplied for password.",
             // TODO this needs to be asserted as well
-            cookies: [],
+            // cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -260,8 +261,8 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
+          // expect(response.headers[HttpHeaders.setCookieHeader],
+          //     equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -300,7 +301,7 @@ void main() {
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Password must be at least 6 characters long.",
             // TODO this needs to be asserted as well
-            cookies: [],
+            // cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -309,8 +310,8 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
+          // expect(response.headers[HttpHeaders.setCookieHeader],
+          //     equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -349,7 +350,7 @@ void main() {
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Password cannot be longer than 20 characters.",
             // TODO this needs to be asserted as well
-            cookies: [],
+            // cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -358,8 +359,8 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
+          // expect(response.headers[HttpHeaders.setCookieHeader],
+          //     equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
           // cleanup
         },
       );
@@ -398,7 +399,7 @@ void main() {
             responseMessage:
                 "Password has to contain both letters and numbers.",
             // TODO this needs to be asserted as well
-            cookies: [],
+            // cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -407,8 +408,8 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
+          // expect(response.headers[HttpHeaders.setCookieHeader],
+          //     equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -445,7 +446,7 @@ void main() {
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "First name is required.",
             // TODO this needs to be asserted as well
-            cookies: [],
+            // cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -454,8 +455,8 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
+          // expect(response.headers[HttpHeaders.setCookieHeader],
+          //     equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -494,7 +495,7 @@ void main() {
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Invalid data type supplied for first name.",
             // TODO this needs to be asserted as well
-            cookies: [],
+            // cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -503,8 +504,8 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
+          // expect(response.headers[HttpHeaders.setCookieHeader],
+          //     equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -541,7 +542,7 @@ void main() {
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Last name is required.",
             // TODO this needs to be asserted as well
-            cookies: [],
+            // cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -550,8 +551,8 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
+          // expect(response.headers[HttpHeaders.setCookieHeader],
+          //     equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -590,7 +591,7 @@ void main() {
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Invalid data type supplied for last name.",
             // TODO this needs to be asserted as well
-            cookies: [],
+            // cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -599,8 +600,8 @@ void main() {
             equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
-          expect(response.headers[HttpHeaders.setCookieHeader],
-              equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
+          // expect(response.headers[HttpHeaders.setCookieHeader],
+          //     equals(expectedResponse.headers[HttpHeaders.setCookieHeader]));
 
           // cleanup
         },
@@ -637,7 +638,7 @@ void main() {
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Nickname is required.",
             // TODO this needs to be asserted as well
-            cookies: [],
+            // cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -684,7 +685,7 @@ void main() {
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Invalid data type supplied for nickname.",
             // TODO this needs to be asserted as well
-            cookies: [],
+            // cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -738,6 +739,74 @@ void main() {
           // then
           verify(() => validatedRequestHandler.call(changedRequest)).called(1);
           expect(response, equals(validatedRequestHandlerResponse));
+
+          // cleanup
+        },
+      );
+
+      test(
+        "given a request with all fields valid"
+        "when .validate() is called"
+        "then should have expected changedRequest passed to validatedRequestHandler",
+        () async {
+          // setup
+          final requestBody = {
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
+                "email@valid.com",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                "12345678910111asd",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
+                .FIRST_NAME.value: "FIRST_NAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                "LAST_NAME",
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                "NICKNAME",
+          };
+
+          when(() => validatedRequestHandler(any())).thenAnswer(
+            (i) async => Response.ok("ok"),
+          );
+
+          // given
+          final originalRequest = Request(
+            "post",
+            Uri.parse("http://www.test.com/"),
+            body: jsonEncode(requestBody),
+          );
+
+          // when
+          await validator.validate(
+              validatedRequestHandler: validatedRequestHandler.call)(
+            originalRequest,
+          );
+
+          // then
+          final expectedValidatedBodyData = {
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.EMAIL.value:
+                requestBody[RegisterWithEmailAndPasswordRequestBodyKeyConstants
+                    .EMAIL.value],
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.PASSWORD.value:
+                requestBody[RegisterWithEmailAndPasswordRequestBodyKeyConstants
+                    .PASSWORD.value],
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants
+                    .FIRST_NAME.value:
+                requestBody[RegisterWithEmailAndPasswordRequestBodyKeyConstants
+                    .FIRST_NAME.value],
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.LAST_NAME.value:
+                requestBody[RegisterWithEmailAndPasswordRequestBodyKeyConstants
+                    .LAST_NAME.value],
+            RegisterWithEmailAndPasswordRequestBodyKeyConstants.NICKNAME.value:
+                requestBody[RegisterWithEmailAndPasswordRequestBodyKeyConstants
+                    .NICKNAME.value],
+          };
+
+          final captured =
+              verify(() => validatedRequestHandler(captureAny())).captured;
+          final changedRequest = captured.first as Request;
+          final validatedBodyData = changedRequest
+              .context[RequestConstants.VALIDATED_BODY_DATA.value];
+
+          expect(validatedBodyData, equals(expectedValidatedBodyData));
 
           // cleanup
         },

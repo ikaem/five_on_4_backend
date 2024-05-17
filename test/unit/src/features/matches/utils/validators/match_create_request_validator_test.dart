@@ -54,7 +54,7 @@ void main() {
           // );
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Title is required.",
-            cookies: [],
+            // cookies: [],
           );
           final responseString = await response.readAsString();
 
@@ -101,7 +101,7 @@ void main() {
           ); */
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Description is required.",
-            cookies: [],
+            // cookies: [],
           );
           final responseString = await response.readAsString();
 
@@ -150,7 +150,7 @@ void main() {
           // );
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Date and time is required.",
-            cookies: [],
+            // cookies: [],
           );
           final responseString = await response.readAsString();
 
@@ -195,7 +195,7 @@ void main() {
           // then
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Date and time must be in the future.",
-            cookies: [],
+            // cookies: [],
           );
           final responseString = await response.readAsString();
 
@@ -244,7 +244,7 @@ void main() {
           // );
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Location is required.",
-            cookies: [],
+            // cookies: [],
           );
           final responseString = await response.readAsString();
 
