@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
+import '../../../../../../../bin/src/features/auth/utils/constants/auth_response_constants.dart';
 import '../../../../../../../bin/src/features/core/utils/helpers/response_generator.dart';
 
 void main() {
@@ -137,7 +138,7 @@ void main() {
 
           // then
           expect(
-            response.headers["five_on_4_access_token"],
+            response.headers[AuthResponseConstants.ACCESS_JWT_HEADER_KEY.value],
             accessToken,
           );
 

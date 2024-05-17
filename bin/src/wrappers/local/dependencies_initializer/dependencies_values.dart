@@ -1,5 +1,7 @@
 import '../../../features/auth/data/data_sources/auth_data_source.dart';
 import '../../../features/auth/domain/repositories/auth_repository.dart';
+import '../../../features/auth/domain/use_cases/create_access_jwt/create_access_jwt_use_case.dart';
+import '../../../features/auth/domain/use_cases/create_refresh_jwt_cookie/create_refresh_jwt_cookie_use_case.dart';
 import '../../../features/auth/domain/use_cases/get_auth_by_email/get_auth_by_email_use_case.dart';
 import '../../../features/auth/domain/use_cases/get_auth_by_email_and_hashed_password/get_auth_by_email_and_hashed_password_use_case.dart';
 import '../../../features/auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
@@ -97,6 +99,8 @@ class InitializedUseCasesDependenciesValues {
     required this.createMatchUseCase,
     required this.getHashedValueUseCase,
     required this.getAuthorizationBearerTokenFromRequestHeadersUseCase,
+    required this.createAccessJwtUseCase,
+    required this.createRefreshJwtCookieUseCase,
   });
 
   final GoogleLoginUseCase googleLoginUseCase;
@@ -116,6 +120,8 @@ class InitializedUseCasesDependenciesValues {
       getAuthByEmailAndHashedPasswordUseCase;
   final GetAuthorizationBearerTokenFromRequestHeadersUseCase
       getAuthorizationBearerTokenFromRequestHeadersUseCase;
+  final CreateAccessJwtUseCase createAccessJwtUseCase;
+  final CreateRefreshJwtCookieUseCase createRefreshJwtCookieUseCase;
 }
 
 class InitialiazedControllersDependenciesValues {

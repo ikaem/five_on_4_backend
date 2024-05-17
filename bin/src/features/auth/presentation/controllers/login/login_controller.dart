@@ -7,7 +7,10 @@ import '../../../../core/domain/use_cases/get_hashed_value/get_hashed_value_use_
 import '../../../../core/domain/values/response_body_value.dart';
 import '../../../../core/utils/extensions/request_extension.dart';
 import '../../../../core/utils/helpers/generate_response.dart';
+import '../../../../core/utils/helpers/response_generator.dart';
 import '../../../../players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
+import '../../../domain/use_cases/create_access_jwt/create_access_jwt_use_case.dart';
+import '../../../domain/use_cases/create_refresh_jwt_cookie/create_refresh_jwt_cookie_use_case.dart';
 import '../../../domain/use_cases/get_auth_by_email_and_hashed_password/get_auth_by_email_and_hashed_password_use_case.dart';
 import '../../../utils/constants/login_request_body_key_constants.dart';
 import '../../../utils/helpers/generate_auth_access_token_payload.dart';
@@ -19,32 +22,35 @@ class LoginController {
         getAuthByEmailAndHashedPasswordUseCase,
     required GetPlayerByAuthIdUseCase getPlayerByAuthIdUseCase,
     required GetHashedValueUseCase getHashedValueUseCase,
-    required CreateJWTAccessTokenCookieUseCase
-        createJWTAccessTokenCookieUseCase,
+    required CreateAccessJwtUseCase createAccessJwtUseCase,
+    required CreateRefreshJwtCookieUseCase createRefreshJwtCookieUseCase,
+    // required CreateJWTAccessTokenCookieUseCase
+    //     createJWTAccessTokenCookieUseCase,
   })  : _getAuthByEmailAndHashedPasswordUseCase =
             getAuthByEmailAndHashedPasswordUseCase,
         _getPlayerByAuthIdUseCase = getPlayerByAuthIdUseCase,
-        _getHashedValueUseCase = getHashedValueUseCase,
-        _createJWTAccessTokenCookieUseCase = createJWTAccessTokenCookieUseCase;
+        _createRefreshJwtCookieUseCase = createRefreshJwtCookieUseCase,
+        _createAccessJwtUseCase = createAccessJwtUseCase,
+        _getHashedValueUseCase = getHashedValueUseCase;
+  // _createJWTAccessTokenCookieUseCase = createJWTAccessTokenCookieUseCase;
 
   final GetAuthByEmailAndHashedPasswordUseCase
       _getAuthByEmailAndHashedPasswordUseCase;
   final GetPlayerByAuthIdUseCase _getPlayerByAuthIdUseCase;
   final GetHashedValueUseCase _getHashedValueUseCase;
-  final CreateJWTAccessTokenCookieUseCase _createJWTAccessTokenCookieUseCase;
+  final CreateAccessJwtUseCase _createAccessJwtUseCase;
+  final CreateRefreshJwtCookieUseCase _createRefreshJwtCookieUseCase;
+  // final CreateJWTAccessTokenCookieUseCase _createJWTAccessTokenCookieUseCase;
 
   Future<Response> call(Request request) async {
     final validatedBodyData = request.getValidatedBodyData();
     if (validatedBodyData == null) {
-      final responseBody = ResponseBodyValue(
+      final response = ResponseGenerator.failure(
         message: "Request body not validated.",
-        ok: false,
-      );
-      return generateResponse(
         statusCode: HttpStatus.internalServerError,
-        body: responseBody,
-        cookies: null,
       );
+
+      return response;
     }
 
     final email =
@@ -60,49 +66,43 @@ class LoginController {
       hashedPassword: hashedPassword,
     );
     if (auth == null) {
-      final responseBody =
-          ResponseBodyValue(message: "Invalid credentials", ok: false);
-      return generateResponse(
+      final response = ResponseGenerator.failure(
+        message: "Invalid credentials",
         statusCode: HttpStatus.unauthorized,
-        body: responseBody,
-        cookies: null,
       );
+      return response;
     }
 
     final player = await _getPlayerByAuthIdUseCase(authId: auth.id);
     if (player == null) {
-      final responseBody = ResponseBodyValue(
-          message: "Authenticated player not found.", ok: false);
-      return generateResponse(
+      final response = ResponseGenerator.failure(
+        message: "Authenticated player not found.",
         statusCode: HttpStatus.notFound,
-        body: responseBody,
-        cookies: null,
       );
+      return response;
     }
 
-    final authAccessTokenPayload = generateAuthAccessTokenPayload(
+    final accessToken = _createAccessJwtUseCase(
       authId: auth.id,
       playerId: player.id,
     );
-    final authCookie = _createJWTAccessTokenCookieUseCase(
-      payload: authAccessTokenPayload,
-      expiresIn: const Duration(days: 7),
+
+    final refreshTokenCookie = _createRefreshJwtCookieUseCase(
+      authId: auth.id,
+      playerId: player.id,
     );
 
-    final responseBody = ResponseBodyValue(
+    final response = ResponseGenerator.auth(
       message: "User logged in successfully",
-      ok: true,
       data: generateAuthOkResponseData(
         playerId: player.id,
         playerName: player.name,
         playerNickname: player.nickname,
       ),
+      accessToken: accessToken,
+      refreshTokenCookie: refreshTokenCookie,
     );
 
-    return generateResponse(
-      statusCode: HttpStatus.ok,
-      body: responseBody,
-      cookies: [authCookie],
-    );
+    return response;
   }
 }

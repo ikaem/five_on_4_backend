@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 
+import '../../../auth/utils/constants/auth_response_constants.dart';
+
 abstract class ResponseGenerator {
   static Response auth({
     required String message,
@@ -80,7 +82,8 @@ abstract class ResponseGenerator {
         HttpHeaders.contentTypeHeader: "application/json",
         if (cookiesStrings.isNotEmpty)
           HttpHeaders.setCookieHeader: cookiesStrings,
-        if (accessToken != null) "five_on_4_access_token": accessToken,
+        if (accessToken != null)
+          AuthResponseConstants.ACCESS_JWT_HEADER_KEY.value: accessToken,
       },
     );
 

@@ -9,6 +9,8 @@ Map<String, Object> generateAuthOkResponseData({
     "nickname": playerNickname,
   };
 
+  // TODO this will need to be tested
+
 // TODO not a standard
   // return {
   //   "ok": true,
