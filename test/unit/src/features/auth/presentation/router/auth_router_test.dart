@@ -9,6 +9,7 @@ import '../../../../../../../bin/src/features/auth/presentation/controllers/logi
 import '../../../../../../../bin/src/features/auth/presentation/controllers/logout/logout_controller.dart';
 import '../../../../../../../bin/src/features/auth/presentation/controllers/register_with_email_and_password/register_with_email_and_password_controller.dart';
 import '../../../../../../../bin/src/features/auth/presentation/router/auth_router.dart';
+import '../../../../../../../bin/src/features/auth/utils/middlewares/authenticate_with_google_request_middleware_wrapper.dart';
 import '../../../../../../../bin/src/features/auth/utils/middlewares/authorize_request_middleware_wrapper.dart';
 import '../../../../../../../bin/src/features/auth/utils/middlewares/login_request_middleware_wrapper.dart';
 import '../../../../../../../bin/src/features/auth/utils/middlewares/register_with_email_and_password_request_middleware_wrapper.dart';
@@ -26,6 +27,8 @@ void main() {
       _MockMiddlewareRequestHandlerCallback();
   final authorizeRequestHandler = _MockMiddlewareRequestHandlerCallback();
   final loginRequestHandler = _MockMiddlewareRequestHandlerCallback();
+  final authenticateWithGoogleRequestHandler =
+      _MockMiddlewareRequestHandlerCallback();
 
   // middleware
   final registerWithEmailAndPasswordRequestMiddlewareWrapper =
@@ -33,6 +36,8 @@ void main() {
   final authorizeRequestMiddlewareWrapper =
       _MockAuthorizeRequestMiddlewareWrapper();
   final loginRequestMiddlewareWrapper = _MockLoginRequestMiddlewareWrapper();
+  final authenticateWithGoogleRequestMiddlewareWrapper =
+      _MockAuthenticateWithGoogleRequestMiddlewareWrapper();
 
   setUpAll(() {
     registerFallbackValue(_FakeRequest());
@@ -42,17 +47,27 @@ void main() {
     // validators
     when(() => registerWithEmailAndPasswordRequestHandler.call(any()))
         .thenAnswer((invocation) async {
-      // NOTE return null to propagate request to the next middleware - the handler
+      // NOTE return provided callbac? to propagate request to the next middleware - the handler
       return null;
+      // return (() async => Response(200))();
     });
     when(() => authorizeRequestHandler.call(any()))
         .thenAnswer((invocation) async {
-      // NOTE return null to propagate request to the next middleware - the handler
+      // NOTE return provided callbac? to propagate request to the next middleware - the handler
+      // TODO real validator never actually returns null - it always returns a response
       return null;
+      // return (() async => Response(200))();
     });
     when(() => loginRequestHandler.call(any())).thenAnswer((invocation) async {
-      // NOTE return null to propagate request to the next middleware - the handler
+      // NOTE return provided callbac? to propagate request to the next middleware - the handler
       return null;
+      // return (() async => Response(200))();
+    });
+    when(() => authenticateWithGoogleRequestHandler.call(any()))
+        .thenAnswer((invocation) async {
+      // NOTE return provided callbac? to propagate request to the next middleware - the handler
+      return null;
+      // return (() async => Response(200))();
     });
 
     // middlewares
@@ -70,6 +85,12 @@ void main() {
     when(() => loginRequestMiddlewareWrapper.call()).thenReturn(
       createMiddleware(
         requestHandler: loginRequestHandler.call,
+      ),
+    );
+    when(() => authenticateWithGoogleRequestMiddlewareWrapper.call())
+        .thenReturn(
+      createMiddleware(
+        requestHandler: authenticateWithGoogleRequestHandler.call,
       ),
     );
 
@@ -95,11 +116,13 @@ void main() {
     reset(loginRequestHandler);
     reset(authorizeRequestHandler);
     reset(registerWithEmailAndPasswordRequestHandler);
+    reset(authenticateWithGoogleRequestHandler);
 
     // middlewares
     reset(registerWithEmailAndPasswordRequestMiddlewareWrapper);
     reset(authorizeRequestMiddlewareWrapper);
     reset(loginRequestMiddlewareWrapper);
+    reset(authenticateWithGoogleRequestMiddlewareWrapper);
 
     // controllers
     reset(googleLoginController);
@@ -109,6 +132,89 @@ void main() {
   });
 
   group("$AuthRouter", () {
+    group("post /auth-google", () {
+      final realRequest =
+          Request("post", Uri.parse("https://example.com/auth-google"));
+
+      // should call the GoogleLoginController's request handler
+      test(
+        // TODO rename this in ticket-15
+        "given GoogleLoginController instance"
+        "when a request to the endpoint is made"
+        "then should call the GoogleLoginController's request handler",
+        () async {
+          // setup
+          final authRouter = AuthRouter(
+            googleLoginController: googleLoginController,
+            registerWithEmailAndPasswordController:
+                registerWithEmailAndPasswordController,
+            logoutController: logoutController,
+            registerWithEmailAndPasswordRequestMiddlewareWrapper:
+                registerWithEmailAndPasswordRequestMiddlewareWrapper,
+            authorizeRequestMiddlewareWrapper:
+                authorizeRequestMiddlewareWrapper,
+            loginController: loginController,
+            loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
+            authenticateWithGoogleRequestMiddlewareWrapper:
+                authenticateWithGoogleRequestMiddlewareWrapper,
+          );
+
+          // given
+
+          // when
+          await authRouter.router(realRequest);
+
+          // then
+          final captured =
+              verify(() => googleLoginController.call(captureAny())).captured;
+          final capturedRequest = captured.first as Request;
+
+          expect(capturedRequest.method, equals(realRequest.method));
+          expect(capturedRequest.url, equals(realRequest.url));
+          // cleanup
+        },
+      );
+
+      // should call the AuhtenticateWithGoogleRequestMiddlewareWrapper's request handler
+      test(
+        "given AuthenticateWithGoogleRequestMiddlewareWrapper instance"
+        "when a request to the endpoint is made"
+        "then should call the AuthenticateWithGoogleRequestMiddlewareWrapper's request handler",
+        () async {
+          // setup
+          final authRouter = AuthRouter(
+            googleLoginController: googleLoginController,
+            registerWithEmailAndPasswordController:
+                registerWithEmailAndPasswordController,
+            logoutController: logoutController,
+            registerWithEmailAndPasswordRequestMiddlewareWrapper:
+                registerWithEmailAndPasswordRequestMiddlewareWrapper,
+            authorizeRequestMiddlewareWrapper:
+                authorizeRequestMiddlewareWrapper,
+            loginController: loginController,
+            loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
+            authenticateWithGoogleRequestMiddlewareWrapper:
+                authenticateWithGoogleRequestMiddlewareWrapper,
+          );
+
+          // given
+
+          // when
+          await authRouter.router(realRequest);
+
+          // then
+          final captured = verify(
+            () => authenticateWithGoogleRequestHandler.call(captureAny()),
+          ).captured;
+          final capturedRequest = captured.first as Request;
+
+          expect(capturedRequest.method, equals(realRequest.method));
+          expect(capturedRequest.url, equals(realRequest.url));
+
+          // cleanup
+        },
+      );
+    });
     group("post /login", () {
       final realRequest =
           Request("post", Uri.parse("https://example.com/login"));
@@ -131,6 +237,8 @@ void main() {
                 authorizeRequestMiddlewareWrapper,
             loginController: loginController,
             loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
+            authenticateWithGoogleRequestMiddlewareWrapper:
+                authenticateWithGoogleRequestMiddlewareWrapper,
           );
 
           // given
@@ -168,6 +276,8 @@ void main() {
                 authorizeRequestMiddlewareWrapper,
             loginController: loginController,
             loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
+            authenticateWithGoogleRequestMiddlewareWrapper:
+                authenticateWithGoogleRequestMiddlewareWrapper,
           );
 
           // given
@@ -211,6 +321,8 @@ void main() {
                   authorizeRequestMiddlewareWrapper,
               loginController: loginController,
               loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
+              authenticateWithGoogleRequestMiddlewareWrapper:
+                  authenticateWithGoogleRequestMiddlewareWrapper,
             );
 
             // given
@@ -247,6 +359,8 @@ void main() {
                   authorizeRequestMiddlewareWrapper,
               loginController: loginController,
               loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
+              authenticateWithGoogleRequestMiddlewareWrapper:
+                  authenticateWithGoogleRequestMiddlewareWrapper,
             );
 
             // given
@@ -290,6 +404,8 @@ void main() {
                   authorizeRequestMiddlewareWrapper,
               loginController: loginController,
               loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
+              authenticateWithGoogleRequestMiddlewareWrapper:
+                  authenticateWithGoogleRequestMiddlewareWrapper,
             );
 
             // given
@@ -327,6 +443,8 @@ void main() {
                   authorizeRequestMiddlewareWrapper,
               loginController: loginController,
               loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
+              authenticateWithGoogleRequestMiddlewareWrapper:
+                  authenticateWithGoogleRequestMiddlewareWrapper,
             );
 
             // given
@@ -349,46 +467,48 @@ void main() {
         );
       },
     );
-    group("post /google-login", () {
-      final realRequest =
-          Request("post", Uri.parse("https://example.com/google-login"));
+    // group("post /google-login", () {
+    //   final realRequest =
+    //       Request("post", Uri.parse("https://example.com/google-login"));
 
-      test(
-        "given GoogleLoginController instance"
-        "when a request to the endpoint is made"
-        "then should call the GoogleLoginController's request handler",
-        () async {
-          // setup
-          final authRouter = AuthRouter(
-            googleLoginController: googleLoginController,
-            registerWithEmailAndPasswordController:
-                registerWithEmailAndPasswordController,
-            logoutController: logoutController,
-            registerWithEmailAndPasswordRequestMiddlewareWrapper:
-                registerWithEmailAndPasswordRequestMiddlewareWrapper,
-            authorizeRequestMiddlewareWrapper:
-                authorizeRequestMiddlewareWrapper,
-            loginController: loginController,
-            loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
-          );
+    //   test(
+    //     "given GoogleLoginController instance"
+    //     "when a request to the endpoint is made"
+    //     "then should call the GoogleLoginController's request handler",
+    //     () async {
+    //       // setup
+    //       final authRouter = AuthRouter(
+    //         googleLoginController: googleLoginController,
+    //         registerWithEmailAndPasswordController:
+    //             registerWithEmailAndPasswordController,
+    //         logoutController: logoutController,
+    //         registerWithEmailAndPasswordRequestMiddlewareWrapper:
+    //             registerWithEmailAndPasswordRequestMiddlewareWrapper,
+    //         authorizeRequestMiddlewareWrapper:
+    //             authorizeRequestMiddlewareWrapper,
+    //         loginController: loginController,
+    //         loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
+    //         authenticateWithGoogleRequestMiddlewareWrapper:
+    //             authenticateWithGoogleRequestMiddlewareWrapper,
+    //       );
 
-          // given
+    //       // given
 
-          // when
-          await authRouter.router(realRequest);
+    //       // when
+    //       await authRouter.router(realRequest);
 
-          // then
-          final captured =
-              verify(() => googleLoginController.call(captureAny())).captured;
-          final capturedRequest = captured.first as Request;
+    //       // then
+    //       final captured =
+    //           verify(() => googleLoginController.call(captureAny())).captured;
+    //       final capturedRequest = captured.first as Request;
 
-          expect(capturedRequest.method, equals(realRequest.method));
-          expect(capturedRequest.url, equals(realRequest.url));
+    //       expect(capturedRequest.method, equals(realRequest.method));
+    //       expect(capturedRequest.url, equals(realRequest.url));
 
-          // cleanup
-        },
-      );
-    });
+    //       // cleanup
+    //     },
+    //   );
+    // });
   });
 }
 
@@ -411,8 +531,13 @@ class _MockLoginController extends Mock implements LoginController {}
 class _MockLoginRequestMiddlewareWrapper extends Mock
     implements LoginRequestMiddlewareWrapper {}
 
+class _MockAuthenticateWithGoogleRequestMiddlewareWrapper extends Mock
+    implements AuthenticateWithGoogleRequestMiddlewareWrapper {}
+
 class _MockMiddlewareRequestHandlerCallback extends Mock {
+  // TODO this does not really simulate what the real handler does - it actually always returns a resoponse - but leave for now
   FutureOr<Response?> call(Request request);
+  // Future<Response> call(Request request);
 }
 
 class _FakeRequest extends Fake implements Request {}

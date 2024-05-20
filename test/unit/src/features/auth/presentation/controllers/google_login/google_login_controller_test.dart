@@ -5,24 +5,35 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
+import '../../../../../../../../bin/src/features/auth/domain/use_cases/create_access_jwt/create_access_jwt_use_case.dart';
+import '../../../../../../../../bin/src/features/auth/domain/use_cases/create_refresh_jwt_cookie/create_refresh_jwt_cookie_use_case.dart';
 import '../../../../../../../../bin/src/features/auth/domain/use_cases/google_login/google_login_use_case.dart';
 import '../../../../../../../../bin/src/features/auth/presentation/controllers/google_login/google_login_controller.dart';
+import '../../../../../../../../bin/src/features/auth/utils/constants/auth_response_constants.dart';
+import '../../../../../../../../bin/src/features/auth/utils/constants/authenticate_with_google_request_body_key_constants.dart';
+import '../../../../../../../../bin/src/features/core/domain/models/auth/auth_model.dart';
 import '../../../../../../../../bin/src/features/core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
+import '../../../../../../../../bin/src/features/core/utils/constants/request_constants.dart';
 import '../../../../../../../../bin/src/features/players/domain/models/player_model.dart';
 import '../../../../../../../../bin/src/features/players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
+import '../../../../../../../helpers/response.dart';
 
 void main() {
   final googleLoginUseCase = _MockGoogleLoginUseCase();
   final getPlayerByAuthIdUseCase = _MockGetPlayerByAuthIdUseCase();
-  final createJWTAccessTokenCookieUseCase =
-      _MockCreateJWTAccessTokenCookieUseCase();
+  final createAccessJwtUseCase = _MockCreateAccessJwtUseCase();
+  final createRefreshJwtCookieUseCase = _MockCreateRefreshJwtCookieUseCase();
+  // final createJWTAccessTokenCookieUseCase =
+  //     _MockCreateJWTAccessTokenCookieUseCase();
   final request = _MockRequest();
 
   // tested class
   final googleLoginController = GoogleLoginController(
     googleLoginUseCase: googleLoginUseCase,
     getPlayerByAuthIdUseCase: getPlayerByAuthIdUseCase,
-    createJWTAccessTokenCookieUseCase: createJWTAccessTokenCookieUseCase,
+    createAccessJwtUseCase: createAccessJwtUseCase,
+    createRefreshJwtCookieUseCase: createRefreshJwtCookieUseCase,
+    // createJWTAccessTokenCookieUseCase: createJWTAccessTokenCookieUseCase,
   );
 
   setUpAll(() {
@@ -33,197 +44,242 @@ void main() {
     reset(googleLoginUseCase);
     reset(getPlayerByAuthIdUseCase);
     reset(request);
-    reset(createJWTAccessTokenCookieUseCase);
+    // reset(createJWTAccessTokenCookieUseCase);
+    reset(createAccessJwtUseCase);
+    reset(createRefreshJwtCookieUseCase);
   });
 
   group("$GoogleLoginController", () {
     group(".call()", () {
-      const validRequestBodyString = '{"idToken": "valid_id_token"}';
       test(
-        "given Request object with missing idToken"
-        "when call() is called "
+        "given request validation has not been done"
+        "when .call() is called"
         "then should return expected response",
         () async {
           // setup
 
           // given
-          when(() => request.readAsString()).thenAnswer((i) async => "");
-
-          // when
-          final response = await googleLoginController(request);
-          final responsePayload = jsonDecode(await response.readAsString());
-
-          // then
-          expect(response.statusCode, 400);
-          expect(
-              responsePayload,
-              equals({
-                "ok": false,
-                "message":
-                    "Invalid payload provided. Google idToken is required.",
-              }));
-
-          // cleanup
-        },
-      );
-
-      test(
-        "given provided idToken is invalid"
-        "when call() is called "
-        "then should return expected response",
-        () async {
-          // setup
-
-          // given
-          when(() => request.readAsString())
-              .thenAnswer((i) async => validRequestBodyString);
-          when(() => googleLoginUseCase(idToken: any(named: "idToken")))
-              .thenAnswer((i) async => null);
-
-          // when
-          final response = await googleLoginController(request);
-
-          // then
-          expect(response.statusCode, 400);
-          expect(
-              jsonDecode(await response.readAsString()),
-              equals({
-                "ok": false,
-                "message": "Invalid Google idToken provided.",
-              }));
-
-          // cleanup
-        },
-      );
-
-      test(
-        "given provided idToken is valid and player is not found"
-        "when call() is called "
-        "then should return expected response",
-        () async {
-          // setup
-
-          // given
-          when(() => request.readAsString())
-              .thenAnswer((i) async => validRequestBodyString);
-          when(() => googleLoginUseCase(idToken: any(named: "idToken")))
-              .thenAnswer((i) async => 1);
-          when(() => getPlayerByAuthIdUseCase(authId: 1))
-              .thenAnswer((i) async => null);
-
-          // when
-          final response = await googleLoginController(request);
-          final responseString = await response.readAsString();
-          final responseMap = jsonDecode(responseString);
-
-          // then
-          expect(response.statusCode, 404);
-          expect(
-              // jsonDecode(await response.readAsString()),
-              responseMap,
-              equals({
-                "ok": false,
-                "message": "Authenticated player not found",
-              }));
-
-          // cleanup
-        },
-      );
-
-      test(
-        "given provided idToken resolves to a valid player"
-        "when call() is called "
-        "then should return expected response",
-        () async {
-          // setup
-
-          // given
-          when(() => request.readAsString())
-              .thenAnswer((i) async => validRequestBodyString);
-          when(() => googleLoginUseCase(idToken: any(named: "idToken")))
-              .thenAnswer((i) async => 1);
-          when(() => getPlayerByAuthIdUseCase(authId: 1))
-              .thenAnswer((i) async => testPlayerModel);
-          when(
-            () => createJWTAccessTokenCookieUseCase.call(
-              payload: any(named: "payload"),
-              expiresIn: any(named: "expiresIn"),
-            ),
-          ).thenReturn(testAuthCookie);
+          when(() => request.context).thenReturn({});
 
           // when
           final response = await googleLoginController(request);
           final responseString = await response.readAsString();
 
           // then
-          final expectedResponsePayload = {
-            "ok": true,
-            "data": {
-              "id": testPlayerModel.id,
-              "name": testPlayerModel.name,
-              "nickname": testPlayerModel.nickname,
-            },
-            "message": "User authenticated successfully.",
+          final expectedResponse = generateTestInternalServerErrorResponse(
+              responseMessage: "Request body not validated.");
+          final expectedResponseString = await expectedResponse.readAsString();
+
+          expect(response.statusCode, equals(expectedResponse.statusCode));
+          expect(responseString, equals(expectedResponseString));
+
+          // cleanup
+        },
+      );
+
+      test(
+        "given request with invalid idToken"
+        "when .call() is called"
+        "then should retrun expected response",
+        () async {
+          // setup
+          final validatedBodyMap = {
+            AuthenticateWithGoogleRequestBodyKeyConstants.ID_TOKEN.value:
+                "invalid_token",
           };
 
-          expect(response.statusCode, 200);
-          expect(
-            jsonDecode(responseString),
-            equals(expectedResponsePayload),
+          // given
+          when(() => request.context).thenReturn({
+            RequestConstants.VALIDATED_BODY_DATA.value: validatedBodyMap,
+          });
+          when(() => googleLoginUseCase(idToken: any(named: "idToken")))
+              .thenAnswer((i) async => null);
+
+          // when
+          final response = await googleLoginController(request);
+          final responseString = await response.readAsString();
+
+          // then
+          final expectedResponse = generateTestUnauthorizedResponse(
+            responseMessage: "Invalid Google idToken provided.",
           );
+          final expectedResponseString = await expectedResponse.readAsString();
+
+          expect(response.statusCode, equals(expectedResponse.statusCode));
+          expect(responseString, equals(expectedResponseString));
 
           // cleanup
         },
       );
 
       test(
-        "given user is signed in with google"
-        "when return Response object "
-        "then should contain expected auth cookie",
+        "given retrieved authId from db is not associated with a player in db"
+        "when .call() is called"
+        "then should return expected response",
         () async {
-          // setup
-          final authId = 1;
+          final validatedBodyMap = {
+            AuthenticateWithGoogleRequestBodyKeyConstants.ID_TOKEN.value:
+                "invalid_token",
+          };
+          when(() => request.context).thenReturn({
+            RequestConstants.VALIDATED_BODY_DATA.value: validatedBodyMap,
+          });
+          when(() => googleLoginUseCase(idToken: any(named: "idToken")))
+              .thenAnswer((i) async => _testAuthModel.id);
 
           // given
-          when(() => request.readAsString())
-              .thenAnswer((i) async => validRequestBodyString);
+          when(() => getPlayerByAuthIdUseCase(authId: 1))
+              .thenAnswer((i) async => null);
+
+          // when
+          final response = await googleLoginController(request);
+          final responseString = await response.readAsString();
+
+          // then
+          final expectedResponse = generateTestNotFoundResponse(
+            responseMessage: "Authenticated player not found.",
+          );
+          final expectedResponseString = await expectedResponse.readAsString();
+
+          expect(response.statusCode, equals(expectedResponse.statusCode));
+          expect(responseString, equals(expectedResponseString));
+
+          // cleanup
+        },
+      );
+
+      test(
+        "given valid request"
+        "when .call() is called"
+        "then should return expected response",
+        () async {
+          // setup
+          final validatedBodyMap = {
+            AuthenticateWithGoogleRequestBodyKeyConstants.ID_TOKEN.value:
+                "invalid_token",
+          };
           when(() => googleLoginUseCase(idToken: any(named: "idToken")))
-              .thenAnswer((i) async => 1);
-          when(() => getPlayerByAuthIdUseCase(authId: any(named: "authId")))
-              .thenAnswer((i) async => testPlayerModel);
-          when(
-            () => createJWTAccessTokenCookieUseCase.call(
-              payload: any(named: "payload"),
-              expiresIn: any(named: "expiresIn"),
-            ),
-          ).thenReturn(testAuthCookie);
+              .thenAnswer((i) async => _testAuthModel.id);
+          when(() => getPlayerByAuthIdUseCase(authId: 1))
+              .thenAnswer((i) async => _testPlayerModel);
+          when(() => createAccessJwtUseCase.call(
+                authId: any(named: "authId"),
+                playerId: any(named: "playerId"),
+              )).thenReturn("jwt");
+          when(() => createRefreshJwtCookieUseCase.call(
+                authId: any(named: "authId"),
+                playerId: any(named: "playerId"),
+              )).thenReturn(_testRefreshCookie);
+
+          // given
+          when(() => request.context).thenReturn({
+            RequestConstants.VALIDATED_BODY_DATA.value: validatedBodyMap,
+          });
+
+          // when
+          final response = await googleLoginController(request);
+          final responseString = await response.readAsString();
+
+          // then
+          final expectedResponse = generateTestOkResponse(
+            responseData: {
+              "id": _testPlayerModel.id,
+              "name": _testPlayerModel.name,
+              "nickname": _testPlayerModel.nickname,
+            },
+            responseMessage: "User authenticated successfully.",
+          );
+          final expectedResponseString = await expectedResponse.readAsString();
+
+          expect(response.statusCode, equals(expectedResponse.statusCode));
+          expect(responseString, equals(expectedResponseString));
+
+          // cleanup
+        },
+      );
+
+      test(
+        "given valid request"
+        "when .call() is called"
+        "then should should return expected response",
+        () async {
+          final validatedBodyMap = {
+            AuthenticateWithGoogleRequestBodyKeyConstants.ID_TOKEN.value:
+                "invalid_token",
+          };
+          when(() => googleLoginUseCase(idToken: any(named: "idToken")))
+              .thenAnswer((i) async => _testAuthModel.id);
+          when(() => getPlayerByAuthIdUseCase(authId: 1))
+              .thenAnswer((i) async => _testPlayerModel);
+          when(() => createAccessJwtUseCase.call(
+                authId: any(named: "authId"),
+                playerId: any(named: "playerId"),
+              )).thenReturn("jwt");
+          when(() => createRefreshJwtCookieUseCase.call(
+                authId: any(named: "authId"),
+                playerId: any(named: "playerId"),
+              )).thenReturn(_testRefreshCookie);
+
+          // given
+          when(() => request.context).thenReturn({
+            RequestConstants.VALIDATED_BODY_DATA.value: validatedBodyMap,
+          });
 
           // when
           final response = await googleLoginController(request);
 
           // then
-          final responseHeaders = response.headers;
-          // TODO just in case caps matter
-          // final responseCookies = responseHeaders["Set-Cookie"];
-          final responseCookies = responseHeaders[HttpHeaders.setCookieHeader];
+          final accessToken = response
+              .headers[AuthResponseConstants.ACCESS_JWT_HEADER_KEY.value];
+          expect(accessToken, equals("jwt"));
 
-          final cookieStrings = responseCookies?.split(",") ?? [];
+          // cleanup
+        },
+      );
 
+      test(
+        "given valid request"
+        "when .call() is called"
+        "then should should return expected response",
+        () async {
+          final validatedBodyMap = {
+            AuthenticateWithGoogleRequestBodyKeyConstants.ID_TOKEN.value:
+                "invalid_token",
+          };
+          when(() => googleLoginUseCase(idToken: any(named: "idToken")))
+              .thenAnswer((i) async => _testAuthModel.id);
+          when(() => getPlayerByAuthIdUseCase(authId: 1))
+              .thenAnswer((i) async => _testPlayerModel);
+          when(() => createAccessJwtUseCase.call(
+                authId: any(named: "authId"),
+                playerId: any(named: "playerId"),
+              )).thenReturn("jwt");
+          when(() => createRefreshJwtCookieUseCase.call(
+                authId: any(named: "authId"),
+                playerId: any(named: "playerId"),
+              )).thenReturn(_testRefreshCookie);
+
+          // given
+          when(() => request.context).thenReturn({
+            RequestConstants.VALIDATED_BODY_DATA.value: validatedBodyMap,
+          });
+
+          // when
+          final response = await googleLoginController(request);
+
+          // then
+          final responsCookies = response.headers[HttpHeaders.setCookieHeader];
+
+          final cookieStrings = responsCookies!.split(",");
           final cookies = cookieStrings.map((cookieString) {
-            final cookie = Cookie.fromSetCookieValue(cookieString);
-            return cookie;
+            return Cookie.fromSetCookieValue(cookieString);
           }).toList();
 
           expect(cookies, hasLength(1));
-          expect(cookies.first.toString(), equals(testAuthCookie.toString()));
+          expect(
+              cookies.first.toString(), equals(_testRefreshCookie.toString()));
 
-          verify(() => createJWTAccessTokenCookieUseCase.call(
-                payload: {
-                  "authId": authId,
-                  "playerId": testPlayerModel.id,
-                },
-                expiresIn: Duration(days: 7),
-              )).called(1);
+          // cleanup
         },
       );
     });
@@ -240,13 +296,26 @@ class _MockRequest extends Mock implements Request {}
 class _MockCreateJWTAccessTokenCookieUseCase extends Mock
     implements CreateJWTAccessTokenCookieUseCase {}
 
-final testPlayerModel = PlayerModel(
+class _MockCreateAccessJwtUseCase extends Mock
+    implements CreateAccessJwtUseCase {}
+
+class _MockCreateRefreshJwtCookieUseCase extends Mock
+    implements CreateRefreshJwtCookieUseCase {}
+
+final _testAuthModel = AuthModel(
   id: 1,
-  name: "name",
-  nickname: "nickname",
-  authId: 1,
+  email: "email",
+  createdAt: DateTime.now().millisecondsSinceEpoch,
+  updatedAt: DateTime.now().millisecondsSinceEpoch,
 );
 
-final testAuthCookie = Cookie.fromSetCookieValue(
-  "accessToken=token; HttpOnly; Secure; Path=/",
+final _testPlayerModel = PlayerModel(
+  id: 1,
+  authId: 1,
+  nickname: "nickname",
+  name: "name",
+);
+
+final _testRefreshCookie = Cookie.fromSetCookieValue(
+  "refreshToken=token; HttpOnly; Secure; Path=/",
 );
