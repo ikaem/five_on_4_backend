@@ -282,8 +282,9 @@ InitialiazedControllersDependenciesValues getInitializedControllers({
   final googleLoginController = GoogleLoginController(
     googleLoginUseCase: initializedUseCases.googleLoginUseCase,
     getPlayerByAuthIdUseCase: initializedUseCases.getPlayerByAuthIdUseCase,
-    createJWTAccessTokenCookieUseCase:
-        initializedUseCases.createJWTAccessTokenCookieUseCase,
+    createAccessJwtUseCase: initializedUseCases.createAccessJwtUseCase,
+    createRefreshJwtCookieUseCase:
+        initializedUseCases.createRefreshJwtCookieUseCase,
   );
   final getMatchController = GetMatchController(
     getMatchUseCase: initializedUseCases.getMatchUseCase,
