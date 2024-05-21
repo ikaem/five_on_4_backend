@@ -1,24 +1,29 @@
 import 'dart:io';
 
 import 'package:mocktail/mocktail.dart';
+import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../../bin/src/features/core/domain/use_cases/get_cookie_by_name_in_string/get_cookie_by_name_in_string_use_case.dart';
+import '../../../../../../../../bin/src/features/core/domain/use_cases/get_cookie_by_name_in_request/get_cookie_by_name_in_request_use_case.dart';
 import '../../../../../../../../bin/src/wrappers/local/cookies_handler/cookies_handler_wrapper.dart';
 
 void main() {
   final cookiesHandlerWrapper = _MockCookiesHandlerWrapper();
 
   // tested class
-  final getCookieByNameInStringUseCase = GetCookieByNameInStringUseCase(
+  final getCookieByNameInRequestUseCase = GetCookieByNameInRequestUseCase(
     cookiesHandlerWrapper: cookiesHandlerWrapper,
   );
+
+  setUpAll(() {
+    registerFallbackValue(_FakeRequest());
+  });
 
   tearDown(() {
     reset(cookiesHandlerWrapper);
   });
 
-  group("$GetCookieByNameInStringUseCase", () {
+  group("$GetCookieByNameInRequestUseCase", () {
     group(".call()", () {
       test(
         "given an invalid cookie name"
@@ -27,8 +32,8 @@ void main() {
         () async {
           // setup
           when(
-            () => cookiesHandlerWrapper.findCookieByNameInString(
-              cookiesString: any(named: "cookiesString"),
+            () => cookiesHandlerWrapper.findCookieByNameInRequest(
+              request: any(named: "request"),
               cookieName: any(named: "cookieName"),
             ),
           ).thenReturn(null);
@@ -37,8 +42,8 @@ void main() {
           final cookieName = "invalid_cookie_name";
 
           // when
-          final result = getCookieByNameInStringUseCase(
-            cookiesString: "",
+          final result = getCookieByNameInRequestUseCase(
+            request: _FakeRequest(),
             cookieName: cookieName,
           );
 
@@ -56,8 +61,8 @@ void main() {
         () async {
           // setup
           when(
-            () => cookiesHandlerWrapper.findCookieByNameInString(
-              cookiesString: any(named: "cookiesString"),
+            () => cookiesHandlerWrapper.findCookieByNameInRequest(
+              request: any(named: "request"),
               cookieName: any(named: "cookieName"),
             ),
           ).thenReturn(_testCookie);
@@ -66,8 +71,8 @@ void main() {
           final cookieName = "cookie_name";
 
           // when
-          final result = getCookieByNameInStringUseCase(
-            cookiesString: "",
+          final result = getCookieByNameInRequestUseCase(
+            request: _FakeRequest(),
             cookieName: cookieName,
           );
 
@@ -83,5 +88,7 @@ void main() {
 
 class _MockCookiesHandlerWrapper extends Mock
     implements CookiesHandlerWrapper {}
+
+class _FakeRequest extends Fake implements Request {}
 
 final _testCookie = Cookie("cookie_name", "cookie_value");

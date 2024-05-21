@@ -23,7 +23,7 @@ import '../../../features/auth/utils/validators/register_with_email_and_password
 import '../../../features/core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
 import '../../../features/core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
 import '../../../features/core/domain/use_cases/get_authorization_bearer_token_from_request_headers/get_authorization_bearer_token_from_request_headers_use_case.dart';
-import '../../../features/core/domain/use_cases/get_cookie_by_name_in_string/get_cookie_by_name_in_string_use_case.dart';
+import '../../../features/core/domain/use_cases/get_cookie_by_name_in_request/get_cookie_by_name_in_request_use_case.dart';
 import '../../../features/core/domain/use_cases/get_hashed_value/get_hashed_value_use_case.dart';
 import '../../../features/matches/data/data_sources/matches_data_source.dart';
 import '../../../features/matches/domain/repositories/matches_repository.dart';
@@ -109,7 +109,7 @@ class InitializedUseCasesDependenciesValues {
   final GetMatchUseCase getMatchUseCase;
   final GetPlayerByIdUseCase getPlayerByIdUseCase;
   final GetAuthByIdUseCase getAuthByIdUseCase;
-  final GetCookieByNameInStringUseCase getCookieByNameInStringUseCase;
+  final GetCookieByNameInRequestUseCase getCookieByNameInStringUseCase;
   final GetAccessTokenDataFromAccessJwtUseCase
       getAccessTokenDataFromAccessJwtUseCase;
   final CreateMatchUseCase createMatchUseCase;
