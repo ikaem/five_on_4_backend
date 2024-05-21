@@ -18,31 +18,32 @@ void main() {
   group("$RefreshTokenController", () {
     group(".call()", () {
       // should return bard request if there is no cookie in the request
-      test(
-        "given request without cookies"
-        "when .call() is called"
-        "then should return expected response",
-        () async {
-          // setup
+      // TODO not needed - we dont care if there are not cookies in general
+      // test(
+      //   "given request without cookies"
+      //   "when .call() is called"
+      //   "then should return expected response",
+      //   () async {
+      //     // setup
 
-          // given
-          when(() => request.headers).thenReturn({});
+      //     // given
+      //     when(() => request.headers).thenReturn({});
 
-          // when
-          final response = await controller(request);
-          final responseString = await response.readAsString();
+      //     // when
+      //     final response = await controller(request);
+      //     final responseString = await response.readAsString();
 
-          // then
-          final expectedResponse = generateTestBadRequestResponse(
-              responseMessage: "No cookie found in the request.");
-          final expectedResponseString = await expectedResponse.readAsString();
+      //     // then
+      //     final expectedResponse = generateTestBadRequestResponse(
+      //         responseMessage: "No cookie found in the request.");
+      //     final expectedResponseString = await expectedResponse.readAsString();
 
-          expect(responseString, equals(expectedResponseString));
-          expect(response.statusCode, equals(expectedResponse.statusCode));
+      //     expect(responseString, equals(expectedResponseString));
+      //     expect(response.statusCode, equals(expectedResponse.statusCode));
 
-          // cleanup
-        },
-      );
+      //     // cleanup
+      //   },
+      // );
 
       // should return bad request if there is no not a refresh token cookie in cookies
       test(

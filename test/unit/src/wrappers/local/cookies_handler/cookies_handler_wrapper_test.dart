@@ -1,28 +1,41 @@
+import 'dart:io';
+
+import 'package:mocktail/mocktail.dart';
+import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
 import '../../../../../../bin/src/wrappers/local/cookies_handler/cookies_handler_wrapper.dart';
 
 void main() {
+  final request = _MockRequest();
+
+  // tested class
   final cookiesHandlerWrapper = CookiesHandlerWrapper();
 
+  tearDown(() {
+    reset(request);
+  });
+
   group("$CookiesHandlerWrapper", () {
-    group(".findCookieByNameInString", () {
+// TODO test
+    group(".getCookiesStringFromRequest", () {});
+
+    group(".findCookieByNameInRequest", () {
+// should return null if there is no cookies in the request
       test(
-        "given a cookie name not present in the cookies string"
-        "when findCookieByNameInString() is called"
+        "given a request with no cookies"
+        "when call .findCookieByNameInRequest()"
         "then should return null",
         () async {
           // setup
-          const cookiesString =
-              "token_1=your_access_token_value; Expires=Thursday, 25-Dec-2025 23:13:00 GMT; HttpOnly; Secure;token_2=your_another_cookie_value; Expires=Thursday, 25-Dec-2025 23:13:00 GMT; HttpOnly; Secure";
 
           // given
-          const missingCookieName = "missing_cookie_name";
+          when(() => request.headers).thenReturn({});
 
           // when
-          final result = cookiesHandlerWrapper.findCookieByNameInString(
-            cookiesString: cookiesString,
-            cookieName: missingCookieName,
+          final result = cookiesHandlerWrapper.findCookieByNameInRequest(
+            request: request,
+            cookieName: "cookie_name",
           );
 
           // then
@@ -32,28 +45,95 @@ void main() {
         },
       );
 
+// should return null if there is no searched for cookie by name
       test(
-        "given a cookie name present in the cookies string"
-        "when findCookieByNameInString() is called"
-        "then should return the cookie",
+        "given <pre-condition to the test>"
+        "when <behavior we are specifying>"
+        "then should <state we expect to happen>",
         () async {
           // setup
           const cookiesString =
               "token_1=your_access_token_value; Expires=Thursday, 25-Dec-2025 23:13:00 GMT; HttpOnly; Secure;token_2=your_another_cookie_value; Expires=Thursday, 25-Dec-2025 23:13:00 GMT; HttpOnly; Secure";
 
           // given
-          const cookieName = "token_1";
+          when(() => request.headers).thenReturn({
+            HttpHeaders.cookieHeader: cookiesString,
+          });
 
           // when
-          final result = cookiesHandlerWrapper.findCookieByNameInString(
-            cookiesString: cookiesString,
-            cookieName: cookieName,
+          final result = cookiesHandlerWrapper.findCookieByNameInRequest(
+            request: request,
+            cookieName: "missing_cookie_name",
           );
 
           // then
-          expect(result, isNotNull);
-          expect(result!.name, equals(cookieName));
-          expect(result.value, equals("your_access_token_value"));
+          expect(result, isNull);
+
+          // cleanup
+        },
+      );
+
+// should return expected cookie if request is valid
+      test(
+        "given valid request with single cookie"
+        "when call .findCookieByNameInRequest()"
+        "then should return expected cookie",
+        () async {
+          // setup
+          const cookiesString =
+              "found_token=your_access_token_value; Expires=Thursday, 25-Dec-2025 23:13:00 GMT; HttpOnly; Secure";
+
+          // given
+          when(() => request.headers).thenReturn({
+            HttpHeaders.cookieHeader: cookiesString,
+          });
+
+          // when
+          final result = cookiesHandlerWrapper.findCookieByNameInRequest(
+            request: request,
+            cookieName: "found_token",
+          );
+
+          // then
+          final expectedCookie =
+              Cookie.fromSetCookieValue("found_token=your_access_token_value");
+          expect(
+            result.toString(),
+            equals(expectedCookie.toString()),
+          );
+
+          // cleanup
+        },
+      );
+
+      test(
+        "given valid request with multiple cookies"
+        "when call .findCookieByNameInRequest()"
+        "then should return expected cookie",
+        () async {
+          // setup
+          const cookiesString =
+              "found_token=your_access_token_value; Expires=Thursday, 25-Dec-2025 23:13:00 GMT; HttpOnly; Secure;token_2=your_another_cookie_value; Expires=Thursday, 25-Dec-2025 23:13:00 GMT; HttpOnly; Secure";
+
+          // given
+          when(() => request.headers).thenReturn({
+            HttpHeaders.cookieHeader: cookiesString,
+          });
+
+          // when
+          final result = cookiesHandlerWrapper.findCookieByNameInRequest(
+            request: request,
+            cookieName: "found_token",
+          );
+
+          // then
+          final expectedCookie =
+              Cookie.fromSetCookieValue("found_token=your_access_token_value");
+
+          expect(
+            result.toString(),
+            equals(expectedCookie.toString()),
+          );
 
           // cleanup
         },
@@ -61,6 +141,8 @@ void main() {
     });
   });
 }
+
+class _MockRequest extends Mock implements Request {}
 
 // TODO let it stay here as a reference
 // const _cookiesString =
