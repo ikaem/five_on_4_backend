@@ -10,7 +10,6 @@ import '../../../../../../../bin/src/features/core/utils/helpers/response_genera
 void main() {
   group("$ResponseGenerator", () {
     group(".auth()", () {
-      // should return expected response
       test(
         "given required arguments"
         "when .auth() is called"
@@ -48,7 +47,6 @@ void main() {
         },
       );
 
-      // should return response with expected status code
       test(
         "given custom http status code is provided"
         "when .auth() is called"
@@ -88,7 +86,6 @@ void main() {
         },
       );
 
-      // should return response with json content type
       test(
         "given response is returned "
         "when examine response headers "
@@ -114,7 +111,6 @@ void main() {
         },
       );
 
-      // should include access token in response headers
       test(
         "given access token is provided"
         "when .auth() is called"
@@ -146,7 +142,6 @@ void main() {
         },
       );
 
-      // should include refresh token in http only cookie
       test(
         "given refresh token cookie is provided"
         "when .auth() is called"
@@ -178,7 +173,6 @@ void main() {
       );
     });
     group(".failure()", () {
-      // should return expected response
       test(
         "given required arguments"
         "when .failure() is called"
@@ -213,7 +207,6 @@ void main() {
         },
       );
 
-      // should return response with expected status code
       test(
         "given status code is provided"
         "when .failure() is called"
@@ -238,7 +231,6 @@ void main() {
         },
       );
 
-      // should return response with json content type
       test(
         "given response is returned "
         "when examine response headers "
@@ -301,7 +293,6 @@ void main() {
         },
       );
 
-      // given custom http status code is provided, then should return expected response
       test(
         "given custom http status code is provided "
         "when .success() is called"
@@ -329,7 +320,6 @@ void main() {
         },
       );
 
-      // given no data is provided, then should return expected response
       test(
         "given no data is provided "
         "when .success() is called "
@@ -364,7 +354,6 @@ void main() {
         },
       );
 
-      // should return json response
       test(
         "given response is returned "
         "when examine response headers "

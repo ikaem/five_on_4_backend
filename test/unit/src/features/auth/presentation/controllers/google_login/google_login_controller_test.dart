@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:mocktail/mocktail.dart';
@@ -12,7 +11,6 @@ import '../../../../../../../../bin/src/features/auth/presentation/controllers/g
 import '../../../../../../../../bin/src/features/auth/utils/constants/auth_response_constants.dart';
 import '../../../../../../../../bin/src/features/auth/utils/constants/authenticate_with_google_request_body_key_constants.dart';
 import '../../../../../../../../bin/src/features/core/domain/models/auth/auth_model.dart';
-import '../../../../../../../../bin/src/features/core/domain/use_cases/create_jwt_access_token_cookie/create_jwt_access_token_cookie_use_case.dart';
 import '../../../../../../../../bin/src/features/core/utils/constants/request_constants.dart';
 import '../../../../../../../../bin/src/features/players/domain/models/player_model.dart';
 import '../../../../../../../../bin/src/features/players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
@@ -23,8 +21,6 @@ void main() {
   final getPlayerByAuthIdUseCase = _MockGetPlayerByAuthIdUseCase();
   final createAccessJwtUseCase = _MockCreateAccessJwtUseCase();
   final createRefreshJwtCookieUseCase = _MockCreateRefreshJwtCookieUseCase();
-  // final createJWTAccessTokenCookieUseCase =
-  //     _MockCreateJWTAccessTokenCookieUseCase();
   final request = _MockRequest();
 
   // tested class
@@ -33,7 +29,6 @@ void main() {
     getPlayerByAuthIdUseCase: getPlayerByAuthIdUseCase,
     createAccessJwtUseCase: createAccessJwtUseCase,
     createRefreshJwtCookieUseCase: createRefreshJwtCookieUseCase,
-    // createJWTAccessTokenCookieUseCase: createJWTAccessTokenCookieUseCase,
   );
 
   setUpAll(() {
@@ -44,7 +39,6 @@ void main() {
     reset(googleLoginUseCase);
     reset(getPlayerByAuthIdUseCase);
     reset(request);
-    // reset(createJWTAccessTokenCookieUseCase);
     reset(createAccessJwtUseCase);
     reset(createRefreshJwtCookieUseCase);
   });
@@ -292,9 +286,6 @@ class _MockGetPlayerByAuthIdUseCase extends Mock
     implements GetPlayerByAuthIdUseCase {}
 
 class _MockRequest extends Mock implements Request {}
-
-class _MockCreateJWTAccessTokenCookieUseCase extends Mock
-    implements CreateJWTAccessTokenCookieUseCase {}
 
 class _MockCreateAccessJwtUseCase extends Mock
     implements CreateAccessJwtUseCase {}

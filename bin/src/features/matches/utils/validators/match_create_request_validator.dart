@@ -2,9 +2,8 @@ import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 
-import '../../../core/domain/values/response_body_value.dart';
 import '../../../core/utils/extensions/request_extension.dart';
-import '../../../core/utils/helpers/generate_response.dart';
+import '../../../core/utils/helpers/response_generator.dart';
 import '../../../core/utils/validators/request_validator.dart';
 import '../constants/match_create_request_body_key_constants.dart';
 
@@ -22,71 +21,96 @@ class MatchCreateRequestValidator implements RequestValidator {
             requestBody[MatchCreateRequestBodyKeyConstants.TITLE.value];
         // TODO these checks should be better later - do the same like in login request validator
         if (title is! String) {
-          final responseBody = ResponseBodyValue(
+          final response = ResponseGenerator.failure(
             message: "Title is required.",
-            ok: false,
-          );
-          return generateResponse(
             statusCode: HttpStatus.badRequest,
-            body: responseBody,
-            // TODO this is incorrect  - cookies should be updated in the repsonse
-            cookies: [],
           );
+          return response;
+          // final responseBody = ResponseBodyValue(
+          //   message: "Title is required.",
+          //   ok: false,
+          // );
+          // return generateResponse(
+          //   statusCode: HttpStatus.badRequest,
+          //   body: responseBody,
+          //   // TODO this is incorrect  - cookies should be updated in the repsonse
+          //   cookies: [],
+          // );
         }
 
         final description =
             requestBody[MatchCreateRequestBodyKeyConstants.DESCRIPTION.value];
         if (description is! String) {
-          final responseBody = ResponseBodyValue(
+          final response = ResponseGenerator.failure(
             message: "Description is required.",
-            ok: false,
-          );
-          return generateResponse(
             statusCode: HttpStatus.badRequest,
-            body: responseBody,
-            cookies: [],
           );
+          return response;
+          // final responseBody = ResponseBodyValue(
+          //   message: "Description is required.",
+          //   ok: false,
+          // );
+          // return generateResponse(
+          //   statusCode: HttpStatus.badRequest,
+          //   body: responseBody,
+          //   cookies: [],
+          // );
         }
 
         final dateAndTime =
             requestBody[MatchCreateRequestBodyKeyConstants.DATE_AND_TIME.value];
         if (dateAndTime is! int) {
-          final responseBody = ResponseBodyValue(
+          final response = ResponseGenerator.failure(
             message: "Date and time is required.",
-            ok: false,
-          );
-          return generateResponse(
             statusCode: HttpStatus.badRequest,
-            body: responseBody,
-            cookies: [],
           );
+          return response;
+          // final responseBody = ResponseBodyValue(
+          //   message: "Date and time is required.",
+          //   ok: false,
+          // );
+          // return generateResponse(
+          //   statusCode: HttpStatus.badRequest,
+          //   body: responseBody,
+          //   cookies: [],
+          // );
         }
 
         final matchDate = DateTime.fromMillisecondsSinceEpoch(dateAndTime);
         if (matchDate.isBefore(DateTime.now())) {
-          final responseBody = ResponseBodyValue(
+          final response = ResponseGenerator.failure(
             message: "Date and time must be in the future.",
-            ok: false,
-          );
-          return generateResponse(
             statusCode: HttpStatus.badRequest,
-            body: responseBody,
-            cookies: [],
           );
+          return response;
+          // final responseBody = ResponseBodyValue(
+          //   message: "Date and time must be in the future.",
+          //   ok: false,
+          // );
+          // return generateResponse(
+          //   statusCode: HttpStatus.badRequest,
+          //   body: responseBody,
+          //   cookies: [],
+          // );
         }
 
         final location =
             requestBody[MatchCreateRequestBodyKeyConstants.LOCATION.value];
         if (location is! String) {
-          final responseBody = ResponseBodyValue(
+          final response = ResponseGenerator.failure(
             message: "Location is required.",
-            ok: false,
-          );
-          return generateResponse(
             statusCode: HttpStatus.badRequest,
-            body: responseBody,
-            cookies: [],
           );
+          return response;
+          // final responseBody = ResponseBodyValue(
+          //   message: "Location is required.",
+          //   ok: false,
+          // );
+          // return generateResponse(
+          //   statusCode: HttpStatus.badRequest,
+          //   body: responseBody,
+          //   cookies: [],
+          // );
         }
 
         final validatedBodyData = {

@@ -7,6 +7,7 @@ import '../../../../../../test/unit/src/features/matches/utils/mixins/string_che
 import '../../../core/domain/values/response_body_value.dart';
 import '../../../core/utils/extensions/request_extension.dart';
 import '../../../core/utils/helpers/generate_response.dart';
+import '../../../core/utils/helpers/response_generator.dart';
 import '../../../core/utils/validators/request_validator.dart';
 import '../constants/login_request_body_key_constants.dart';
 
@@ -27,67 +28,92 @@ class LoginRequestValidator
         // email
         final email = requestBody[LoginRequestBodyKeyConstants.EMAIL.value];
         if (email == null) {
-          final responseBody = ResponseBodyValue(
+          final response = ResponseGenerator.failure(
             message: "Email is required.",
-            ok: false,
-          );
-          return generateResponse(
             statusCode: HttpStatus.badRequest,
-            body: responseBody,
-            cookies: [],
           );
+          return response;
+          // final responseBody = ResponseBodyValue(
+          //   message: "Email is required.",
+          //   ok: false,
+          // );
+          // return generateResponse(
+          //   statusCode: HttpStatus.badRequest,
+          //   body: responseBody,
+          //   cookies: [],
+          // );
         }
 
         if (email is! String) {
-          final responseBody = ResponseBodyValue(
+          final response = ResponseGenerator.failure(
             message: "Invalid data type supplied for email.",
-            ok: false,
-          );
-          return generateResponse(
             statusCode: HttpStatus.badRequest,
-            body: responseBody,
-            cookies: [],
           );
+          return response;
+          // final responseBody = ResponseBodyValue(
+          //   message: "Invalid data type supplied for email.",
+          //   ok: false,
+          // );
+          // return generateResponse(
+          //   statusCode: HttpStatus.badRequest,
+          //   body: responseBody,
+          //   cookies: [],
+          // );
         }
 
         final isValidEmail = checkIsValidEmail(email);
         if (!isValidEmail) {
-          final responseBody = ResponseBodyValue(
+          final response = ResponseGenerator.failure(
             message: "Invalid email.",
-            ok: false,
-          );
-          return generateResponse(
             statusCode: HttpStatus.badRequest,
-            body: responseBody,
-            cookies: [],
           );
+          return response;
+          // final responseBody = ResponseBodyValue(
+          //   message: "Invalid email.",
+          //   ok: false,
+          // );
+          // return generateResponse(
+          //   statusCode: HttpStatus.badRequest,
+          //   body: responseBody,
+          //   cookies: [],
+          // );
         }
 
         // password
         final password =
             requestBody[LoginRequestBodyKeyConstants.PASSWORD.value];
         if (password == null) {
-          final responseBody = ResponseBodyValue(
+          final response = ResponseGenerator.failure(
             message: "Password is required.",
-            ok: false,
-          );
-          return generateResponse(
             statusCode: HttpStatus.badRequest,
-            body: responseBody,
-            cookies: [],
           );
+          return response;
+          // final responseBody = ResponseBodyValue(
+          //   message: "Password is required.",
+          //   ok: false,
+          // );
+          // return generateResponse(
+          //   statusCode: HttpStatus.badRequest,
+          //   body: responseBody,
+          //   cookies: [],
+          // );
         }
 
         if (password is! String) {
-          final responseBody = ResponseBodyValue(
+          final response = ResponseGenerator.failure(
             message: "Invalid data type supplied for password.",
-            ok: false,
-          );
-          return generateResponse(
             statusCode: HttpStatus.badRequest,
-            body: responseBody,
-            cookies: [],
           );
+          return response;
+          // final responseBody = ResponseBodyValue(
+          //   message: "Invalid data type supplied for password.",
+          //   ok: false,
+          // );
+          // return generateResponse(
+          //   statusCode: HttpStatus.badRequest,
+          //   body: responseBody,
+          //   cookies: [],
+          // );
         }
 
         final validatedBodyData = {

@@ -123,16 +123,11 @@ void main() {
           // then
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Invalid request - email already in use.",
-            // TODO this needs to be asserted as well
-            // cookies: [],
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
           expect(responseString, equals(expectedResponseString));
           expect(response.statusCode, equals(expectedResponse.statusCode));
-
-          // verify(() => getAuthByEmailUseCase.call(email: requestBody["email"]!))
-          //     .called(1);
 
           // cleanup
         },

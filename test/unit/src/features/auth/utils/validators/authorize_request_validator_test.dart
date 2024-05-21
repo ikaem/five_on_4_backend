@@ -10,7 +10,6 @@ import '../../../../../../../bin/src/features/auth/utils/validators/authorize_re
 import '../../../../../../../bin/src/features/core/domain/models/auth/auth_model.dart';
 import '../../../../../../../bin/src/features/core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
 import '../../../../../../../bin/src/features/core/domain/use_cases/get_authorization_bearer_token_from_request_headers/get_authorization_bearer_token_from_request_headers_use_case.dart';
-import '../../../../../../../bin/src/features/core/domain/use_cases/get_cookie_by_name_in_string/get_cookie_by_name_in_string_use_case.dart';
 import '../../../../../../../bin/src/features/core/domain/values/access_token_data_value.dart';
 import '../../../../../../../bin/src/features/players/domain/models/player_model.dart';
 import '../../../../../../../bin/src/features/players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
@@ -18,7 +17,6 @@ import '../../../../../../helpers/response.dart';
 
 void main() {
   final request = _MockRequest();
-  // final getCookieByNameInStringUseCase = _MockGetCookieByNameInStringUseCase();
   final getAccessTokenDataFromAccessJwtUseCase =
       _MockGetAccessTokenDataFromAccessJwtUseCase();
   final getPlayerByIdUseCase = _MockGetPlayerByIdUseCase();
@@ -29,7 +27,6 @@ void main() {
 
   // tested class
   final requestAuthorizationValidator = AuthorizeRequestValidator(
-    // getCookieByNameInStringUseCase: getCookieByNameInStringUseCase,
     getAuthorizationBearerTokenFromRequestHeadersUseCase:
         getAuthorizationBearerTokenFromRequestHeadersUseCase,
     getAccessTokenDataFromAccessJwtUseCase:
@@ -43,7 +40,6 @@ void main() {
   });
 
   tearDown(() {
-    // reset(getCookieByNameInStringUseCase);
     reset(getAccessTokenDataFromAccessJwtUseCase);
     reset(getPlayerByIdUseCase);
     reset(getAuthByIdUseCase);
@@ -76,7 +72,6 @@ void main() {
           // then
           final expectedResponse = generateTestUnauthorizedResponse(
             responseMessage: "No access token found in request.",
-            // cookies: null,
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -119,7 +114,6 @@ void main() {
           // then
           final expectedResponse = generateTestUnauthorizedResponse(
             responseMessage: "Invalid auth token in header.",
-            // cookies: null,
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -162,7 +156,6 @@ void main() {
           // then
           final expectedResponse = generateTestUnauthorizedResponse(
             responseMessage: "Expired auth token in header.",
-            // cookies: null,
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -210,7 +203,6 @@ void main() {
           // then
           final expectedResponse = generateTestUnauthorizedResponse(
             responseMessage: "Auth not found.",
-            // cookies: null,
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -316,7 +308,6 @@ void main() {
           // then
           final expectedResponse = generateTestUnauthorizedResponse(
             responseMessage: "Found player does not match auth id.",
-            // cookies: null,
           );
           final expectedResponseString = await expectedResponse.readAsString();
 
@@ -386,23 +377,15 @@ class _MockGetAccessTokenDataFromAccessJwtUseCase extends Mock
 class _MockGetAuthorizationBearerTokenFromRequestHeadersUseCase extends Mock
     implements GetAuthorizationBearerTokenFromRequestHeadersUseCase {}
 
-// class _MockGetCookieByNameInStringUseCase extends Mock
-//     implements GetCookieByNameInStringUseCase {}
-
 class _MockRequest extends Mock implements Request {}
 
 class _MockValidatedRequestHandlderWrapper extends Mock {
-  // FutureOr<Response?> call(Request request);
   Future<Response> call(Request request);
 }
 
 class _FakeRequest extends Fake implements Request {}
 
 // helpers
-Cookie _generateTestCookie({required String name, required String value}) {
-  return Cookie(name, value);
-}
-
 final _testAuthModel = AuthModel(
   id: 1,
   email: "email",

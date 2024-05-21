@@ -64,8 +64,6 @@ abstract class ResponseGenerator {
   }) {
     final cookies = [
       if (refreshTokenCookie != null) refreshTokenCookie,
-      // TODO for test only this second
-      // if (refreshTokenCookie != null) refreshTokenCookie,
     ];
     final cookiesStrings = cookies.map((cookie) => cookie.toString()).toList();
 

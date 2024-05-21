@@ -49,12 +49,8 @@ void main() {
               validatedRequestHandler: validatedRequestHandler.call)(request);
 
           // then
-          // final expectedResponse = _generateTestBadRequestResponse(
-          //   responseMessage: "Title is required.",
-          // );
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Title is required.",
-            // cookies: [],
           );
           final responseString = await response.readAsString();
 
@@ -82,7 +78,6 @@ void main() {
 
           // given
           when(() => request.readAsString()).thenAnswer((i) async {
-            // return jsonEncode(requestMap);
             final string = jsonEncode(
               requestMap,
             );
@@ -96,12 +91,8 @@ void main() {
           )(request);
 
           // then
-/*           final expectedResponse = _generateTestBadRequestResponse(
-            responseMessage: "Description is required.",
-          ); */
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Description is required.",
-            // cookies: [],
           );
           final responseString = await response.readAsString();
 
@@ -110,7 +101,6 @@ void main() {
             equals(await expectedResponse.readAsString()),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
-          // TODO need to add cookies here as well
 
           // cleanup
         },
@@ -131,7 +121,6 @@ void main() {
 
           // given
           when(() => request.readAsString()).thenAnswer((i) async {
-            // return jsonEncode(requestMap);
             final string = jsonEncode(
               requestMap,
             );
@@ -145,12 +134,8 @@ void main() {
           )(request);
 
           // then
-          // final expectedResponse = _generateTestBadRequestResponse(
-          //   responseMessage: "Date and time is required.",
-          // );
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Date and time is required.",
-            // cookies: [],
           );
           final responseString = await response.readAsString();
 
@@ -195,7 +180,6 @@ void main() {
           // then
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Date and time must be in the future.",
-            // cookies: [],
           );
           final responseString = await response.readAsString();
 
@@ -225,7 +209,6 @@ void main() {
 
           // given
           when(() => request.readAsString()).thenAnswer((i) async {
-            // return jsonEncode(requestMap);
             final string = jsonEncode(
               requestMap,
             );
@@ -239,12 +222,8 @@ void main() {
           )(request);
 
           // then
-          // final expectedResponse = _generateTestBadRequestResponse(
-          //   responseMessage: "Location is required.",
-          // );
           final expectedResponse = generateTestBadRequestResponse(
             responseMessage: "Location is required.",
-            // cookies: [],
           );
           final responseString = await response.readAsString();
 
@@ -358,25 +337,7 @@ void main() {
 class _MockRequest extends Mock implements Request {}
 
 class _MockValidatedRequestHandlderWrapper extends Mock {
-  // FutureOr<Response?> call(Request request);
   Future<Response> call(Request request);
 }
 
 class _FakeRequest extends Fake implements Request {}
-
-// TODO should avoid using this
-Response _generateTestBadRequestResponse({
-  required String responseMessage,
-}) {
-  return Response.badRequest(
-    body: jsonEncode(
-      {
-        "ok": false,
-        "message": responseMessage,
-      },
-    ),
-    headers: {
-      "content-type": "application/json",
-    },
-  );
-}

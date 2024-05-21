@@ -3,10 +3,8 @@ import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 
-// TODO remove cookie from everywhere expecpt auth response
 Response generateTestBadRequestResponse({
   required String responseMessage,
-  // required List<Cookie>? cookies,
 }) {
   return Response.badRequest(
     body: jsonEncode(
@@ -16,19 +14,13 @@ Response generateTestBadRequestResponse({
       },
     ),
     headers: {
-      // "content-type": "application/json",
       HttpHeaders.contentTypeHeader: "application/json",
-      // TODO cookies will need to come here
-      // if (cookies != null)
-      //   HttpHeaders.setCookieHeader:
-      //       cookies.map((cookie) => cookie.toString()).toList(),
     },
   );
 }
 
 Response generateTestNotFoundResponse({
   required String responseMessage,
-  // required List<Cookie>? cookies,
 }) {
   return Response.notFound(
     jsonEncode(
@@ -39,9 +31,6 @@ Response generateTestNotFoundResponse({
     ),
     headers: {
       HttpHeaders.contentTypeHeader: "application/json",
-      // if (cookies != null)
-      //   HttpHeaders.setCookieHeader:
-      //       cookies.map((cookie) => cookie.toString()).toList(),
     },
   );
 }
@@ -66,7 +55,6 @@ Response generateTestOkResponse({
 
 Response generateTestUnauthorizedResponse({
   required String responseMessage,
-  // required List<Cookie>? cookies,
 }) {
   return Response.unauthorized(
     jsonEncode(
@@ -77,16 +65,12 @@ Response generateTestUnauthorizedResponse({
     ),
     headers: {
       HttpHeaders.contentTypeHeader: "application/json",
-      // if (cookies != null)
-      //   HttpHeaders.setCookieHeader:
-      //       cookies.map((cookie) => cookie.toString()).toList(),
     },
   );
 }
 
 Response generateTestInternalServerErrorResponse({
   required String responseMessage,
-  // required List<Cookie>? cookies,
 }) {
   return Response.internalServerError(
     body: jsonEncode(
@@ -97,9 +81,6 @@ Response generateTestInternalServerErrorResponse({
     ),
     headers: {
       HttpHeaders.contentTypeHeader: "application/json",
-      // if (cookies != null)
-      //   HttpHeaders.setCookieHeader:
-      //       cookies.map((cookie) => cookie.toString()).toList(),
     },
   );
 }
