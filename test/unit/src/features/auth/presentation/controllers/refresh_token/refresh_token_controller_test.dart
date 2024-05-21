@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
@@ -17,43 +19,47 @@ void main() {
 
   group("$RefreshTokenController", () {
     group(".call()", () {
-      // should return bard request if there is no cookie in the request
-      // TODO not needed - we dont care if there are not cookies in general
-      // test(
-      //   "given request without cookies"
-      //   "when .call() is called"
-      //   "then should return expected response",
-      //   () async {
-      //     // setup
-
-      //     // given
-      //     when(() => request.headers).thenReturn({});
-
-      //     // when
-      //     final response = await controller(request);
-      //     final responseString = await response.readAsString();
-
-      //     // then
-      //     final expectedResponse = generateTestBadRequestResponse(
-      //         responseMessage: "No cookie found in the request.");
-      //     final expectedResponseString = await expectedResponse.readAsString();
-
-      //     expect(responseString, equals(expectedResponseString));
-      //     expect(response.statusCode, equals(expectedResponse.statusCode));
-
-      //     // cleanup
-      //   },
-      // );
-
       // should return bad request if there is no not a refresh token cookie in cookies
       test(
-        "given <pre-condition to the test>"
-        "when <behavior we are specifying>"
-        "then should <state we expect to happen>",
+        "given request with no refresh token cookie"
+        "when .call() is called"
+        "then should return expected response",
         () async {
           // setup
 
           // given
+          when(() => request.headers).thenReturn({});
+
+          // when
+          final response = await controller(request);
+          final responseString = await response.readAsString();
+
+          // then
+          final expectedResponse = generateTestBadRequestResponse(
+              responseMessage: "No cookie found in the request.");
+          final expectedResponseString = await expectedResponse.readAsString();
+
+          expect(responseString, equals(expectedResponseString));
+          expect(response.statusCode, equals(expectedResponse.statusCode));
+
+          // cleanup
+        },
+      );
+
+      // should return bad request if the token is not valid
+      test(
+        "given request with invalid token in refresh token cookie"
+        "when .call() is called"
+        "then should return expected response",
+        () async {
+          // setup
+
+          // given
+          when(() => request.headers).thenReturn({
+            HttpHeaders.cookieHeader:
+                Cookie.fromSetCookieValue("refresh_token=invalid_token")
+                    .toString(),
+          });
 
           // when
 
@@ -62,8 +68,6 @@ void main() {
           // cleanup
         },
       );
-
-      // should return bad request if the token is not valid
 
       // should return bad request if the token is expired
 
