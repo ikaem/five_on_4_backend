@@ -93,7 +93,6 @@ class InitializedUseCasesDependenciesValues {
     required this.registerWithEmailAndPasswordUseCase,
     required this.googleLoginUseCase,
     required this.getPlayerByAuthIdUseCase,
-    required this.createJWTAccessTokenCookieUseCase,
     required this.getMatchUseCase,
     required this.getPlayerByIdUseCase,
     required this.getCookieByNameInStringUseCase,
@@ -107,7 +106,6 @@ class InitializedUseCasesDependenciesValues {
 
   final GoogleLoginUseCase googleLoginUseCase;
   final GetPlayerByAuthIdUseCase getPlayerByAuthIdUseCase;
-  final CreateJWTAccessTokenCookieUseCase createJWTAccessTokenCookieUseCase;
   final GetMatchUseCase getMatchUseCase;
   final GetPlayerByIdUseCase getPlayerByIdUseCase;
   final GetAuthByIdUseCase getAuthByIdUseCase;

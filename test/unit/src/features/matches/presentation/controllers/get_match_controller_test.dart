@@ -8,6 +8,7 @@ import '../../../../../../../bin/src/features/core/domain/models/auth/auth_model
 import '../../../../../../../bin/src/features/matches/domain/models/match_model.dart';
 import '../../../../../../../bin/src/features/matches/domain/use_cases/get_match/get_match_use_case.dart';
 import '../../../../../../../bin/src/features/matches/presentation/controllers/get_match_controller.dart';
+import '../../../../../../helpers/response.dart';
 
 void main() {
   final getMatchUseCase = _MockGetMatchUseCase();
@@ -42,21 +43,17 @@ void main() {
           });
 
           // when
-          final response =
-              // await getMatchController.call(request, invalidMatchId);
-              await getMatchController.call(request);
+          final response = await getMatchController.call(request);
+          final responseString = await response.readAsString();
 
           // then
-          final expectedResponse = _generateTestBadRequestResponse(
-            // ok: false,
-            responseMessage: "Invalid match id provided.",
-          );
-
-          final responseString = await response.readAsString();
+          final expectedResponse = generateTestBadRequestResponse(
+              responseMessage: "Invalid match id provided.");
+          final expectedResponseString = await expectedResponse.readAsString();
 
           expect(
             responseString,
-            equals(await expectedResponse.readAsString()),
+            equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
 
@@ -81,21 +78,17 @@ void main() {
               .thenAnswer((_) async => null);
 
           // when
-          final response =
-              // await getMatchController.call(request, matchId.toString());
-              await getMatchController.call(request);
+          final response = await getMatchController.call(request);
+          final responseString = await response.readAsString();
 
           // then
-          final expectedResponse = _generateTestNonExistentResponse(
-            // ok: false,
-            responseMessage: "Match not found.",
-          );
-
-          final responseString = await response.readAsString();
+          final expectedResponse =
+              generateTestNotFoundResponse(responseMessage: "Match not found");
+          final expectedResponseString = await expectedResponse.readAsString();
 
           expect(
             responseString,
-            equals(await expectedResponse.readAsString()),
+            equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
 
@@ -104,7 +97,7 @@ void main() {
       );
 
       test(
-        "given match with provided id does exist"
+        "given valid request"
         "when .call() is called"
         "then should return expected response",
         () async {
@@ -120,36 +113,27 @@ void main() {
               .thenAnswer((_) async => _testMatchModel);
 
           // when
-          final response =
-              // await getMatchController.call(request, matchId.toString());
-              await getMatchController.call(
+          final response = await getMatchController.call(
             request,
           );
+          final responseString = await response.readAsString();
 
           // then
-          final expectedResponse = Response.ok(
-            jsonEncode({
-              "ok": true,
-              "data": {
-                // TODO crete to map converters or something like that - to response data maybe?
-                "id": _testAuthModel.id,
-                "title": _testMatchModel.title,
-                "dateAndTime": _testMatchModel.dateAndTime,
-                "location": _testMatchModel.location,
-                "description": _testMatchModel.description,
-              },
-              "message": "Match found.",
-            }),
-            headers: {
-              "Content-Type": "application/json",
+          final expectedResponse = generateTestOkResponse(
+            responseData: {
+              "id": _testAuthModel.id,
+              "title": _testMatchModel.title,
+              "dateAndTime": _testMatchModel.dateAndTime,
+              "location": _testMatchModel.location,
+              "description": _testMatchModel.description,
             },
+            responseMessage: "Match found",
           );
-
-          final responseString = await response.readAsString();
+          final expectedResponseString = await expectedResponse.readAsString();
 
           expect(
             responseString,
-            equals(await expectedResponse.readAsString()),
+            equals(expectedResponseString),
           );
           expect(response.statusCode, equals(expectedResponse.statusCode));
 
@@ -163,39 +147,6 @@ void main() {
 class _MockGetMatchUseCase extends Mock implements GetMatchUseCase {}
 
 class _MockRequest extends Mock implements Request {}
-
-Response _generateTestBadRequestResponse({
-  // required bool ok,
-  required String responseMessage,
-}) {
-  return Response.badRequest(
-    body: jsonEncode(
-      {
-        "ok": false,
-        "message": "Invalid request - $responseMessage.",
-      },
-    ),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  );
-}
-
-Response _generateTestNonExistentResponse({
-  required String responseMessage,
-}) {
-  return Response.notFound(
-    jsonEncode(
-      {
-        "ok": false,
-        "message": "Resource not found - $responseMessage.",
-      },
-    ),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  );
-}
 
 final _testAuthModel = AuthModel(
   id: 1,

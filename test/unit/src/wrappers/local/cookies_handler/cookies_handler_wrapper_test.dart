@@ -2,9 +2,6 @@ import 'package:test/test.dart';
 
 import '../../../../../../bin/src/wrappers/local/cookies_handler/cookies_handler_wrapper.dart';
 
-const cookiesString =
-    "b=a; Path=/; Expires=Mon, 01 Nov 2021 21:46:17 GMT, c=d; expires=Tue, 01 Nov 2022 07:57:25 GMT; HttpOnly; path=/; Domain=.d.es";
-
 void main() {
   final cookiesHandlerWrapper = CookiesHandlerWrapper();
 
@@ -64,3 +61,7 @@ void main() {
     });
   });
 }
+
+// TODO let it stay here as a reference
+// const _cookiesString =
+//     "b=a; Path=/; Expires=Mon, 01 Nov 2021 21:46:17 GMT, c=d; expires=Tue, 01 Nov 2022 07:57:25 GMT; HttpOnly; path=/; Domain=.d.es";

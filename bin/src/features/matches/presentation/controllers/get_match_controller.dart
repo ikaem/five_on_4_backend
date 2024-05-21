@@ -1,11 +1,10 @@
 // create interface or base class for all controllers
-
-import 'dart:convert';
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 
 import '../../../core/utils/extensions/request_extension.dart';
+import '../../../core/utils/helpers/response_generator.dart';
 import '../../domain/models/match_model.dart';
 import '../../domain/use_cases/get_match/get_match_use_case.dart';
 
@@ -18,83 +17,41 @@ class GetMatchController {
 
   Future<Response> call(
     Request request,
-    // String id,
   ) async {
+    // TODO move this to some validator - that will generate validatedParams
     final matchId = request.getUrlParam<int>(
       paramName: "id",
       parser: (value) => int.tryParse(value),
     );
 
     if (matchId == null) {
-      return _generateBadRequestResponse(
-        logMessage: "Invalid match id provided.",
-        responseMessage: "Invalid match id provided.",
+      final response = ResponseGenerator.failure(
+        message: "Invalid match id provided.",
+        statusCode: HttpStatus.badRequest,
       );
+      return response;
     }
 
     final match = await _getMatchUseCase(matchId: matchId);
     if (match == null) {
-      return _generateNonExistentResponse(
-        logMessage: "Match not found.",
-        responseMessage: "Match not found.",
+      final response = ResponseGenerator.failure(
+        message: "Match not found",
+        statusCode: HttpStatus.notFound,
       );
+      return response;
     }
 
-    final successResponse = _generateSuccessResponse(
-      match: match,
+    final response = ResponseGenerator.success(
+      data: _generateOkResponseData(
+        match: match,
+      ),
+      message: "Match found",
     );
-    return successResponse;
+    return response;
   }
 }
 
-Response _generateBadRequestResponse({
-  required String logMessage,
-  required String responseMessage,
-}) {
-  log(
-    logMessage,
-    name: "GetMatchController",
-  );
-  final response = Response.badRequest(
-    body: jsonEncode(
-      {
-        "ok": false,
-        "message": "Invalid request - $responseMessage.",
-      },
-    ),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  );
-
-  return response;
-}
-
-Response _generateNonExistentResponse({
-  required String logMessage,
-  required String responseMessage,
-}) {
-  log(
-    logMessage,
-    name: "GetMatchController",
-  );
-
-  final response = Response.notFound(
-    jsonEncode(
-      {
-        "ok": false,
-        "message": "Resource not found - $responseMessage.",
-      },
-    ),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  );
-
-  return response;
-}
-
-Response _generateSuccessResponse({
+Map<String, Object> _generateOkResponseData({
   required MatchModel match,
 }) {
   final payload = {
@@ -104,18 +61,5 @@ Response _generateSuccessResponse({
     "location": match.location,
     "description": match.description,
   };
-  final response = Response.ok(
-    jsonEncode(
-      {
-        "ok": true,
-        "data": payload,
-        "message": "Match found.",
-      },
-    ),
-    headers: {
-      // TODO this needs updating the cookie too - the access token cookie
-      "Content-Type": "application/json",
-    },
-  );
-  return response;
+  return payload;
 }
