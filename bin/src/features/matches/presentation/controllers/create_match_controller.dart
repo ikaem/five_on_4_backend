@@ -7,6 +7,7 @@ import '../../../core/domain/values/response_body_value.dart';
 import '../../../core/utils/extensions/date_time_extension.dart';
 import '../../../core/utils/extensions/request_extension.dart';
 import '../../../core/utils/helpers/generate_response.dart';
+import '../../../core/utils/helpers/response_generator.dart';
 import '../../domain/use_cases/create_match/create_match_use_case.dart';
 import '../../utils/constants/match_create_request_body_key_constants.dart';
 
@@ -24,17 +25,22 @@ class CreateMatchController {
     // final bodyMap = await request.parseBody();
     final validatedBodyData = request.getValidatedBodyData();
     if (validatedBodyData == null) {
-      final responseBody = ResponseBodyValue(
+      final response = ResponseGenerator.failure(
         message: "Request body not validated.",
-        ok: false,
-      );
-      return generateResponse(
         statusCode: HttpStatus.internalServerError,
-        body: responseBody,
-        // cookies: cookies,
-        // TODO will need cookies
-        cookies: [],
       );
+      return response;
+      // final responseBody = ResponseBodyValue(
+      //   message: "Request body not validated.",
+      //   ok: false,
+      // );
+      // return generateResponse(
+      //   statusCode: HttpStatus.internalServerError,
+      //   body: responseBody,
+      //   // cookies: cookies,
+      //   // TODO will need cookies
+      //   cookies: [],
+      // );
     }
 
     final title =
@@ -62,26 +68,34 @@ class CreateMatchController {
       updatedAt: updatedAt,
     );
 
-    return _generateSuccessResponse(
-      matchId: matchId,
+    // return _generateSuccessResponse(
+    //   matchId: matchId,
+    // );
+
+    final response = ResponseGenerator.success(
+      message: "Match created successfully.",
+      data: {
+        "matchId": matchId,
+      },
     );
+    return response;
   }
 }
 
-Response _generateSuccessResponse({
-  required int matchId,
-}) {
-  return Response.ok(
-    jsonEncode(
-      {
-        "ok": true,
-        "matchId": matchId,
-        "message": "Match created successfully.",
-      },
-    ),
-    headers: {
-      // TODO this needs updating the cookie too - the access token cookie
-      "content-type": "application/json",
-    },
-  );
-}
+// Response _generateSuccessResponse({
+//   required int matchId,
+// }) {
+//   return Response.ok(
+//     jsonEncode(
+//       {
+//         "ok": true,
+//         "matchId": matchId,
+//         "message": "Match created successfully.",
+//       },
+//     ),
+//     headers: {
+//       // TODO this needs updating the cookie too - the access token cookie
+//       "content-type": "application/json",
+//     },
+//   );
+// }
