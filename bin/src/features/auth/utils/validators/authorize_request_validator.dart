@@ -4,11 +4,11 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 
 import '../../../core/domain/use_cases/get_authorization_bearer_token_from_request_headers/get_authorization_bearer_token_from_request_headers_use_case.dart';
+import '../../../core/domain/use_cases/get_refresh_token_data_from_access_jwt/get_refresh_token_data_from_access_jwt_use_case.dart';
 import '../../../core/utils/helpers/response_generator.dart';
 import '../../../core/utils/validators/request_validator.dart';
 import '../../domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
 import '../../../players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
-import '../../../core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
 import '../../../core/domain/values/access_token_data_value.dart';
 
 // TODO this middleware and validator should be used on logout too

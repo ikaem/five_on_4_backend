@@ -1,15 +1,15 @@
 import '../../../../../wrappers/libraries/dart_jsonwebtoken/dart_jsonwebtoken_wrapper.dart';
 import '../../exceptions/jwt_exceptions.dart';
-import '../../values/refresh_token_data_value.dart';
+import '../../values/access_token_data_value.dart';
 
-class GetRefreshTokenDataFromAccessJwtUseCase {
-  GetRefreshTokenDataFromAccessJwtUseCase({
+class GetAccessTokenDataFromAccessJwtUseCase {
+  GetAccessTokenDataFromAccessJwtUseCase({
     required DartJsonWebTokenWrapper dartJsonWebTokenWrapper,
   }) : _dartJsonWebTokenWrapper = dartJsonWebTokenWrapper;
 
   final DartJsonWebTokenWrapper _dartJsonWebTokenWrapper;
 
-  RefreshTokenDataValue call({
+  AccessTokenDataValue call({
     required String jwt,
   }) {
     try {
@@ -25,14 +25,14 @@ class GetRefreshTokenDataFromAccessJwtUseCase {
         throw JsonWebTokenInvalidException(jwt);
       }
 
-      return RefreshTokenDataValueValid(
+      return AccessTokenDataValueValid(
         playerId: playerId,
         authId: authId,
       );
     } on JsonWebTokenExpiredException {
-      return RefreshTokenDataValueExpired(jwt: jwt);
+      return AccessTokenDataValueExpired(jwt: jwt);
     } catch (e) {
-      return RefreshTokenDataValueInvalid(jwt: jwt);
+      return AccessTokenDataValueInvalid(jwt: jwt);
     }
   }
 }
