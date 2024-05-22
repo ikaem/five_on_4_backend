@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 import '../../../../../../../bin/src/features/auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
 import '../../../../../../../bin/src/features/auth/utils/validators/authorize_request_validator.dart';
 import '../../../../../../../bin/src/features/core/domain/models/auth/auth_model.dart';
-import '../../../../../../../bin/src/features/core/domain/use_cases/get_authorization_bearer_token_from_request_headers/get_authorization_bearer_token_from_request_headers_use_case.dart';
+import '../../../../../../../bin/src/features/core/domain/use_cases/get_authorization_bearer_token_from_request/get_authorization_bearer_token_from_request_use_case.dart';
 import '../../../../../../../bin/src/features/core/domain/use_cases/get_refresh_token_data_from_access_jwt/get_refresh_token_data_from_access_jwt_use_case.dart';
 import '../../../../../../../bin/src/features/core/domain/values/access_token_data_value.dart';
 import '../../../../../../../bin/src/features/players/domain/models/player_model.dart';
@@ -56,7 +56,8 @@ void main() {
         () async {
           // setup
           when(() => getAuthorizationBearerTokenFromRequestHeadersUseCase(
-                headers: any(named: "headers"),
+                // headers: any(named: "headers"),
+                request: any(named: "request"),
               )).thenReturn(null);
 
           // given
@@ -89,7 +90,8 @@ void main() {
           // setup
           final invalidAccessToken = "invalid_access_token";
           when(() => getAuthorizationBearerTokenFromRequestHeadersUseCase(
-                headers: any(named: "headers"),
+                // headers: any(named: "headers"),
+                request: any(named: "request"),
               )).thenReturn(invalidAccessToken);
           when(() => request.headers).thenReturn({
             HttpHeaders.authorizationHeader: invalidAccessToken,
@@ -131,7 +133,8 @@ void main() {
           // setup
           final expiredAccessToken = "expired_access_token";
           when(() => getAuthorizationBearerTokenFromRequestHeadersUseCase(
-                headers: any(named: "headers"),
+                // headers: any(named: "headers"),
+                request: any(named: "request"),
               )).thenReturn(expiredAccessToken);
           when(() => request.headers).thenReturn({
             HttpHeaders.authorizationHeader: expiredAccessToken,
@@ -178,7 +181,8 @@ void main() {
           );
 
           when(() => getAuthorizationBearerTokenFromRequestHeadersUseCase(
-                headers: any(named: "headers"),
+                // headers: any(named: "headers"),
+                request: any(named: "request"),
               )).thenReturn(validAccessToken);
           when(() => request.headers).thenReturn({
             HttpHeaders.authorizationHeader: validAccessToken,
@@ -224,7 +228,8 @@ void main() {
           );
 
           when(() => getAuthorizationBearerTokenFromRequestHeadersUseCase(
-                headers: any(named: "headers"),
+                // headers: any(named: "headers"),
+                request: any(named: "request"),
               )).thenReturn(validAccessToken);
           when(() => request.headers).thenReturn({
             HttpHeaders.authorizationHeader: validAccessToken,
@@ -273,7 +278,8 @@ void main() {
           );
 
           when(() => getAuthorizationBearerTokenFromRequestHeadersUseCase(
-                headers: any(named: "headers"),
+                // headers: any(named: "headers"),
+                request: any(named: "request"),
               )).thenReturn(validAccessToken);
           when(() => request.headers).thenReturn({
             HttpHeaders.authorizationHeader: validAccessToken,
@@ -330,7 +336,8 @@ void main() {
           );
 
           when(() => getAuthorizationBearerTokenFromRequestHeadersUseCase(
-                headers: any(named: "headers"),
+                // headers: any(named: "headers"),
+                request: any(named: "request"),
               )).thenReturn(validAccessToken);
           when(() => getAccessTokenDataFromAccessJwtUseCase(
                 jwt: any(named: "jwt"),

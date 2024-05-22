@@ -1,11 +1,15 @@
 import 'dart:io';
 
+import 'package:shelf/shelf.dart';
+
 class GetAuthorizationBearerTokenFromRequestHeadersUseCase {
   const GetAuthorizationBearerTokenFromRequestHeadersUseCase();
 
   String? call({
-    required Map<String, String> headers,
+    // required Map<String, String> headers,
+    required Request request,
   }) {
+    final headers = request.headers;
     final authorizationHeader = headers[HttpHeaders.authorizationHeader];
     if (authorizationHeader == null) {
       return null;

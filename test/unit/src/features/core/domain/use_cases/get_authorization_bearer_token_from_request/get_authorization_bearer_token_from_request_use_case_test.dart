@@ -1,30 +1,40 @@
 import 'dart:io';
 
+import 'package:mocktail/mocktail.dart';
+import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../../bin/src/features/core/domain/use_cases/get_authorization_bearer_token_from_request_headers/get_authorization_bearer_token_from_request_headers_use_case.dart';
+import '../../../../../../../../bin/src/features/core/domain/use_cases/get_authorization_bearer_token_from_request/get_authorization_bearer_token_from_request_use_case.dart';
 
 void main() {
+  final request = _MockRequest();
+
   // TODO tested class
   final getAuthorizationBearerTokenUseCase =
       GetAuthorizationBearerTokenFromRequestHeadersUseCase();
+
+  tearDown(() {
+    reset(request);
+  });
 
   group("$GetAuthorizationBearerTokenFromRequestHeadersUseCase", () {
     group(".call()", () {
       // should return null when no authorization header is found
       test(
-        "given request headers without an authorization header"
+        "given request without an authorization header"
         "when .call() is called"
         "then should return null",
         () async {
           // setup
+          final headers = <String, String>{};
 
           // given
-          final headers = <String, String>{};
+          when(() => request.headers).thenReturn(headers);
 
           // when
           final result = getAuthorizationBearerTokenUseCase(
-            headers: headers,
+            // headers: headers,
+            request: request,
           );
 
           // then
@@ -41,15 +51,17 @@ void main() {
         "then should return null",
         () async {
           // setup
-
-          // given
           final headers = <String, String>{
             HttpHeaders.authorizationHeader: "not_a_b"
           };
 
+          // given
+          when(() => request.headers).thenReturn(headers);
+
           // when
           final result = getAuthorizationBearerTokenUseCase(
-            headers: headers,
+            // headers: headers,
+            request: request,
           );
 
           // then
@@ -66,15 +78,17 @@ void main() {
         "then should return the bearer token",
         () async {
           // setup
-
-          // given
           final headers = <String, String>{
             HttpHeaders.authorizationHeader: "Bearer token"
           };
 
+          // given
+          when(() => request.headers).thenReturn(headers);
+
           // when
           final result = getAuthorizationBearerTokenUseCase(
-            headers: headers,
+            // headers: headers,
+            request: request,
           );
 
           // then
@@ -86,3 +100,5 @@ void main() {
     });
   });
 }
+
+class _MockRequest extends Mock implements Request {}

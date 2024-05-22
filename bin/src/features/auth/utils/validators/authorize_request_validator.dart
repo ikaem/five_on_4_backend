@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:shelf/shelf.dart';
 
-import '../../../core/domain/use_cases/get_authorization_bearer_token_from_request_headers/get_authorization_bearer_token_from_request_headers_use_case.dart';
+import '../../../core/domain/use_cases/get_authorization_bearer_token_from_request/get_authorization_bearer_token_from_request_use_case.dart';
 import '../../../core/domain/use_cases/get_refresh_token_data_from_access_jwt/get_refresh_token_data_from_access_jwt_use_case.dart';
 import '../../../core/utils/helpers/response_generator.dart';
 import '../../../core/utils/validators/request_validator.dart';
@@ -43,7 +43,8 @@ class AuthorizeRequestValidator implements RequestValidator {
       (Request request) async {
         final accessToken =
             _getAuthorizationBearerTokenFromRequestHeadersUseCase(
-          headers: request.headers,
+          // headers: request.headers,
+          request: request,
         );
 
         if (accessToken == null) {
