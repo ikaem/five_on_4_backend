@@ -7,9 +7,11 @@ import '../../../features/auth/domain/use_cases/get_auth_by_email_and_hashed_pas
 import '../../../features/auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
 import '../../../features/auth/domain/use_cases/google_login/google_login_use_case.dart';
 import '../../../features/auth/domain/use_cases/register_with_email_and_password/register_with_email_and_password_use_case.dart';
+import '../../../features/auth/presentation/controllers/get_auth/get_auth_controller.dart';
 import '../../../features/auth/presentation/controllers/google_login/google_login_controller.dart';
 import '../../../features/auth/presentation/controllers/login/login_controller.dart';
 import '../../../features/auth/presentation/controllers/logout/logout_controller.dart';
+import '../../../features/auth/presentation/controllers/refresh_token/refresh_token_controller.dart';
 import '../../../features/auth/presentation/controllers/register_with_email_and_password/register_with_email_and_password_controller.dart';
 import '../../../features/auth/presentation/router/auth_router.dart';
 import '../../../features/auth/utils/middlewares/authenticate_with_google_request_middleware_wrapper.dart';
@@ -20,7 +22,8 @@ import '../../../features/auth/utils/validators/authenticate_with_google_request
 import '../../../features/auth/utils/validators/authorize_request_validator.dart';
 import '../../../features/auth/utils/validators/login_request_validator.dart';
 import '../../../features/auth/utils/validators/register_with_email_and_password_request_validator.dart';
-import '../../../features/core/domain/use_cases/get_authorization_bearer_token_from_request_headers/get_authorization_bearer_token_from_request_headers_use_case.dart';
+import '../../../features/core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
+import '../../../features/core/domain/use_cases/get_authorization_bearer_token_from_request/get_authorization_bearer_token_from_request_use_case.dart';
 import '../../../features/core/domain/use_cases/get_cookie_by_name_in_request/get_cookie_by_name_in_request_use_case.dart';
 import '../../../features/core/domain/use_cases/get_hashed_value/get_hashed_value_use_case.dart';
 import '../../../features/core/domain/use_cases/get_refresh_token_data_from_access_jwt/get_refresh_token_data_from_access_jwt_use_case.dart';
@@ -101,6 +104,7 @@ class InitializedUseCasesDependenciesValues {
     required this.getAuthorizationBearerTokenFromRequestHeadersUseCase,
     required this.createAccessJwtUseCase,
     required this.createRefreshJwtCookieUseCase,
+    required this.getRefreshTokenDataFromAccessJwtUseCase,
   });
 
   final GoogleLoginUseCase googleLoginUseCase;
@@ -121,6 +125,8 @@ class InitializedUseCasesDependenciesValues {
       getAuthorizationBearerTokenFromRequestHeadersUseCase;
   final CreateAccessJwtUseCase createAccessJwtUseCase;
   final CreateRefreshJwtCookieUseCase createRefreshJwtCookieUseCase;
+  final GetRefreshTokenDataFromAccessJwtUseCase
+      getRefreshTokenDataFromAccessJwtUseCase;
 }
 
 class InitialiazedControllersDependenciesValues {
@@ -131,6 +137,8 @@ class InitialiazedControllersDependenciesValues {
     required this.googleLoginController,
     required this.getMatchController,
     required this.createMatchController,
+    required this.getAuthController,
+    required this.refreshTokenController,
   });
 
   final LoginController loginController;
@@ -140,6 +148,8 @@ class InitialiazedControllersDependenciesValues {
   final GoogleLoginController googleLoginController;
   final GetMatchController getMatchController;
   final CreateMatchController createMatchController;
+  final GetAuthController getAuthController;
+  final RefreshTokenController refreshTokenController;
 }
 
 class InitializedValidatorsDependenciesValues {
