@@ -24,6 +24,7 @@ class AccessTokenDataValueInvalid extends AccessTokenDataValue
     required this.jwt,
   });
 
+  // TODO this might not be needed at all - maybe even better to remove it
   final String jwt;
 
   @override

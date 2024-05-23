@@ -69,6 +69,7 @@ class RefreshTokenController {
         );
       case RefreshTokenDataValueValid():
 // TODO abstract this to private function
+// TODO SAME LOGIC might exist in get auth controller
 
         final authid = refreshTokenData.authId;
         final auth = await _getAuthByIdUseCase(id: authid);
