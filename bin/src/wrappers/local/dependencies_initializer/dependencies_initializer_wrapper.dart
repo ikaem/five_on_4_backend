@@ -11,9 +11,11 @@ import '../../../features/auth/domain/use_cases/get_auth_by_email_and_hashed_pas
 import '../../../features/auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
 import '../../../features/auth/domain/use_cases/google_login/google_login_use_case.dart';
 import '../../../features/auth/domain/use_cases/register_with_email_and_password/register_with_email_and_password_use_case.dart';
+import '../../../features/auth/presentation/controllers/get_auth/get_auth_controller.dart';
 import '../../../features/auth/presentation/controllers/google_login/google_login_controller.dart';
 import '../../../features/auth/presentation/controllers/login/login_controller.dart';
 import '../../../features/auth/presentation/controllers/logout/logout_controller.dart';
+import '../../../features/auth/presentation/controllers/refresh_token/refresh_token_controller.dart';
 import '../../../features/auth/presentation/controllers/register_with_email_and_password/register_with_email_and_password_controller.dart';
 import '../../../features/auth/presentation/router/auth_router.dart';
 import '../../../features/auth/utils/middlewares/authenticate_with_google_request_middleware_wrapper.dart';
@@ -250,6 +252,10 @@ InitializedUseCasesDependenciesValues getInitializedUseCases({
   final createRefreshJwtCookieUseCase = CreateRefreshJwtCookieUseCase(
     dartJsonWebTokenWrapper: initializedWrappers.dartJsonWebTokenWrapper,
   );
+  final getRefreshTokenDataFromAccessJwtUseCase =
+      GetRefreshTokenDataFromAccessJwtUseCase(
+    dartJsonWebTokenWrapper: initializedWrappers.dartJsonWebTokenWrapper,
+  );
 
   return InitializedUseCasesDependenciesValues(
     googleLoginUseCase: googleLoginUseCase,
@@ -270,6 +276,8 @@ InitializedUseCasesDependenciesValues getInitializedUseCases({
         getAuthorizationBearerTokenFromRequestHeadersUseCase,
     createAccessJwtUseCase: createAccessJwtUseCase,
     createRefreshJwtCookieUseCase: createRefreshJwtCookieUseCase,
+    getRefreshTokenDataFromAccessJwtUseCase:
+        getRefreshTokenDataFromAccessJwtUseCase,
   );
 }
 
@@ -313,6 +321,28 @@ InitialiazedControllersDependenciesValues getInitializedControllers({
         initializedUseCases.createRefreshJwtCookieUseCase,
   );
 
+  final getAuthController = GetAuthController(
+    getAuthorizationBearerTokenFromRequestHeadersUseCase: initializedUseCases
+        .getAuthorizationBearerTokenFromRequestHeadersUseCase,
+    getAccessTokenDataFromAccessJwtUseCase:
+        initializedUseCases.getAccessTokenDataFromAccessJwtUseCase,
+    getAuthByIdUseCase: initializedUseCases.getAuthByIdUseCase,
+    getPlayerByIdUseCase: initializedUseCases.getPlayerByIdUseCase,
+  );
+
+  final refreshTokenController = RefreshTokenController(
+    createAccessJwtUseCase: initializedUseCases.createAccessJwtUseCase,
+    createRefreshJwtCookieUseCase:
+        initializedUseCases.createRefreshJwtCookieUseCase,
+    getAuthByIdUseCase: initializedUseCases.getAuthByIdUseCase,
+    getCookieByNameInRequestUseCase:
+        initializedUseCases.getCookieByNameInStringUseCase,
+    getPlayerByIdUseCase: initializedUseCases.getPlayerByIdUseCase,
+    getRefreshTokenDataFromAccessJwtUseCase:
+        initializedUseCases.getRefreshTokenDataFromAccessJwtUseCase,
+    //
+  );
+
   return InitialiazedControllersDependenciesValues(
     googleLoginController: googleLoginController,
     getMatchController: getMatchController,
@@ -321,6 +351,8 @@ InitialiazedControllersDependenciesValues getInitializedControllers({
     registerWithEmailAndPasswordController:
         registerWithEmailAndPasswordController,
     loginController: loginController,
+    getAuthController: getAuthController,
+    refreshTokenController: refreshTokenController,
   );
 }
 
@@ -411,6 +443,8 @@ InitializedRoutersDependenciesValues getInitializedRouters({
     authenticateWithGoogleRequestMiddlewareWrapper:
         initializedMiddlewareWrappers
             .authenticateWithGoogleRequestMiddlewareWrapper,
+    getAuthController: initializedControllers.getAuthController,
+    refreshTokenController: initializedControllers.refreshTokenController,
   );
 
   final matchesRouter = MatchesRouter(

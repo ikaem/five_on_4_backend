@@ -4,9 +4,11 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
+import '../../../../../../../bin/src/features/auth/presentation/controllers/get_auth/get_auth_controller.dart';
 import '../../../../../../../bin/src/features/auth/presentation/controllers/google_login/google_login_controller.dart';
 import '../../../../../../../bin/src/features/auth/presentation/controllers/login/login_controller.dart';
 import '../../../../../../../bin/src/features/auth/presentation/controllers/logout/logout_controller.dart';
+import '../../../../../../../bin/src/features/auth/presentation/controllers/refresh_token/refresh_token_controller.dart';
 import '../../../../../../../bin/src/features/auth/presentation/controllers/register_with_email_and_password/register_with_email_and_password_controller.dart';
 import '../../../../../../../bin/src/features/auth/presentation/router/auth_router.dart';
 import '../../../../../../../bin/src/features/auth/utils/middlewares/authenticate_with_google_request_middleware_wrapper.dart';
@@ -21,6 +23,8 @@ void main() {
       _MockRegisterWithEmailAndPasswordController();
   final logoutController = _MockLogoutController();
   final loginController = _MockLoginController();
+  final getAuthController = _MockGetAuthController();
+  final refreshTokenController = _MockRefreshTokenController();
 
 // validators
   final registerWithEmailAndPasswordRequestHandler =
@@ -109,6 +113,13 @@ void main() {
     when(() => loginController.call(any())).thenAnswer((invocation) async {
       return Response.ok("ok");
     });
+    when(() => getAuthController.call(any())).thenAnswer((invocation) async {
+      return Response.ok("ok");
+    });
+    when(() => refreshTokenController.call(any()))
+        .thenAnswer((invocation) async {
+      return Response.ok("ok");
+    });
   });
 
   tearDown(() {
@@ -129,9 +140,102 @@ void main() {
     reset(loginController);
     reset(logoutController);
     reset(registerWithEmailAndPasswordController);
+    reset(getAuthController);
+    reset(refreshTokenController);
   });
 
   group("$AuthRouter", () {
+    group("post /refresh-token", () {
+      final realRequest =
+          Request("post", Uri.parse("https://example.com/refresh-token"));
+
+      test(
+        "given RefreshTokenController instance"
+        "when a request to the endpoint is made"
+        "then should call the RefreshTokenController's request handler",
+        () async {
+          // setup
+          // TODO maybe this can be moved uo, and have only one instance of the router
+          final authRouter = AuthRouter(
+            googleLoginController: googleLoginController,
+            registerWithEmailAndPasswordController:
+                registerWithEmailAndPasswordController,
+            logoutController: logoutController,
+            registerWithEmailAndPasswordRequestMiddlewareWrapper:
+                registerWithEmailAndPasswordRequestMiddlewareWrapper,
+            authorizeRequestMiddlewareWrapper:
+                authorizeRequestMiddlewareWrapper,
+            loginController: loginController,
+            loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
+            authenticateWithGoogleRequestMiddlewareWrapper:
+                authenticateWithGoogleRequestMiddlewareWrapper,
+            getAuthController: getAuthController,
+            refreshTokenController: refreshTokenController,
+          );
+
+          // given
+
+          // when
+          await authRouter.router(realRequest);
+
+          // then
+          final captured =
+              verify(() => refreshTokenController.call(captureAny())).captured;
+          final capturedRequest = captured.first as Request;
+
+          expect(capturedRequest.method, equals(realRequest.method));
+          expect(capturedRequest.url, equals(realRequest.url));
+
+          // cleanup
+        },
+      );
+    });
+
+    group("post /get-auth", () {
+      final realRequest =
+          Request("post", Uri.parse("https://example.com/get-auth"));
+
+      // should call the GetAuthController's request handler
+      test(
+        "given GetAuthController instance"
+        "when a request to the endpoint is made"
+        "then should call the GetAuthController's request handler",
+        () async {
+          // setup
+          final authRouter = AuthRouter(
+            googleLoginController: googleLoginController,
+            registerWithEmailAndPasswordController:
+                registerWithEmailAndPasswordController,
+            logoutController: logoutController,
+            registerWithEmailAndPasswordRequestMiddlewareWrapper:
+                registerWithEmailAndPasswordRequestMiddlewareWrapper,
+            authorizeRequestMiddlewareWrapper:
+                authorizeRequestMiddlewareWrapper,
+            loginController: loginController,
+            loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
+            authenticateWithGoogleRequestMiddlewareWrapper:
+                authenticateWithGoogleRequestMiddlewareWrapper,
+            getAuthController: getAuthController,
+            refreshTokenController: refreshTokenController,
+          );
+
+          // given
+
+          // when
+          await authRouter.router(realRequest);
+
+          // then
+          final captured =
+              verify(() => getAuthController.call(captureAny())).captured;
+          final capturedRequest = captured.first as Request;
+
+          expect(capturedRequest.method, equals(realRequest.method));
+          expect(capturedRequest.url, equals(realRequest.url));
+
+          // cleanup
+        },
+      );
+    });
     group("post /auth-google", () {
       final realRequest =
           Request("post", Uri.parse("https://example.com/auth-google"));
@@ -157,6 +261,8 @@ void main() {
             loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
             authenticateWithGoogleRequestMiddlewareWrapper:
                 authenticateWithGoogleRequestMiddlewareWrapper,
+            getAuthController: getAuthController,
+            refreshTokenController: refreshTokenController,
           );
 
           // given
@@ -195,6 +301,8 @@ void main() {
             loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
             authenticateWithGoogleRequestMiddlewareWrapper:
                 authenticateWithGoogleRequestMiddlewareWrapper,
+            getAuthController: getAuthController,
+            refreshTokenController: refreshTokenController,
           );
 
           // given
@@ -239,6 +347,8 @@ void main() {
             loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
             authenticateWithGoogleRequestMiddlewareWrapper:
                 authenticateWithGoogleRequestMiddlewareWrapper,
+            getAuthController: getAuthController,
+            refreshTokenController: refreshTokenController,
           );
 
           // given
@@ -278,6 +388,8 @@ void main() {
             loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
             authenticateWithGoogleRequestMiddlewareWrapper:
                 authenticateWithGoogleRequestMiddlewareWrapper,
+            getAuthController: getAuthController,
+            refreshTokenController: refreshTokenController,
           );
 
           // given
@@ -323,6 +435,8 @@ void main() {
               loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
               authenticateWithGoogleRequestMiddlewareWrapper:
                   authenticateWithGoogleRequestMiddlewareWrapper,
+              getAuthController: getAuthController,
+              refreshTokenController: refreshTokenController,
             );
 
             // given
@@ -361,6 +475,8 @@ void main() {
               loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
               authenticateWithGoogleRequestMiddlewareWrapper:
                   authenticateWithGoogleRequestMiddlewareWrapper,
+              getAuthController: getAuthController,
+              refreshTokenController: refreshTokenController,
             );
 
             // given
@@ -406,6 +522,8 @@ void main() {
               loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
               authenticateWithGoogleRequestMiddlewareWrapper:
                   authenticateWithGoogleRequestMiddlewareWrapper,
+              getAuthController: getAuthController,
+              refreshTokenController: refreshTokenController,
             );
 
             // given
@@ -445,6 +563,8 @@ void main() {
               loginRequestMiddlewareWrapper: loginRequestMiddlewareWrapper,
               authenticateWithGoogleRequestMiddlewareWrapper:
                   authenticateWithGoogleRequestMiddlewareWrapper,
+              getAuthController: getAuthController,
+              refreshTokenController: refreshTokenController,
             );
 
             // given
@@ -520,13 +640,18 @@ class _MockRegisterWithEmailAndPasswordController extends Mock
 
 class _MockLogoutController extends Mock implements LogoutController {}
 
+class _MockGetAuthController extends Mock implements GetAuthController {}
+
+class _MockLoginController extends Mock implements LoginController {}
+
+class _MockRefreshTokenController extends Mock
+    implements RefreshTokenController {}
+
 class _MockRegisterWithEmailAndPasswordRequestMiddlewareWrapper extends Mock
     implements RegisterWithEmailAndPasswordRequestMiddlewareWrapper {}
 
 class _MockAuthorizeRequestMiddlewareWrapper extends Mock
     implements AuthorizeRequestMiddlewareWrapper {}
-
-class _MockLoginController extends Mock implements LoginController {}
 
 class _MockLoginRequestMiddlewareWrapper extends Mock
     implements LoginRequestMiddlewareWrapper {}

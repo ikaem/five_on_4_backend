@@ -96,19 +96,6 @@ class GetAuthController {
             playerNickname: player.nickname,
           ),
         );
-
-      // return ResponseGenerator.auth(
-      //   message: "User authentication retrieved successfully.",
-      //   data: generateAuthOkResponseData(
-      //     playerId: player.id,
-      //     playerName: player.name,
-      //     playerNickname: player.nickname,
-      //   ),
-      //   accessToken: "accessToken",
-      //   refreshTokenCookie: Cookie.fromSetCookieValue(
-      //     "refreshTokenCookie=refreshTokenCookie; HttpOnly; Path=/; SameSite=Strict; Secure; Max-Age=2592000;",
-      //   ),
-      // );
     }
   }
 }
