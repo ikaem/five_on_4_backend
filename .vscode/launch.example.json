@@ -8,7 +8,14 @@
       "program": "bin/main.dart",
       "args": [],
       "toolArgs": [],
-      "env": {}
+      "env": {
+        "PGHOST": "",
+        "PGDATABASE": "",
+        "PGUSER": "",
+        "PGPASSWORD": "",
+        "AUTH_PASSWORD_SALT": "",
+        "JWT_SECRET": ""
+      }
     }
   ]
 }
