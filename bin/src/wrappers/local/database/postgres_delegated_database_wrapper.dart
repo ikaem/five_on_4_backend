@@ -20,7 +20,9 @@ class PostgresDelegatedDatabaseWrapper {
         database: _envVarsDBWrapper.database,
       ),
       settings: ConnectionSettings(
-        sslMode: SslMode.require,
+        // sslMode: SslMode.require,
+        // TODO research which is better
+        sslMode: SslMode.verifyFull,
         onOpen: (connection) async {
           print("Connected!");
         },
