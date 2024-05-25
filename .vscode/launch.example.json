@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Shelf Server (Debug)",
+      "type": "dart",
+      "request": "launch",
+      "program": "bin/main.dart",
+      "args": [],
+      "toolArgs": [],
+      "env": {}
+    }
+  ]
+}

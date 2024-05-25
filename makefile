@@ -1,3 +1,6 @@
+run_dev: 
+	dart run bin/main.dart
+
 generate: 
 	dart run build_runner build --delete-conflicting-outputs
 
