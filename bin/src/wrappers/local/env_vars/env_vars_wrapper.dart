@@ -1,26 +1,17 @@
-import 'package:envied/envied.dart';
+import 'dart:io';
 
-part 'env_vars_wrapper.g.dart';
-
-@Envied(path: ".env")
 class EnvVarsWrapper {
-  @EnviedField(varName: "PGHOST")
-  final String _pgHost = _EnvVarsWrapper._pgHost;
+  final String _pgHost = Platform.environment['PGHOST']!;
 
-  @EnviedField(varName: "PGDATABASE")
-  final String _pgDatabase = _EnvVarsWrapper._pgDatabase;
+  final String _pgDatabase = Platform.environment['PGDATABASE']!;
 
-  @EnviedField(varName: "PGUSER")
-  final String _pgUsername = _EnvVarsWrapper._pgUsername;
+  final String _pgUsername = Platform.environment['PGUSER']!;
 
-  @EnviedField(varName: "PGPASSWORD")
-  final String _pgPassword = _EnvVarsWrapper._pgPassword;
+  final String _pgPassword = Platform.environment['PGPASSWORD']!;
 
-  @EnviedField(varName: "AUTH_PASSWORD_SALT")
-  final String _authPasswordSalt = _EnvVarsWrapper._authPasswordSalt;
+  final String _authPasswordSalt = Platform.environment['AUTH_PASSWORD_SALT']!;
 
-  @EnviedField(varName: "JWT_SECRET")
-  final String _jwtSecret = _EnvVarsWrapper._jwtSecret;
+  final String _jwtSecret = Platform.environment['JWT_SECRET']!;
 
   EnvVarsDBWrapper get dbWrapper {
     return EnvVarsDBWrapper(
@@ -38,6 +29,46 @@ class EnvVarsWrapper {
     );
   }
 }
+
+// TODO old - dont use
+// part 'env_vars_wrapper.g.dart';
+
+// @Envied(path: ".env")
+// class EnvVarsWrapper {
+//   @EnviedField(varName: "PGHOST")
+//   final String _pgHost = _EnvVarsWrapper._pgHost;
+
+//   @EnviedField(varName: "PGDATABASE")
+//   final String _pgDatabase = _EnvVarsWrapper._pgDatabase;
+
+//   @EnviedField(varName: "PGUSER")
+//   final String _pgUsername = _EnvVarsWrapper._pgUsername;
+
+//   @EnviedField(varName: "PGPASSWORD")
+//   final String _pgPassword = _EnvVarsWrapper._pgPassword;
+
+//   @EnviedField(varName: "AUTH_PASSWORD_SALT")
+//   final String _authPasswordSalt = _EnvVarsWrapper._authPasswordSalt;
+
+//   @EnviedField(varName: "JWT_SECRET")
+//   final String _jwtSecret = _EnvVarsWrapper._jwtSecret;
+
+//   EnvVarsDBWrapper get dbWrapper {
+//     return EnvVarsDBWrapper(
+//       host: _pgHost,
+//       database: _pgDatabase,
+//       username: _pgUsername,
+//       password: _pgPassword,
+//     );
+//   }
+
+//   EnvVarsAuthWrapper get authWrapper {
+//     return EnvVarsAuthWrapper(
+//       passwordSalt: _authPasswordSalt,
+//       jwtSecret: _jwtSecret,
+//     );
+//   }
+// }
 
 class EnvVarsDBWrapper {
   EnvVarsDBWrapper({
