@@ -70,6 +70,7 @@ final errorReturningMiddleware = createMiddleware(
   ) {
     // this will return
     log("Error: $error");
+    print("Error: $error");
     return Response.internalServerError(
       body: jsonEncode(
         {
