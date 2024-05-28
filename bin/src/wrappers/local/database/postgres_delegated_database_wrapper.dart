@@ -29,6 +29,8 @@ class PostgresDelegatedDatabaseWrapper {
       ),
     );
 
+    // pgDatabase.ensureOpen(user)
+
     return pgDatabase;
   }
 }
