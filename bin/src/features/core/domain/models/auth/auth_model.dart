@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+// TODO what is this used for even?
 class AuthModel extends Equatable {
   const AuthModel({
     // TODO chnage this to id, not auth ID

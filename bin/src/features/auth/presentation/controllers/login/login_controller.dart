@@ -83,6 +83,7 @@ class LoginController {
       playerId: player.id,
     );
 
+// TODO this response data should actuall be a model retruened by some use case - only return models
     final response = ResponseGenerator.auth(
       message: "User logged in successfully",
       data: generateAuthOkResponseData(

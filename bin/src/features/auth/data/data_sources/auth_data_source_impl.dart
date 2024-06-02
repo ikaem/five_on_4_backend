@@ -25,6 +25,8 @@ class AuthDataSourceImpl implements AuthDataSource {
   }) async {
     final authId = await _databaseWrapper.transaction(
       () async {
+// TODO probably transaction should be used here
+
         // TODO extract this to a helper here
         // final password = authValue.password;
         // final hashedPassword = password == null

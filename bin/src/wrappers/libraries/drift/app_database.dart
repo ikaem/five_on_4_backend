@@ -15,7 +15,9 @@ part "app_database.g.dart";
     TeamEntity,
     MatchEntity,
   ],
-  queries: {"current_timestamp": "SELECT CURRENT_TIMESTAMP;"},
+  queries: {
+    "current_timestamp": "SELECT CURRENT_TIMESTAMP;",
+  },
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase(
