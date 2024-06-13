@@ -4,6 +4,7 @@ run_dev:
 	PGDATABASE= \
 	PGUSER= \
 	PGPASSWORD= \
+	PGPORT = \
 	AUTH_PASSWORD_SALT= \
 	JWT_SECRET= \
 	dart run bin/main.dart

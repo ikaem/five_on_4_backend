@@ -18,6 +18,7 @@ class PostgresDelegatedDatabaseWrapper {
         username: _envVarsDBWrapper.username,
         password: _envVarsDBWrapper.password,
         database: _envVarsDBWrapper.database,
+        port: _envVarsDBWrapper.port,
       ),
       settings: ConnectionSettings(
         sslMode: SslMode.require,

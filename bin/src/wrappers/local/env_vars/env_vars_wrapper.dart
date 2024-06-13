@@ -9,6 +9,8 @@ class EnvVarsWrapper {
 
   final String _pgPassword = Platform.environment['PGPASSWORD']!;
 
+  final int _pgPort = int.parse(Platform.environment['PGPORT']!);
+
   final String _authPasswordSalt = Platform.environment['AUTH_PASSWORD_SALT']!;
 
   final String _jwtSecret = Platform.environment['JWT_SECRET']!;
@@ -19,6 +21,7 @@ class EnvVarsWrapper {
       database: _pgDatabase,
       username: _pgUsername,
       password: _pgPassword,
+      port: _pgPort,
     );
   }
 
@@ -76,11 +79,13 @@ class EnvVarsDBWrapper {
     required this.database,
     required this.username,
     required this.password,
+    required this.port,
   });
   final String host;
   final String database;
   final String username;
   final String password;
+  final int port;
 }
 
 class EnvVarsAuthWrapper {
