@@ -26,6 +26,58 @@ void main() {
   });
 
   group("$MatchesDataSource", () {
+    group(".getPlayerMatchesOverview", () {
+      // should get 5 upcoming matches
+      test(
+        "given player has upcoming matches "
+        "when .getPlayerMatchesOverview() is called "
+        "then should return response with max 5 upcoming matches",
+        () async {
+          // setup
+          // create 5 upcoming matches
+          final matchEntitiesData = List.generate(5, (index) {
+            return MatchEntityData(
+              id: index + 1,
+              title: "title $index",
+              dateAndTime: DateTime.now().normalizedToSeconds,
+              location: "location $index",
+              description: "description $index",
+              createdAt: DateTime.now().normalizedToSeconds,
+              updatedAt: DateTime.now().normalizedToSeconds,
+            );
+          });
+
+          // given
+          // insert 5 upcoming matches in db
+          await testDatabaseWrapper.databaseWrapper.transaction(() async {
+            for (final matchEntityData in matchEntitiesData) {
+              await testDatabaseWrapper.databaseWrapper.matchesRepo.insertOne(
+                matchEntityData,
+              );
+            }
+          });
+
+          // when
+          final response = await matchesDataSource.getPlayerMatchesOverview(
+            playerId: 1,
+          );
+
+          // then
+          expect(response, containsAll(matchEntitiesData));
+
+          // cleanup
+        },
+      );
+
+      // should get 5 today matches
+
+      // should get 5 past matches
+
+      // should get max 5 of each upcoming
+
+      // TODO: should make sure that all matches are with the player as a participant
+    });
+
     group(".createMatch()", () {
       test(
         "given valid create match value "
