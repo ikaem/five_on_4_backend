@@ -37,4 +37,23 @@ class MatchesRepositoryImpl implements MatchesRepository {
 
     return id;
   }
+
+  @override
+  Future<List<MatchModel>> getPlayerMatchesOverview({
+    required int playerId,
+  }) async {
+    final matches = await matchesDataSource.getPlayerMatchesOverview(
+      playerId: playerId,
+    );
+
+    final matchModels = matches
+        .map(
+          (match) => MatchesConverter.modelFromEntity(
+            entity: match,
+          ),
+        )
+        .toList();
+
+    return matchModels;
+  }
 }
