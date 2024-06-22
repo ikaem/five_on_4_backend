@@ -9,4 +9,8 @@ abstract interface class MatchesRepository {
   Future<int> createMatch({
     required CreateMatchValue createMatchValue,
   });
+
+  Future<List<MatchModel>> getPlayerMatchesOverview({
+    required int playerId,
+  });
 }

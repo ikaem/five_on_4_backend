@@ -36,10 +36,14 @@ import '../../../features/matches/data/data_sources/matches_data_source_impl.dar
 import '../../../features/matches/domain/repositories/matches_repository_impl.dart';
 import '../../../features/matches/domain/use_cases/create_match/create_match_use_case.dart';
 import '../../../features/matches/domain/use_cases/get_match/get_match_use_case.dart';
+import '../../../features/matches/domain/use_cases/get_player_matches_overview/get_player_matches_overview_use_case.dart';
 import '../../../features/matches/presentation/controllers/create_match_controller.dart';
 import '../../../features/matches/presentation/controllers/get_match_controller.dart';
+import '../../../features/matches/presentation/controllers/get_player_matches_overview_controller.dart';
 import '../../../features/matches/presentation/router/matches_router.dart';
+import '../../../features/matches/utils/middlewares/get_player_matches_overview_request_middleware_wrapper.dart';
 import '../../../features/matches/utils/middlewares/match_create_request_middleware_wrapper.dart';
+import '../../../features/matches/utils/validators/get_player_matches_overview_request_validator.dart';
 import '../../../features/matches/utils/validators/match_create_request_validator.dart';
 import '../../../features/players/data/data_sources/players_data_source_impl.dart';
 import '../../../features/players/domain/repositories/players_repository_impl.dart';
@@ -256,6 +260,9 @@ InitializedUseCasesDependenciesValues getInitializedUseCases({
       GetRefreshTokenDataFromAccessJwtUseCase(
     dartJsonWebTokenWrapper: initializedWrappers.dartJsonWebTokenWrapper,
   );
+  final getPlayerMatchesOverviewUseCase = GetPlayerMatchesOverviewUseCase(
+    matchesRepository: initializedRepositories.matchesRepository,
+  );
 
   return InitializedUseCasesDependenciesValues(
     googleLoginUseCase: googleLoginUseCase,
@@ -278,6 +285,7 @@ InitializedUseCasesDependenciesValues getInitializedUseCases({
     createRefreshJwtCookieUseCase: createRefreshJwtCookieUseCase,
     getRefreshTokenDataFromAccessJwtUseCase:
         getRefreshTokenDataFromAccessJwtUseCase,
+    getPlayerMatchesOverviewUseCase: getPlayerMatchesOverviewUseCase,
   );
 }
 
@@ -340,7 +348,12 @@ InitialiazedControllersDependenciesValues getInitializedControllers({
     getPlayerByIdUseCase: initializedUseCases.getPlayerByIdUseCase,
     getRefreshTokenDataFromAccessJwtUseCase:
         initializedUseCases.getRefreshTokenDataFromAccessJwtUseCase,
-    //
+  );
+
+  final getPlayerMatchesOverviewController = GetPlayerMatchesOverviewController(
+    getPlayerMatchesOverviewUseCase:
+        initializedUseCases.getPlayerMatchesOverviewUseCase,
+    getPlayerByIdUseCase: initializedUseCases.getPlayerByIdUseCase,
   );
 
   return InitialiazedControllersDependenciesValues(
@@ -353,6 +366,7 @@ InitialiazedControllersDependenciesValues getInitializedControllers({
     loginController: loginController,
     getAuthController: getAuthController,
     refreshTokenController: refreshTokenController,
+    getPlayerMatchesOverviewController: getPlayerMatchesOverviewController,
   );
 }
 
@@ -373,6 +387,8 @@ InitializedValidatorsDependenciesValues getInitializedValidators({
       RegisterWithEmailAndPasswordRequestValidator();
   final authenticateWithGoogleRequestValidator =
       AuthenticateWithGoogleRequestValidator();
+  final getPlayerMatchesOverviewRequestValidator =
+      GetPlayerMatchesOverviewRequestValidator();
 
   return InitializedValidatorsDependenciesValues(
     requestAuthorizationValidator: requestAuthorizationValidator,
@@ -382,6 +398,8 @@ InitializedValidatorsDependenciesValues getInitializedValidators({
         registerWithEmailAndPasswordRequestValidator,
     authenticateWithGoogleRequestValidator:
         authenticateWithGoogleRequestValidator,
+    getPlayerMatchesOverviewRequestValidator:
+        getPlayerMatchesOverviewRequestValidator,
   );
 }
 
@@ -410,6 +428,11 @@ InitializedMiddlewareWrappersDependenciesValues
     authenticateWithGoogleRequestValidator:
         initializedValidators.authenticateWithGoogleRequestValidator,
   );
+  final getPlayerMatchesOverviewRequestMiddlewareWrapper =
+      GetPlayerMatchesOverviewRequestMiddlewareWrapper(
+    getPlayerMatchesOverviewRequestValidator:
+        initializedValidators.getPlayerMatchesOverviewRequestValidator,
+  );
 
   return InitializedMiddlewareWrappersDependenciesValues(
     authorizeRequestMiddlewareWrapper: requestAuthorizationMiddleware,
@@ -419,6 +442,8 @@ InitializedMiddlewareWrappersDependenciesValues
         registerWithEmailAndPasswordRequestMiddleware,
     authenticateWithGoogleRequestMiddlewareWrapper:
         authenticateWithGoogleRequestMiddlewareWrapper,
+    getPlayerMatchesOverviewRequestMiddlewareWrapper:
+        getPlayerMatchesOverviewRequestMiddlewareWrapper,
   );
 }
 
@@ -454,6 +479,10 @@ InitializedRoutersDependenciesValues getInitializedRouters({
         initializedMiddlewareWrappers.authorizeRequestMiddlewareWrapper,
     matchCreateRequestMiddleware:
         initializedMiddlewareWrappers.matchCreateRequestMiddlewareWrapper,
+    getPlayerMatchesOverviewController:
+        initializedControllers.getPlayerMatchesOverviewController,
+    getPlayerMatchesOverviewRequestMiddleware: initializedMiddlewareWrappers
+        .getPlayerMatchesOverviewRequestMiddlewareWrapper,
   );
 
   return InitializedRoutersDependenciesValues(

@@ -9,4 +9,14 @@ abstract interface class MatchesDataSource {
   Future<int> createMatch({
     required CreateMatchValue createMatchValue,
   });
+
+  /// returns a list of matches that the player is a participant in
+  ///
+  /// returned value is a list of matches that includes max 5 of each:
+  /// - upcoming matches
+  /// - today matches
+  /// - past matches
+  Future<List<MatchEntityData>> getPlayerMatchesOverview({
+    required int playerId,
+  });
 }

@@ -31,10 +31,14 @@ import '../../../features/matches/data/data_sources/matches_data_source.dart';
 import '../../../features/matches/domain/repositories/matches_repository.dart';
 import '../../../features/matches/domain/use_cases/create_match/create_match_use_case.dart';
 import '../../../features/matches/domain/use_cases/get_match/get_match_use_case.dart';
+import '../../../features/matches/domain/use_cases/get_player_matches_overview/get_player_matches_overview_use_case.dart';
 import '../../../features/matches/presentation/controllers/create_match_controller.dart';
 import '../../../features/matches/presentation/controllers/get_match_controller.dart';
+import '../../../features/matches/presentation/controllers/get_player_matches_overview_controller.dart';
 import '../../../features/matches/presentation/router/matches_router.dart';
+import '../../../features/matches/utils/middlewares/get_player_matches_overview_request_middleware_wrapper.dart';
 import '../../../features/matches/utils/middlewares/match_create_request_middleware_wrapper.dart';
+import '../../../features/matches/utils/validators/get_player_matches_overview_request_validator.dart';
 import '../../../features/matches/utils/validators/match_create_request_validator.dart';
 import '../../../features/players/data/data_sources/players_data_source.dart';
 import '../../../features/players/domain/repositories/players_repository.dart';
@@ -105,6 +109,7 @@ class InitializedUseCasesDependenciesValues {
     required this.createAccessJwtUseCase,
     required this.createRefreshJwtCookieUseCase,
     required this.getRefreshTokenDataFromAccessJwtUseCase,
+    required this.getPlayerMatchesOverviewUseCase,
   });
 
   final GoogleLoginUseCase googleLoginUseCase;
@@ -127,6 +132,7 @@ class InitializedUseCasesDependenciesValues {
   final CreateRefreshJwtCookieUseCase createRefreshJwtCookieUseCase;
   final GetRefreshTokenDataFromAccessJwtUseCase
       getRefreshTokenDataFromAccessJwtUseCase;
+  final GetPlayerMatchesOverviewUseCase getPlayerMatchesOverviewUseCase;
 }
 
 class InitialiazedControllersDependenciesValues {
@@ -139,6 +145,7 @@ class InitialiazedControllersDependenciesValues {
     required this.createMatchController,
     required this.getAuthController,
     required this.refreshTokenController,
+    required this.getPlayerMatchesOverviewController,
   });
 
   final LoginController loginController;
@@ -150,6 +157,7 @@ class InitialiazedControllersDependenciesValues {
   final CreateMatchController createMatchController;
   final GetAuthController getAuthController;
   final RefreshTokenController refreshTokenController;
+  final GetPlayerMatchesOverviewController getPlayerMatchesOverviewController;
 }
 
 class InitializedValidatorsDependenciesValues {
@@ -159,6 +167,7 @@ class InitializedValidatorsDependenciesValues {
     required this.loginRequestValidator,
     required this.registerWithEmailAndPasswordRequestValidator,
     required this.authenticateWithGoogleRequestValidator,
+    required this.getPlayerMatchesOverviewRequestValidator,
   });
 
   final AuthorizeRequestValidator requestAuthorizationValidator;
@@ -168,6 +177,8 @@ class InitializedValidatorsDependenciesValues {
       registerWithEmailAndPasswordRequestValidator;
   final AuthenticateWithGoogleRequestValidator
       authenticateWithGoogleRequestValidator;
+  final GetPlayerMatchesOverviewRequestValidator
+      getPlayerMatchesOverviewRequestValidator;
 }
 
 class InitializedMiddlewareWrappersDependenciesValues {
@@ -177,6 +188,7 @@ class InitializedMiddlewareWrappersDependenciesValues {
     required this.matchCreateRequestMiddlewareWrapper,
     required this.registerWithEmailAndPasswordRequestMiddlewareWrapper,
     required this.authenticateWithGoogleRequestMiddlewareWrapper,
+    required this.getPlayerMatchesOverviewRequestMiddlewareWrapper,
   });
 
   final AuthorizeRequestMiddlewareWrapper authorizeRequestMiddlewareWrapper;
@@ -186,6 +198,8 @@ class InitializedMiddlewareWrappersDependenciesValues {
       registerWithEmailAndPasswordRequestMiddlewareWrapper;
   final AuthenticateWithGoogleRequestMiddlewareWrapper
       authenticateWithGoogleRequestMiddlewareWrapper;
+  final GetPlayerMatchesOverviewRequestMiddlewareWrapper
+      getPlayerMatchesOverviewRequestMiddlewareWrapper;
 }
 
 class InitializedRoutersDependenciesValues {

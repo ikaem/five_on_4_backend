@@ -31,6 +31,7 @@ void main() {
               // (request) => loginRequestHandlerCallback.call(request));
               (request) {
             // return loginRequestHandlerCallback.call(request);
+            // we are returning from the validator(and consequently from middleware), so the request will not propagate to the request handler of the router
             return (Request request) async {
               return Response.ok("ok");
             }(request);
@@ -44,7 +45,7 @@ void main() {
           final middleware = middlewareWrapper.call();
           // get middleware request handler
           final setupRequestHandler = middleware((request) async {
-            // request will not propagate to this handler
+            // request will not propagate to this handler - this is router route handler
             return Response.ok(
                 "Returning from the router-specific handler - request propagates to the request handler.");
           });

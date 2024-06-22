@@ -54,12 +54,16 @@ class GetMatchController {
 Map<String, Object> _generateOkResponseData({
   required MatchModel match,
 }) {
-  final payload = {
+  // TODO this should be fixed - tghis should be a map that holds "match", which has payload
+  final matchPayload = {
     "id": match.id,
     "title": match.title,
     "dateAndTime": match.dateAndTime,
     "location": match.location,
     "description": match.description,
   };
-  return payload;
+
+  return {
+    "match": matchPayload,
+  };
 }

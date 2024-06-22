@@ -29,6 +29,7 @@ void main() {
     group(".call()", () {
       final matchId = 1;
 
+// TODO this should be delegated to middleware
       test(
         "given invalid match id"
         "when .call() is called"
@@ -121,11 +122,13 @@ void main() {
           // then
           final expectedResponse = generateTestOkResponse(
             responseData: {
-              "id": _testAuthModel.id,
-              "title": _testMatchModel.title,
-              "dateAndTime": _testMatchModel.dateAndTime,
-              "location": _testMatchModel.location,
-              "description": _testMatchModel.description,
+              "match": {
+                "id": _testAuthModel.id,
+                "title": _testMatchModel.title,
+                "dateAndTime": _testMatchModel.dateAndTime,
+                "location": _testMatchModel.location,
+                "description": _testMatchModel.description,
+              }
             },
             responseMessage: "Match found",
           );

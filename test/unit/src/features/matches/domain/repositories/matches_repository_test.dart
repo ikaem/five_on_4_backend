@@ -26,6 +26,48 @@ void main() {
   });
 
   group("$MatchesRepository", () {
+    group(".getPlayerMatchesOverview", () {
+      // should return a list of matches that the player is a participant in
+      test(
+        "given player is a participant in matches "
+        "when .getPlayerMatchesOverview() is called with playerId "
+        "then should return expected list of matches",
+        () async {
+          // setup
+          final matches = List.generate(3, (index) {
+            return MatchEntityData(
+              createdAt: DateTime.now().normalizedToSeconds,
+              dateAndTime: DateTime.now().normalizedToSeconds,
+              description: "description",
+              id: index + 1,
+              location: "location",
+              title: "title",
+              updatedAt: DateTime.now().normalizedToSeconds,
+            );
+          });
+
+          // given
+          when(() => matchesDataSource.getPlayerMatchesOverview(
+                playerId: any(named: "playerId"),
+              )).thenAnswer((i) async => matches);
+
+          // when
+          final result = await matchesRepositoryImpl.getPlayerMatchesOverview(
+            playerId: 1,
+          );
+
+          // then
+          final expectedMatches = matches
+              .map((match) => MatchesConverter.modelFromEntity(entity: match))
+              .toList();
+
+          expect(result, equals(expectedMatches));
+
+          // cleanup
+        },
+      );
+    });
+
     group(".createMatch()", () {
       test(
         "given CreateMatchValue "

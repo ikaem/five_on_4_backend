@@ -26,6 +26,229 @@ void main() {
   });
 
   group("$MatchesDataSource", () {
+    group(".getPlayerMatchesOverview", () {
+      // should get 5 upcoming matches
+      test(
+        "given player has multiple today matches "
+        "when .getPlayerMatchesOverview() is called "
+        "then should return response with max 5 today matches in expected order",
+        () async {
+          // setup
+          final matchEntitiesData = List.generate(10, (index) {
+            return MatchEntityData(
+              id: index + 1,
+              title: "title $index",
+              // dateAndTime: DateTime.now().normalizedToSeconds,
+              dateAndTime: DateTime.now()
+                  .add(Duration(minutes: index + 1))
+                  .normalizedToSeconds,
+              location: "location $index",
+              description: "description $index",
+              createdAt: DateTime.now().normalizedToSeconds,
+              updatedAt: DateTime.now().normalizedToSeconds,
+            );
+          });
+
+          // given
+          await testDatabaseWrapper.databaseWrapper.transaction(() async {
+            for (final matchEntityData in matchEntitiesData) {
+              await testDatabaseWrapper.databaseWrapper.matchesRepo.insertOne(
+                matchEntityData,
+              );
+            }
+          });
+
+          // when
+          final response = await matchesDataSource.getPlayerMatchesOverview(
+            playerId: 1,
+          );
+
+          // then
+          final closest5MatchesToNow = matchEntitiesData.sublist(0, 5);
+          expect(response, equals(closest5MatchesToNow));
+        },
+      );
+
+      // should get 5 upcoming matches
+      test(
+        "given player has multiple upcoming matches "
+        "when .getPlayerMatchesOverview() is called "
+        "then should return response with max 5 upcoming matches in expected order",
+        () async {
+          // setup
+          final matchEntitiesData = List.generate(10, (index) {
+            return MatchEntityData(
+              id: index + 1,
+              title: "title $index",
+              dateAndTime: DateTime.now()
+                  .add(Duration(days: index + 1))
+                  .add(Duration(minutes: index + 1))
+                  .normalizedToSeconds,
+              location: "location $index",
+              description: "description $index",
+              createdAt: DateTime.now().normalizedToSeconds,
+              updatedAt: DateTime.now().normalizedToSeconds,
+            );
+          });
+
+          // given
+          await testDatabaseWrapper.databaseWrapper.transaction(() async {
+            for (final matchEntityData in matchEntitiesData) {
+              await testDatabaseWrapper.databaseWrapper.matchesRepo.insertOne(
+                matchEntityData,
+              );
+            }
+          });
+
+          // when
+          final response = await matchesDataSource.getPlayerMatchesOverview(
+            playerId: 1,
+          );
+
+          // then
+          final closest5MatchesToNow = matchEntitiesData.sublist(0, 5);
+          expect(response, equals(closest5MatchesToNow));
+        },
+      );
+
+      // should get 5 past matches
+      test(
+        "given player has multiple past matches "
+        "when .getPlayerMatchesOverview() is called "
+        "then should return response with max 5 past matches in expected order",
+        () async {
+          // setup
+          final matchEntitiesData = List.generate(10, (index) {
+            return MatchEntityData(
+              id: index + 1,
+              title: "title $index",
+              dateAndTime: DateTime.now()
+                  .subtract(Duration(days: index + 1))
+                  .subtract(Duration(minutes: index + 1))
+                  // .add(Duration(minutes: index + 1))
+                  .normalizedToSeconds,
+              location: "location $index",
+              description: "description $index",
+              createdAt: DateTime.now().normalizedToSeconds,
+              updatedAt: DateTime.now().normalizedToSeconds,
+            );
+          });
+
+          // given
+          await testDatabaseWrapper.databaseWrapper.transaction(() async {
+            for (final matchEntityData in matchEntitiesData) {
+              await testDatabaseWrapper.databaseWrapper.matchesRepo.insertOne(
+                matchEntityData,
+              );
+            }
+          });
+
+          // when
+          final response = await matchesDataSource.getPlayerMatchesOverview(
+            playerId: 1,
+          );
+
+          // then
+          final closest5MatchesToNow = matchEntitiesData.sublist(0, 5);
+          expect(response, equals(closest5MatchesToNow));
+        },
+      );
+
+      // should get max 5 of each upcoming, today and past
+      test(
+        "given player has multiple upcoming, today and past matches "
+        "when .getPlayerMatchesOverview() is called "
+        "then should return response with max 5 of each upcoming, today, and past matches in expected order",
+        () async {
+          // setup
+          final todayMatchEntitiesData = List.generate(10, (index) {
+            return MatchEntityData(
+              id: index + 1,
+              title: "title $index",
+              dateAndTime: DateTime.now()
+                  .add(Duration(minutes: index + 1))
+                  .normalizedToSeconds,
+              location: "location $index",
+              description: "description $index",
+              createdAt: DateTime.now().normalizedToSeconds,
+              updatedAt: DateTime.now().normalizedToSeconds,
+            );
+          });
+          final upcomingMatchEntitiesData = List.generate(10, (index) {
+            return MatchEntityData(
+              id: index + 11,
+              title: "title $index",
+              dateAndTime: DateTime.now()
+                  .add(Duration(days: index + 1))
+                  .add(Duration(minutes: index + 1))
+                  .normalizedToSeconds,
+              location: "location $index",
+              description: "description $index",
+              createdAt: DateTime.now().normalizedToSeconds,
+              updatedAt: DateTime.now().normalizedToSeconds,
+            );
+          });
+          final pastMatchEntitiesData = List.generate(10, (index) {
+            return MatchEntityData(
+              id: index + 21,
+              title: "title $index",
+              dateAndTime: DateTime.now()
+                  .subtract(Duration(days: index + 1))
+                  .subtract(Duration(minutes: index + 1))
+                  .normalizedToSeconds,
+              location: "location $index",
+              description: "description $index",
+              createdAt: DateTime.now().normalizedToSeconds,
+              updatedAt: DateTime.now().normalizedToSeconds,
+            );
+          });
+
+          // given
+          await testDatabaseWrapper.databaseWrapper.transaction(() async {
+            for (final matchEntityData in todayMatchEntitiesData) {
+              await testDatabaseWrapper.databaseWrapper.matchesRepo.insertOne(
+                matchEntityData,
+              );
+            }
+            for (final matchEntityData in upcomingMatchEntitiesData) {
+              await testDatabaseWrapper.databaseWrapper.matchesRepo.insertOne(
+                matchEntityData,
+              );
+            }
+            for (final matchEntityData in pastMatchEntitiesData) {
+              await testDatabaseWrapper.databaseWrapper.matchesRepo.insertOne(
+                matchEntityData,
+              );
+            }
+          });
+
+          // when
+          final response = await matchesDataSource.getPlayerMatchesOverview(
+            playerId: 1,
+          );
+
+          // then
+          final closest5TodayMatchesToNow =
+              todayMatchEntitiesData.sublist(0, 5);
+          final closest5UpcomingMatchesToNow =
+              upcomingMatchEntitiesData.sublist(0, 5);
+          final closest5PastMatchesToNow = pastMatchEntitiesData.sublist(0, 5);
+
+          final expectedResponse = [
+            ...closest5TodayMatchesToNow,
+            ...closest5UpcomingMatchesToNow,
+            ...closest5PastMatchesToNow,
+          ];
+
+          expect(response, equals(expectedResponse));
+
+          // cleanup
+        },
+      );
+
+      // TODO: should make sure that all matches are with the player as a participant
+    });
+
     group(".createMatch()", () {
       test(
         "given valid create match value "
