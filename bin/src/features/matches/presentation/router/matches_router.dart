@@ -6,15 +6,28 @@ import 'package:shelf_router/shelf_router.dart';
 import '../../../../wrappers/local/custom_middleware/custom_middleware_wrapper.dart';
 import '../controllers/create_match_controller.dart';
 import '../controllers/get_match_controller.dart';
+import '../controllers/get_player_matches_overview_controller.dart';
 
 class MatchesRouter {
   MatchesRouter({
     required GetMatchController getMatchController,
     required CreateMatchController createMatchController,
+    required GetPlayerMatchesOverviewController
+        getPlayerMatchesOverviewController,
+    // TODO this should be called requestAuthorizationRequestMiddleware
     required CustomMiddlewareWrapper requestAuthorizationMiddleware,
     required CustomMiddlewareWrapper matchCreateRequestMiddleware,
+    required CustomMiddlewareWrapper getPlayerMatchesOverviewRequestMiddleware,
   }) {
     final matchesRouter = Router();
+
+    matchesRouter.get(
+      "/player-matches-overview",
+      Pipeline()
+          .addMiddleware(requestAuthorizationMiddleware())
+          .addMiddleware(getPlayerMatchesOverviewRequestMiddleware())
+          .addHandler(getPlayerMatchesOverviewController.call),
+    );
 
     matchesRouter.post(
       "/",
