@@ -3,6 +3,7 @@ import 'package:shelf_router/shelf_router.dart';
 import '../../../auth/presentation/router/auth_router.dart';
 import '../../../matches/presentation/router/matches_router.dart';
 
+// TODO this should be tested
 class AppRouter {
   AppRouter({
     required AuthRouter authRouter,
