@@ -28,7 +28,7 @@ class CreateRefreshJwtCookieUseCase {
 
     final httpOnly = "HttpOnly";
     final secure = "Secure";
-    final name = "refreshToken";
+    final name = "refresh_token";
     // TODO what is path
     final path = "/";
 

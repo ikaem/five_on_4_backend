@@ -26,7 +26,7 @@ void main() {
             message: message,
             data: data,
             accessToken: "accessToken",
-            refreshTokenCookie: Cookie("refresh_token", "refreshToken"),
+            refreshTokenCookie: Cookie("refresh_token", "refresh_token"),
           );
           final responseBodyString = await response.readAsString();
 
@@ -65,7 +65,7 @@ void main() {
             data: data,
             statusCode: statusCode,
             accessToken: "accessToken",
-            refreshTokenCookie: Cookie("refresh_token", "refreshToken"),
+            refreshTokenCookie: Cookie("refresh_token", "refresh_token"),
           );
           final responseBodyString = await response.readAsString();
 
@@ -100,7 +100,7 @@ void main() {
             message: message,
             data: data,
             accessToken: "accessToken",
-            refreshTokenCookie: Cookie("refresh_token", "refreshToken"),
+            refreshTokenCookie: Cookie("refresh_token", "refresh_token"),
           );
 
           // when / then
@@ -122,7 +122,7 @@ void main() {
           final message = "message";
           final data = {"data": "data"};
           final accessToken = "accessToken";
-          final refreshTokenCookie = Cookie("refresh_token", "refreshToken");
+          final refreshTokenCookie = Cookie("refresh_token", "refresh_token");
 
           // when
           final response = ResponseGenerator.auth(
@@ -152,7 +152,7 @@ void main() {
           // given
           final message = "message";
           final data = {"data": "data"};
-          final refreshTokenCookie = Cookie("refresh_token", "refreshToken");
+          final refreshTokenCookie = Cookie("refresh_token", "refresh_token");
           final accessToken = "accessToken";
 
           // when

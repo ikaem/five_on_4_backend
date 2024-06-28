@@ -411,7 +411,7 @@ void main() {
         () async {
           // setup
           final refreshTokenCookie = Cookie.fromSetCookieValue(
-            "refreshToken=token; HttpOnly; Secure; Path=/",
+            "refresh_token=token; HttpOnly; Secure; Path=/",
           );
 
           when(() => getCookieByNameInRequestUseCase(
@@ -499,5 +499,5 @@ final _testPlayerModel = PlayerModel(
   name: "name",
 );
 final _testRefreshCookie = Cookie.fromSetCookieValue(
-  "refreshToken=token; HttpOnly; Secure; Path=/",
+  "refresh_token=token; HttpOnly; Secure; Path=/",
 );

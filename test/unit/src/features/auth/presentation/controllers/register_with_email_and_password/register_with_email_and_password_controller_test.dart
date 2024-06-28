@@ -440,5 +440,5 @@ final _testPlayerModel = PlayerModel(
 );
 
 final _testRefreshCookie = Cookie.fromSetCookieValue(
-  "refreshToken=token; HttpOnly; Secure; Path=/",
+  "refresh_token=token; HttpOnly; Secure; Path=/",
 );

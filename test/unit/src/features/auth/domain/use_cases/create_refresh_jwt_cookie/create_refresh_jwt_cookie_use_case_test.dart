@@ -118,7 +118,7 @@ void main() {
 
           // then
           final expectedCookie = Cookie.fromSetCookieValue(
-            "refreshToken=jwt; HttpOnly; Secure; Path=/",
+            "refresh_token=jwt; HttpOnly; Secure; Path=/",
           );
 
           expect(cookie.toString(), expectedCookie.toString());

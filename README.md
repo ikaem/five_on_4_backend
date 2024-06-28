@@ -50,21 +50,25 @@ You should see the logging printed in the first terminal:
 
 
 ## How to do db migrations
-1. make changes 
+1. make sure version 1 schema exists
+   1. wiuth migration 1
+   2. if not, create it with maake generate_migrations_schema
+2. make changes 
 - add new table
 - or add new column
 - or change column type
 - - or some such
-2. increase "schemaVersion" on AppDatabase by 1
+1. increase "schemaVersion" on AppDatabase by 1
+<!-- 2. run make generate --> -> maybe not this
 3. run the following command
 ```
 maake generate_migrations_schema
 ```
-4. run the following command
+1. run the following command
 ```
 make generate_migrations_steps
 ```
-5. add next migration to migration_wrapper that matches your db modification. for example:
+1. add next migration to migration_wrapper that matches your db modification. for example:
 ```
     onUpgrade: stepByStep(
       from1To2: (m, schema) async {
