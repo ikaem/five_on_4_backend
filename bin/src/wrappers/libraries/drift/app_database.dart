@@ -17,6 +17,7 @@ part "app_database.g.dart";
   ],
   queries: {
     "current_timestamp": "SELECT CURRENT_TIMESTAMP;",
+    // "levenstein": "SELECT levenshtein(?, ?);",
   },
 )
 class AppDatabase extends _$AppDatabase {
@@ -32,3 +33,20 @@ class AppDatabase extends _$AppDatabase {
   @override
   MigrationStrategy get migration => _migrationWrapper.migration;
 }
+
+
+/* 
+
+
+@DriftDatabase(
+  tables: [Users],
+  queries: {
+    'userById': 'SELECT * FROM users WHERE id = ?',
+  },
+)
+Drift will generate two methods for you: userById(int id) and watchUserById(int id).
+
+
+
+
+ */

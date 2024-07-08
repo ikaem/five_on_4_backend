@@ -26,6 +26,97 @@ void main() {
   });
 
   group("$MatchesDataSource", () {
+    group(
+      ".searchMatches()",
+      () {
+        // TODO try
+        test(
+          "given existing matches in db "
+          "when .searchMatches() is called with specific matchName filter "
+          "then should return expected matches",
+          () async {
+            // setup
+            final MatchSearchFilterValue filter = MatchSearchFilterValue(
+              matchTitle: "new",
+            );
+
+            final matchEntityData1 = MatchEntityData(
+              id: 1,
+              title: "Newest match",
+              dateAndTime: DateTime.now().normalizedToSeconds,
+              location: "location",
+              description: "description",
+              createdAt: DateTime.now().normalizedToSeconds,
+              updatedAt: DateTime.now().normalizedToSeconds,
+            );
+            final matchEntityData2 = MatchEntityData(
+              id: 2,
+              title: "New match",
+              dateAndTime: DateTime.now().normalizedToSeconds,
+              location: "location",
+              description: "description",
+              createdAt: DateTime.now().normalizedToSeconds,
+              updatedAt: DateTime.now().normalizedToSeconds,
+            );
+            final matchEntityData3 = MatchEntityData(
+              id: 3,
+              title: "Old match",
+              dateAndTime: DateTime.now().normalizedToSeconds,
+              location: "location",
+              description: "description",
+              createdAt: DateTime.now().normalizedToSeconds,
+              updatedAt: DateTime.now().normalizedToSeconds,
+            );
+            final matchEntityData4 = MatchEntityData(
+              id: 4,
+              title: "Network match",
+              dateAndTime: DateTime.now().normalizedToSeconds,
+              location: "location",
+              description: "description",
+              createdAt: DateTime.now().normalizedToSeconds,
+              updatedAt: DateTime.now().normalizedToSeconds,
+            );
+            final matchEntitieData5 = MatchEntityData(
+              id: 5,
+              title: "Monewaub match",
+              dateAndTime: DateTime.now().normalizedToSeconds,
+              location: "location",
+              description: "description",
+              createdAt: DateTime.now().normalizedToSeconds,
+              updatedAt: DateTime.now().normalizedToSeconds,
+            );
+
+            final matchEntitiesData = [
+              matchEntityData1,
+              matchEntityData2,
+              matchEntityData3,
+              matchEntityData4,
+              matchEntitieData5,
+            ];
+
+            // given
+            await testDatabaseWrapper.databaseWrapper.transaction(() async {
+              for (final matchEntityData in matchEntitiesData) {
+                await testDatabaseWrapper.databaseWrapper.matchesRepo.insertOne(
+                  matchEntityData,
+                );
+              }
+            });
+
+            // when
+            final foundMatches = await matchesDataSource.searchMatches(
+              filter: filter,
+            );
+
+            // then
+            print("what");
+
+            // cleanup
+          },
+        );
+      },
+    );
+
     group(".getPlayerMatchesOverview", () {
       // should get 5 upcoming matches
       test(

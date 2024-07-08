@@ -6,12 +6,48 @@ import '../../../core/utils/extensions/date_time_extension.dart';
 import '../../domain/values/create_match_value.dart';
 import 'matches_data_source.dart';
 
+/* 
+
+    final matches = await (findMatches..limit(5)).get();
+    // ..limit(5)
+    // ..get();
+
+    return matches;
+
+
+
+
+
+
+ */
+
 class MatchesDataSourceImpl implements MatchesDataSource {
   MatchesDataSourceImpl({
     required DatabaseWrapper databaseWrapper,
   }) : _databaseWrapper = databaseWrapper;
 
   final DatabaseWrapper _databaseWrapper;
+
+  @override
+  Future<List<MatchEntityData>> searchMatches({
+    required MatchSearchFilterValue filter,
+  }) async {
+    final select = _databaseWrapper.matchesRepo.select();
+    final findMatches = select
+      ..where((tbl) {
+        // TODO i would prefer something more fuzzy here
+        final isMatchTitle = tbl.title.like('%${filter.matchTitle}%');
+
+        // final something = FunctionCallExpression(functionName, arguments);
+
+        // final isSimilarToMatchTitle = tbl.title.
+
+        return isMatchTitle;
+      });
+
+    final matches = await (findMatches..limit(5)).get();
+    return matches;
+  }
 
   @override
   Future<MatchEntityData?> getMatch({
