@@ -7,6 +7,8 @@ import '../../../core/utils/helpers/response_generator.dart';
 import '../../../core/utils/validators/request_validator.dart';
 import '../constants/match_create_request_body_key_constants.dart';
 
+// TODO maybe schema validation should be used - so it is immediately clear what is required
+
 class MatchCreateRequestValidator implements RequestValidator {
   const MatchCreateRequestValidator();
 
