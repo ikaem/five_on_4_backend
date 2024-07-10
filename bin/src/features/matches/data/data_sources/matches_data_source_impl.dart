@@ -37,6 +37,7 @@ class MatchesDataSourceImpl implements MatchesDataSource {
       ..where((tbl) {
         // TODO i would prefer something more fuzzy here
         final isMatchTitle = tbl.title.like('%${filter.matchTitle}%');
+        // final isMatchTitleSimilar = FunctionCallExpression("", arguments)
 
         // final something = FunctionCallExpression(functionName, arguments);
 

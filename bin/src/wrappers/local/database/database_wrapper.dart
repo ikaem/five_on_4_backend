@@ -37,6 +37,9 @@ class DatabaseWrapper {
 
       // Needed initial query to make sure that any migrations are immediately run
       final dbCurrentTime = await db.current_timestamp().get();
+      // TODO do remove this manually via dbeaver
+      // await db.customStatement("CREATE EXTENSION IF NOT EXISTS pg_trgm;");
+      await db.customStatement("CREATE EXTENSION IF NOT EXISTS fuzzystrmatch;");
       print("DB current time: $dbCurrentTime");
 
       _db = db;

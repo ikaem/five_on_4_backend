@@ -17,7 +17,8 @@ part "app_database.g.dart";
   ],
   queries: {
     "current_timestamp": "SELECT CURRENT_TIMESTAMP;",
-    // "levenstein": "SELECT levenshtein(?, ?);",
+    // "levenstein": "SELECT LEVENSHTEIN(?, ?);",
+    // "enablePgTrgm": "CREATE EXTENSION IF NOT EXISTS pg_trgm;",
   },
 )
 class AppDatabase extends _$AppDatabase {
