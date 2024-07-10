@@ -47,7 +47,19 @@ You should see the logging printed in the first terminal:
 2021-05-06T15:47:04.620417  0:00:00.000158 GET     [200] /
 2021-05-06T15:47:08.392928  0:00:00.001216 GET     [200] /echo/I_love_Dart
 ```
-
+## Db for tests
+1. it is setup with docker compose 
+   1. made with this really quickly 
+      1. https://medium.com/@jewelski/quickly-set-up-a-local-postgres-database-using-docker-5098052a4726 
+2. it needs to be run each time before we run tests
+   1. navigate to directory of test db
+   2. run docker-compose up -d
+3. with make - have to be in root of the project
+   1. enter in terminal: make start_tests_db
+4. first time i guess, the image needs to be created
+   1. and then later, we can always just start them before tests
+5. this is how to run docker compose in separate dir
+   1. https://medium.com/@unhandlederror/how-to-run-docker-compose-from-another-directory-e94e081a80cc 
 
 ## How to do db migrations
 1. make sure version 1 schema exists

@@ -14,7 +14,7 @@ void main() {
   late PlayersDataSource playersDataSource;
 
   setUp(() async {
-    testDatabaseWrapper = await getTestDatabaseWrapper();
+    testDatabaseWrapper = await getTestMemoryDatabaseWrapper();
 
     playersDataSource = PlayersDataSourceImpl(
       databaseWrapper: testDatabaseWrapper.databaseWrapper,

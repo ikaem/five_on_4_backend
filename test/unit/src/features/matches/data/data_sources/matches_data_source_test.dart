@@ -15,7 +15,7 @@ void main() {
   late MatchesDataSource matchesDataSource;
 
   setUp(() async {
-    testDatabaseWrapper = await getTestDatabaseWrapper();
+    testDatabaseWrapper = await getTestMemoryDatabaseWrapper();
     matchesDataSource = MatchesDataSourceImpl(
       databaseWrapper: testDatabaseWrapper.databaseWrapper,
     );
