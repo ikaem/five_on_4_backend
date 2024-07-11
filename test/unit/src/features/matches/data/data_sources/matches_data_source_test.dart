@@ -39,12 +39,12 @@ void main() {
           () async {
             // setup
             final MatchSearchFilterValue filter = MatchSearchFilterValue(
-              matchTitle: "new",
+              matchTitle: "Iv",
             );
 
             final matchEntityData1 = MatchEntityData(
               id: 1,
-              title: "Newest match",
+              title: "Ivan",
               dateAndTime: DateTime.now().normalizedToSeconds,
               location: "location",
               description: "description",
@@ -53,7 +53,7 @@ void main() {
             );
             final matchEntityData2 = MatchEntityData(
               id: 2,
-              title: "New match",
+              title: "Ovan",
               dateAndTime: DateTime.now().normalizedToSeconds,
               location: "location",
               description: "description",
@@ -62,7 +62,7 @@ void main() {
             );
             final matchEntityData3 = MatchEntityData(
               id: 3,
-              title: "Old match",
+              title: "Ivanović",
               dateAndTime: DateTime.now().normalizedToSeconds,
               location: "location",
               description: "description",
@@ -71,7 +71,7 @@ void main() {
             );
             final matchEntityData4 = MatchEntityData(
               id: 4,
-              title: "Network match",
+              title: "Ovo",
               dateAndTime: DateTime.now().normalizedToSeconds,
               location: "location",
               description: "description",
@@ -80,7 +80,16 @@ void main() {
             );
             final matchEntitieData5 = MatchEntityData(
               id: 5,
-              title: "Monewaub match",
+              title: "Ivo",
+              dateAndTime: DateTime.now().normalizedToSeconds,
+              location: "location",
+              description: "description",
+              createdAt: DateTime.now().normalizedToSeconds,
+              updatedAt: DateTime.now().normalizedToSeconds,
+            );
+            final matchEntitieData6 = MatchEntityData(
+              id: 6,
+              title: "Pivo",
               dateAndTime: DateTime.now().normalizedToSeconds,
               location: "location",
               description: "description",
@@ -94,6 +103,7 @@ void main() {
               matchEntityData3,
               matchEntityData4,
               matchEntitieData5,
+              matchEntitieData6,
             ];
 
             // given
@@ -111,6 +121,14 @@ void main() {
             );
 
             // then
+            final expectedMatches = [
+              matchEntityData1,
+              matchEntityData4,
+              matchEntitieData5,
+            ];
+
+            expect(foundMatches, equals(expectedMatches));
+
             print("what");
 
             // cleanup

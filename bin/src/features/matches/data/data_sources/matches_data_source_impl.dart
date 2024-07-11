@@ -32,22 +32,123 @@ class MatchesDataSourceImpl implements MatchesDataSource {
   Future<List<MatchEntityData>> searchMatches({
     required MatchSearchFilterValue filter,
   }) async {
+    final matchTitle = filter.matchTitle;
+
     final select = _databaseWrapper.matchesRepo.select();
-    final findMatches = select
-      ..where((tbl) {
-        // TODO i would prefer something more fuzzy here
-        final isMatchTitle = tbl.title.like('%${filter.matchTitle}%');
-        // final isMatchTitleSimilar = FunctionCallExpression("", arguments)
 
-        // final something = FunctionCallExpression(functionName, arguments);
+    // final levensteinDistance = CustomExpression<List<dynamic>>()
+    // TODO I HOPE THIS sanitizes the input
+    // TODO maybe there is some package that will saniztize it - check it
+    // LEVENSHTEIN(title, ${variable.value})
 
-        // final isSimilarToMatchTitle = tbl.title.
+    // final customExpression = CustomExpression<List<dynamic>>("""
+    //   select
+    //     *,
+    //     LEVENSHTEIN(title, 'asd')
+    //   from
+    //     match_entity
+    //   limit 5;
+    //   """);
 
-        return isMatchTitle;
-      });
+// TODO ---------------- i dont know how to work with this -------------------------
+
+    // final isSimularTitleFunctionCallExrpession =
+    //     FunctionCallExpression("LEVENSHTEIN", [
+    //   Variable.withString("title"),
+    //   Variable.withString("asd"),
+    // ]);
+
+    SimpleSelectStatement<$MatchEntityTable, MatchEntityData> findMatches =
+        select;
+
+    if (matchTitle != null) {
+      final matchTitleVariable = Variable.withString(matchTitle);
+      final isSimilarTitleExpression = CustomExpression<bool>(
+        "LEVENSHTEIN(title, '${matchTitleVariable.value}') <= 2",
+        precedence: Precedence.primary,
+      );
+
+      findMatches = findMatches
+        ..where((tbl) {
+          return isSimilarTitleExpression;
+        });
+    }
 
     final matches = await (findMatches..limit(5)).get();
+
+    // final result = await customExpression.
+// TODO ---------------- i dont know how to work with this -------------------------
+
+/* 
+        select 
+          *
+        from 
+          match_entity
+        where 
+          LEVENSHTEIN(title, 'in') <= 2
+        limit 5;
+
+ */
+
+    /* 
+          """
+      select
+        *,
+        LEVENSHTEIN(title, '?')
+      from
+        match_entity
+      limit 5;
+      """,
+    
+     */
+
+// TODO leave here for now
+    // TODO this works easy, but variable does not work
+    // CustomSelectStatement<List<dynamic>>? findMatches;
+    // LEVENSHTEIN(title, 'asd')
+    // final customSelect = CustomSelectStatement(
+    //   """
+    //     select
+    //       *
+    //     from
+    //       match_entity
+    //     where
+    //       LEVENSHTEIN(title, '?') <= 2
+    //     limit 5;
+    //   """,
+    //   [
+    // TODO it does not react to variables here
+    //     // Variable("iv"),
+    //     // Variable.withString("iv"),
+    //     Variable.withInt(2)
+    //   ],
+    //   {
+    //     // TODO not even needed it seems
+    //     _databaseWrapper.db.matchEntity,
+    //   },
+    //   _databaseWrapper.db,
+    // );
+    // final result = await customSelect.get();
+    // TODO there is .map on customSelect, so that should be used
+
     return matches;
+
+    // TODO ---- this works
+    // final findMatches = select
+    //   ..where((tbl) {
+    //     // TODO i would prefer something more fuzzy here
+    //     final isMatchTitle = tbl.title.like('%${filter.matchTitle}%');
+    //     // final isMatchTitleSimilar = FunctionCallExpression("", arguments)
+
+    //     // final something = FunctionCallExpression(functionName, arguments);
+
+    //     // final isSimilarToMatchTitle = tbl.title.
+
+    //     return isMatchTitle;
+    //   });
+
+    // final matches = await (findMatches..limit(5)).get();
+    // return matches;
   }
 
   @override
