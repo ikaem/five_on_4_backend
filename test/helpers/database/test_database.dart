@@ -43,7 +43,7 @@ Future<TestDatabaseWrapper> getTestMemoryDatabaseWrapper() async {
   return testDatabaseWrapper;
 }
 
-Future<TestDatabaseWrapper> getPostgresMemoryDatabaseWrapper() async {
+Future<TestDatabaseWrapper> getTestPostgresDatabaseWrapper() async {
   final db = DatabaseWrapper(
     delegatedDatabase: TestPosgresDelegatedDatabaseWrapper().delegatedDatabase,
   );
@@ -69,9 +69,10 @@ class TestPosgresDelegatedDatabaseWrapper {
       ),
       settings: ConnectionSettings(
         // TODO not sure about this - we will see
-        sslMode: SslMode.require,
+        // sslMode: SslMode.require,
         // TODO research which is better
         // sslMode: SslMode.verifyFull,
+        sslMode: SslMode.disable,
         onOpen: (connection) async {
           print("Connected!");
         },
