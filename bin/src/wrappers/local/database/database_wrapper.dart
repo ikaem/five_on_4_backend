@@ -56,6 +56,15 @@ class DatabaseWrapper {
     return db.transaction(action, requireNew: requireNew);
   }
 
+// TODO make this only for testing - maybe as some kind of extension in tests only
+  Future<void> clearAll() async {
+    await transaction(() async {
+      for (final table in db.allTables) {
+        await db.delete(table).go();
+      }
+    });
+  }
+
   Future<void> close() async {
     await db.close();
   }

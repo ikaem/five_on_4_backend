@@ -19,7 +19,8 @@ Future<void> main() async {
   late AuthDataSource authDataSource;
 
   setUp(() async {
-    testDatabaseWrapper = await getTestMemoryDatabaseWrapper();
+    // testDatabaseWrapper = await getTestMemoryDatabaseWrapper();
+    testDatabaseWrapper = await getTestPostgresDatabaseWrapper();
 
     authDataSource = AuthDataSourceImpl(
       databaseWrapper: testDatabaseWrapper.databaseWrapper,

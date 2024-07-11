@@ -2,6 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Launch tests db",
+      "command": "docker-compose up",
+      "type": "node-terminal",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/test/helpers/database"
+    },
+    {
       "name": "Shelf Server (Debug)",
       "type": "dart",
       "request": "launch",

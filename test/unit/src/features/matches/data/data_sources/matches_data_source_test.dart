@@ -15,13 +15,15 @@ void main() {
   late MatchesDataSource matchesDataSource;
 
   setUp(() async {
-    testDatabaseWrapper = await getTestMemoryDatabaseWrapper();
+    // testDatabaseWrapper = await getTestMemoryDatabaseWrapper();
+    testDatabaseWrapper = await getTestPostgresDatabaseWrapper();
     matchesDataSource = MatchesDataSourceImpl(
       databaseWrapper: testDatabaseWrapper.databaseWrapper,
     );
   });
 
   tearDown(() async {
+    await testDatabaseWrapper.databaseWrapper.clearAll();
     await testDatabaseWrapper.databaseWrapper.close();
   });
 
