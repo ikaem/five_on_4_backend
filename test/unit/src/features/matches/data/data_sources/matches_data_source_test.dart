@@ -32,6 +32,69 @@ void main() {
       ".searchMatches()",
       () {
         // TODO try
+        final matchEntityData1 = MatchEntityData(
+          id: 1,
+          title: "Ivan",
+          dateAndTime: DateTime.now().normalizedToSeconds,
+          location: "location",
+          description: "description",
+          createdAt: DateTime.now().normalizedToSeconds,
+          updatedAt: DateTime.now().normalizedToSeconds,
+        );
+        final matchEntityData2 = MatchEntityData(
+          id: 2,
+          title: "Ovan",
+          dateAndTime: DateTime.now().normalizedToSeconds,
+          location: "location",
+          description: "description",
+          createdAt: DateTime.now().normalizedToSeconds,
+          updatedAt: DateTime.now().normalizedToSeconds,
+        );
+        final matchEntityData3 = MatchEntityData(
+          id: 3,
+          title: "Ivanović",
+          dateAndTime: DateTime.now().normalizedToSeconds,
+          location: "location",
+          description: "description",
+          createdAt: DateTime.now().normalizedToSeconds,
+          updatedAt: DateTime.now().normalizedToSeconds,
+        );
+        final matchEntityData4 = MatchEntityData(
+          id: 4,
+          title: "Ovo",
+          dateAndTime: DateTime.now().normalizedToSeconds,
+          location: "location",
+          description: "description",
+          createdAt: DateTime.now().normalizedToSeconds,
+          updatedAt: DateTime.now().normalizedToSeconds,
+        );
+        final matchEntitieData5 = MatchEntityData(
+          id: 5,
+          title: "Ivo",
+          dateAndTime: DateTime.now().normalizedToSeconds,
+          location: "location",
+          description: "description",
+          createdAt: DateTime.now().normalizedToSeconds,
+          updatedAt: DateTime.now().normalizedToSeconds,
+        );
+        final matchEntitieData6 = MatchEntityData(
+          id: 6,
+          title: "Pivo",
+          dateAndTime: DateTime.now().normalizedToSeconds,
+          location: "location",
+          description: "description",
+          createdAt: DateTime.now().normalizedToSeconds,
+          updatedAt: DateTime.now().normalizedToSeconds,
+        );
+
+        final matchEntitiesData = [
+          matchEntityData1,
+          matchEntityData2,
+          matchEntityData3,
+          matchEntityData4,
+          matchEntitieData5,
+          matchEntitieData6,
+        ];
         test(
           "given existing matches in db "
           "when .searchMatches() is called with specific matchName filter "
@@ -41,70 +104,6 @@ void main() {
             final MatchSearchFilterValue filter = MatchSearchFilterValue(
               matchTitle: "Iv",
             );
-
-            final matchEntityData1 = MatchEntityData(
-              id: 1,
-              title: "Ivan",
-              dateAndTime: DateTime.now().normalizedToSeconds,
-              location: "location",
-              description: "description",
-              createdAt: DateTime.now().normalizedToSeconds,
-              updatedAt: DateTime.now().normalizedToSeconds,
-            );
-            final matchEntityData2 = MatchEntityData(
-              id: 2,
-              title: "Ovan",
-              dateAndTime: DateTime.now().normalizedToSeconds,
-              location: "location",
-              description: "description",
-              createdAt: DateTime.now().normalizedToSeconds,
-              updatedAt: DateTime.now().normalizedToSeconds,
-            );
-            final matchEntityData3 = MatchEntityData(
-              id: 3,
-              title: "Ivanović",
-              dateAndTime: DateTime.now().normalizedToSeconds,
-              location: "location",
-              description: "description",
-              createdAt: DateTime.now().normalizedToSeconds,
-              updatedAt: DateTime.now().normalizedToSeconds,
-            );
-            final matchEntityData4 = MatchEntityData(
-              id: 4,
-              title: "Ovo",
-              dateAndTime: DateTime.now().normalizedToSeconds,
-              location: "location",
-              description: "description",
-              createdAt: DateTime.now().normalizedToSeconds,
-              updatedAt: DateTime.now().normalizedToSeconds,
-            );
-            final matchEntitieData5 = MatchEntityData(
-              id: 5,
-              title: "Ivo",
-              dateAndTime: DateTime.now().normalizedToSeconds,
-              location: "location",
-              description: "description",
-              createdAt: DateTime.now().normalizedToSeconds,
-              updatedAt: DateTime.now().normalizedToSeconds,
-            );
-            final matchEntitieData6 = MatchEntityData(
-              id: 6,
-              title: "Pivo",
-              dateAndTime: DateTime.now().normalizedToSeconds,
-              location: "location",
-              description: "description",
-              createdAt: DateTime.now().normalizedToSeconds,
-              updatedAt: DateTime.now().normalizedToSeconds,
-            );
-
-            final matchEntitiesData = [
-              matchEntityData1,
-              matchEntityData2,
-              matchEntityData3,
-              matchEntityData4,
-              matchEntitieData5,
-              matchEntitieData6,
-            ];
 
             // given
             await testDatabaseWrapper.databaseWrapper.transaction(() async {
@@ -130,6 +129,37 @@ void main() {
             expect(foundMatches, equals(expectedMatches));
 
             print("what");
+
+            // cleanup
+          },
+        );
+
+        test(
+          "given existing matches in db"
+          "when .searchMatches() is called without specific matchName filter"
+          "then should return expected matches",
+          () async {
+            // setup
+            final MatchSearchFilterValue filter = MatchSearchFilterValue();
+
+            // given
+            await testDatabaseWrapper.databaseWrapper.transaction(() async {
+              for (final matchEntityData in matchEntitiesData) {
+                await testDatabaseWrapper.databaseWrapper.matchesRepo.insertOne(
+                  matchEntityData,
+                );
+              }
+            });
+
+            // when
+            final foundMatches = await matchesDataSource.searchMatches(
+              filter: filter,
+            );
+
+            // then
+            final expectedMatches = matchEntitiesData.getRange(0, 5);
+
+            expect(foundMatches, equals(expectedMatches));
 
             // cleanup
           },
