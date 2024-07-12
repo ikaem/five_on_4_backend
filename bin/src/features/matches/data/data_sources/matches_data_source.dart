@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../wrappers/libraries/drift/app_database.dart';
 import '../../domain/values/create_match_value.dart';
+import '../../domain/values/match_search_filter_value.dart';
 
 abstract interface class MatchesDataSource {
   Future<MatchEntityData?> getMatch({
@@ -30,14 +31,3 @@ abstract interface class MatchesDataSource {
 }
 
 // TODO move to values
-class MatchSearchFilterValue extends Equatable {
-  MatchSearchFilterValue({
-    this.matchTitle,
-  });
-
-  // TODO in future, there will be more filters here
-  final String? matchTitle;
-
-  @override
-  List<Object?> get props => [matchTitle];
-}

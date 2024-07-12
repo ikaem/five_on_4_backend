@@ -4,6 +4,7 @@ import '../../../../wrappers/libraries/drift/app_database.dart';
 import '../../../../wrappers/local/database/database_wrapper.dart';
 import '../../../core/utils/extensions/date_time_extension.dart';
 import '../../domain/values/create_match_value.dart';
+import '../../domain/values/match_search_filter_value.dart';
 import 'matches_data_source.dart';
 
 /* 

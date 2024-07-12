@@ -6,6 +6,7 @@ import '../../../../../../../bin/src/features/matches/data/data_sources/matches_
 import '../../../../../../../bin/src/features/matches/domain/repositories/matches_repository.dart';
 import '../../../../../../../bin/src/features/matches/domain/repositories/matches_repository_impl.dart';
 import '../../../../../../../bin/src/features/matches/domain/values/create_match_value.dart';
+import '../../../../../../../bin/src/features/matches/domain/values/match_search_filter_value.dart';
 import '../../../../../../../bin/src/features/matches/utils/converters/matches_converters.dart';
 import '../../../../../../../bin/src/wrappers/libraries/drift/app_database.dart';
 
@@ -19,6 +20,7 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(_FakeCreateMatchValue());
+    registerFallbackValue(_FakeMatchSearchFilterValue());
   });
 
   tearDown(() {
@@ -26,6 +28,49 @@ void main() {
   });
 
   group("$MatchesRepository", () {
+    group(".searchMatches()", () {
+      // should return expected matches
+      test(
+        "given matches data source returns searched matches"
+        "when .searchMatches() is called "
+        "then should return expected matches",
+        () async {
+          // setup
+          final matchesEntitiesData = List.generate(3, (index) {
+            return MatchEntityData(
+              createdAt: DateTime.now().normalizedToSeconds,
+              dateAndTime: DateTime.now().normalizedToSeconds,
+              description: "description",
+              id: index + 1,
+              location: "location",
+              title: "title",
+              updatedAt: DateTime.now().normalizedToSeconds,
+            );
+          });
+
+          // given
+          when(() =>
+                  matchesDataSource.searchMatches(filter: any(named: "filter")))
+              .thenAnswer((_) => Future.value(matchesEntitiesData));
+
+          // when
+          final result = await matchesRepositoryImpl.searchMatches(
+              filter: MatchSearchFilterValue(
+            matchTitle: "title",
+          ));
+
+          // then
+          final expectedMatchValues = matchesEntitiesData
+              .map((match) => MatchesConverter.modelFromEntity(entity: match))
+              .toList();
+
+          expect(result, equals(expectedMatchValues));
+
+          // cleanup
+        },
+      );
+    });
+
     group(".getPlayerMatchesOverview", () {
       // should return a list of matches that the player is a participant in
       test(
@@ -161,6 +206,9 @@ void main() {
 class _MockMatchesDataSource extends Mock implements MatchesDataSource {}
 
 class _FakeCreateMatchValue extends Fake implements CreateMatchValue {}
+
+class _FakeMatchSearchFilterValue extends Fake
+    implements MatchSearchFilterValue {}
 
 final testMatchEntityData = MatchEntityData(
   id: 1,

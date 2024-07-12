@@ -2,6 +2,7 @@ import '../../data/data_sources/matches_data_source.dart';
 import '../../utils/converters/matches_converters.dart';
 import '../models/match_model.dart';
 import '../values/create_match_value.dart';
+import '../values/match_search_filter_value.dart';
 import 'matches_repository.dart';
 
 class MatchesRepositoryImpl implements MatchesRepository {
@@ -52,6 +53,20 @@ class MatchesRepositoryImpl implements MatchesRepository {
             entity: match,
           ),
         )
+        .toList();
+
+    return matchModels;
+  }
+
+  @override
+  Future<List<MatchModel>> searchMatches(
+      {required MatchSearchFilterValue filter}) async {
+    final matches = await matchesDataSource.searchMatches(
+      filter: filter,
+    );
+
+    final matchModels = matches
+        .map((match) => MatchesConverter.modelFromEntity(entity: match))
         .toList();
 
     return matchModels;
