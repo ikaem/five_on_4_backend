@@ -3,7 +3,7 @@ import 'package:drift/native.dart';
 import 'package:drift_postgres/drift_postgres.dart';
 import 'package:postgres/postgres.dart';
 
-import '../../../bin/src/wrappers/local/database/database_wrapper.dart';
+import 'package:five_on_4_backend/src/wrappers/local/database/database_wrapper.dart';
 
 class TestDatabaseWrapper {
   TestDatabaseWrapper({

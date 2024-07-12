@@ -1,9 +1,9 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../../bin/src/features/players/domain/models/player_model.dart';
-import '../../../../../../../../bin/src/features/players/domain/repositories/players_repository.dart';
-import '../../../../../../../../bin/src/features/players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
+import 'package:five_on_4_backend/src/features/players/domain/models/player_model.dart';
+import 'package:five_on_4_backend/src/features/players/domain/repositories/players_repository.dart';
+import 'package:five_on_4_backend/src/features/players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
 
 void main() {
   final playersRepository = _MockPlayersRepository();

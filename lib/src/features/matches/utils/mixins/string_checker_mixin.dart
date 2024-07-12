@@ -1,4 +1,4 @@
-import '../../../../../../../bin/src/features/core/utils/constants/reg_exp_constants.dart';
+import 'package:five_on_4_backend/src/features/core/utils/constants/reg_exp_constants.dart';
 
 // TODO this needs testing too probably
 mixin StringCheckerMixin {

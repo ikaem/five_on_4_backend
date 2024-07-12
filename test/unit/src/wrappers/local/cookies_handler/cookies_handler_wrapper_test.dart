@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../bin/src/wrappers/local/cookies_handler/cookies_handler_wrapper.dart';
+import 'package:five_on_4_backend/src/wrappers/local/cookies_handler/cookies_handler_wrapper.dart';
 
 void main() {
   final request = _MockRequest();

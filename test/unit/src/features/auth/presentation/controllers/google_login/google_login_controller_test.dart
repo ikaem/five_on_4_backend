@@ -4,16 +4,16 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../../bin/src/features/auth/domain/use_cases/create_access_jwt/create_access_jwt_use_case.dart';
-import '../../../../../../../../bin/src/features/auth/domain/use_cases/create_refresh_jwt_cookie/create_refresh_jwt_cookie_use_case.dart';
-import '../../../../../../../../bin/src/features/auth/domain/use_cases/google_login/google_login_use_case.dart';
-import '../../../../../../../../bin/src/features/auth/presentation/controllers/google_login/google_login_controller.dart';
-import '../../../../../../../../bin/src/features/auth/utils/constants/auth_response_constants.dart';
-import '../../../../../../../../bin/src/features/auth/utils/constants/authenticate_with_google_request_body_key_constants.dart';
-import '../../../../../../../../bin/src/features/core/domain/models/auth/auth_model.dart';
-import '../../../../../../../../bin/src/features/core/utils/constants/request_constants.dart';
-import '../../../../../../../../bin/src/features/players/domain/models/player_model.dart';
-import '../../../../../../../../bin/src/features/players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
+import 'package:five_on_4_backend/src/features/auth/domain/use_cases/create_access_jwt/create_access_jwt_use_case.dart';
+import 'package:five_on_4_backend/src/features/auth/domain/use_cases/create_refresh_jwt_cookie/create_refresh_jwt_cookie_use_case.dart';
+import 'package:five_on_4_backend/src/features/auth/domain/use_cases/google_login/google_login_use_case.dart';
+import 'package:five_on_4_backend/src/features/auth/presentation/controllers/google_login/google_login_controller.dart';
+import 'package:five_on_4_backend/src/features/auth/utils/constants/auth_response_constants.dart';
+import 'package:five_on_4_backend/src/features/auth/utils/constants/authenticate_with_google_request_body_key_constants.dart';
+import 'package:five_on_4_backend/src/features/core/domain/models/auth/auth_model.dart';
+import 'package:five_on_4_backend/src/features/core/utils/constants/request_constants.dart';
+import 'package:five_on_4_backend/src/features/players/domain/models/player_model.dart';
+import 'package:five_on_4_backend/src/features/players/domain/use_cases/get_player_by_auth_id/get_player_by_auth_id_use_case.dart';
 import '../../../../../../../helpers/response.dart';
 
 void main() {

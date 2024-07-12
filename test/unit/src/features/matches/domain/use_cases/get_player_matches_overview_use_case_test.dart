@@ -1,10 +1,10 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/matches/domain/models/match_model.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/models/match_model.dart';
 // import '../../../../../../../bin/src/features/matches/domain/repositories/matches_repository.dart';
-import '../../../../../../../bin/src/features/matches/domain/repositories/matches_repository.dart';
-import '../../../../../../../bin/src/features/matches/domain/use_cases/get_player_matches_overview/get_player_matches_overview_use_case.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/repositories/matches_repository.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/use_cases/get_player_matches_overview/get_player_matches_overview_use_case.dart';
 
 // TODO this should probably live in its own folder
 void main() {

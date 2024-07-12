@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../../bin/src/features/auth/domain/use_cases/create_refresh_jwt_cookie/create_refresh_jwt_cookie_use_case.dart';
-import '../../../../../../../../bin/src/features/auth/utils/constants/jwt_duration_constants.dart';
-import '../../../../../../../../bin/src/wrappers/libraries/dart_jsonwebtoken/dart_jsonwebtoken_wrapper.dart';
+import 'package:five_on_4_backend/src/features/auth/domain/use_cases/create_refresh_jwt_cookie/create_refresh_jwt_cookie_use_case.dart';
+import 'package:five_on_4_backend/src/features/auth/utils/constants/jwt_duration_constants.dart';
+import 'package:five_on_4_backend/src/wrappers/libraries/dart_jsonwebtoken/dart_jsonwebtoken_wrapper.dart';
 
 void main() {
   final dartJsonWebTokenWrapper = _MockDartJsonWebTokenWrapper();

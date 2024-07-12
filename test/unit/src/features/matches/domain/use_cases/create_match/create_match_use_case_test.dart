@@ -1,9 +1,9 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../../bin/src/features/matches/domain/repositories/matches_repository.dart';
-import '../../../../../../../../bin/src/features/matches/domain/use_cases/create_match/create_match_use_case.dart';
-import '../../../../../../../../bin/src/features/matches/domain/values/create_match_value.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/repositories/matches_repository.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/use_cases/create_match/create_match_use_case.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/values/create_match_value.dart';
 
 void main() {
   final matchesRepository = _MockMatchesRepository();

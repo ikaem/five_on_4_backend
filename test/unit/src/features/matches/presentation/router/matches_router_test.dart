@@ -4,13 +4,13 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/matches/presentation/controllers/create_match_controller.dart';
-import '../../../../../../../bin/src/features/matches/presentation/controllers/get_match_controller.dart';
-import '../../../../../../../bin/src/features/matches/presentation/controllers/get_player_matches_overview_controller.dart';
-import '../../../../../../../bin/src/features/matches/presentation/router/matches_router.dart';
-import '../../../../../../../bin/src/features/matches/utils/middlewares/get_player_matches_overview_request_middleware_wrapper.dart';
-import '../../../../../../../bin/src/features/matches/utils/middlewares/match_create_request_middleware_wrapper.dart';
-import '../../../../../../../bin/src/wrappers/local/custom_middleware/custom_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/matches/presentation/controllers/create_match_controller.dart';
+import 'package:five_on_4_backend/src/features/matches/presentation/controllers/get_match_controller.dart';
+import 'package:five_on_4_backend/src/features/matches/presentation/controllers/get_player_matches_overview_controller.dart';
+import 'package:five_on_4_backend/src/features/matches/presentation/router/matches_router.dart';
+import 'package:five_on_4_backend/src/features/matches/utils/middlewares/get_player_matches_overview_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/matches/utils/middlewares/match_create_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/wrappers/local/custom_middleware/custom_middleware_wrapper.dart';
 
 // TODO stay here as a reference
 // Middleware function = (innerHandler) {

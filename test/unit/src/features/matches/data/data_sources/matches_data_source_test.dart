@@ -1,12 +1,12 @@
 import 'package:drift/drift.dart' hide isNull;
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/core/utils/extensions/date_time_extension.dart';
-import '../../../../../../../bin/src/features/matches/data/data_sources/matches_data_source.dart';
-import '../../../../../../../bin/src/features/matches/data/data_sources/matches_data_source_impl.dart';
-import '../../../../../../../bin/src/features/matches/domain/values/create_match_value.dart';
-import '../../../../../../../bin/src/features/matches/domain/values/match_search_filter_value.dart';
-import '../../../../../../../bin/src/wrappers/libraries/drift/app_database.dart';
+import 'package:five_on_4_backend/src/features/core/utils/extensions/date_time_extension.dart';
+import 'package:five_on_4_backend/src/features/matches/data/data_sources/matches_data_source.dart';
+import 'package:five_on_4_backend/src/features/matches/data/data_sources/matches_data_source_impl.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/values/create_match_value.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/values/match_search_filter_value.dart';
+import 'package:five_on_4_backend/src/wrappers/libraries/drift/app_database.dart';
 import '../../../../../../helpers/database/test_database.dart';
 
 void main() {

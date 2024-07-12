@@ -4,10 +4,10 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/core/utils/extensions/date_time_extension.dart';
-import '../../../../../../../bin/src/features/matches/domain/use_cases/create_match/create_match_use_case.dart';
-import '../../../../../../../bin/src/features/matches/presentation/controllers/create_match_controller.dart';
-import '../../../../../../../bin/src/features/matches/utils/constants/match_create_request_body_key_constants.dart';
+import 'package:five_on_4_backend/src/features/core/utils/extensions/date_time_extension.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/use_cases/create_match/create_match_use_case.dart';
+import 'package:five_on_4_backend/src/features/matches/presentation/controllers/create_match_controller.dart';
+import 'package:five_on_4_backend/src/features/matches/utils/constants/match_create_request_body_key_constants.dart';
 import '../../../../../../helpers/response.dart';
 
 void main() {

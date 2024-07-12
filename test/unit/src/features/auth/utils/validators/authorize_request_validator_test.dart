@@ -4,14 +4,14 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
-import '../../../../../../../bin/src/features/auth/utils/validators/authorize_request_validator.dart';
-import '../../../../../../../bin/src/features/core/domain/models/auth/auth_model.dart';
-import '../../../../../../../bin/src/features/core/domain/use_cases/get_authorization_bearer_token_from_request/get_authorization_bearer_token_from_request_use_case.dart';
-import '../../../../../../../bin/src/features/core/domain/use_cases/get_refresh_token_data_from_access_jwt/get_refresh_token_data_from_access_jwt_use_case.dart';
-import '../../../../../../../bin/src/features/core/domain/values/access_token_data_value.dart';
-import '../../../../../../../bin/src/features/players/domain/models/player_model.dart';
-import '../../../../../../../bin/src/features/players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
+import 'package:five_on_4_backend/src/features/auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
+import 'package:five_on_4_backend/src/features/auth/utils/validators/authorize_request_validator.dart';
+import 'package:five_on_4_backend/src/features/core/domain/models/auth/auth_model.dart';
+import 'package:five_on_4_backend/src/features/core/domain/use_cases/get_authorization_bearer_token_from_request/get_authorization_bearer_token_from_request_use_case.dart';
+import 'package:five_on_4_backend/src/features/core/domain/use_cases/get_refresh_token_data_from_access_jwt/get_refresh_token_data_from_access_jwt_use_case.dart';
+import 'package:five_on_4_backend/src/features/core/domain/values/access_token_data_value.dart';
+import 'package:five_on_4_backend/src/features/players/domain/models/player_model.dart';
+import 'package:five_on_4_backend/src/features/players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
 import '../../../../../../helpers/response.dart';
 
 void main() {

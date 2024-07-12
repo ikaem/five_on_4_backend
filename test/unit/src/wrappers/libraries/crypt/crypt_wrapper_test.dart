@@ -1,7 +1,7 @@
 import 'package:crypt/crypt.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../bin/src/wrappers/libraries/crypt/crypt_wrapper.dart';
+import 'package:five_on_4_backend/src/wrappers/libraries/crypt/crypt_wrapper.dart';
 
 void main() {
   const passwordSalt = "passwordSalt";

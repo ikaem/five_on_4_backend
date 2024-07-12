@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/auth/utils/constants/auth_response_constants.dart';
-import '../../../../../../../bin/src/features/core/utils/helpers/response_generator.dart';
+import 'package:five_on_4_backend/src/features/auth/utils/constants/auth_response_constants.dart';
+import 'package:five_on_4_backend/src/features/core/utils/helpers/response_generator.dart';
 
 void main() {
   group("$ResponseGenerator", () {

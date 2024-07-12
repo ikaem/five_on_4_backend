@@ -1,8 +1,8 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../bin/src/features/core/domain/exceptions/jwt_exceptions.dart';
-import '../../../../../../bin/src/wrappers/libraries/dart_jsonwebtoken/dart_jsonwebtoken_wrapper.dart';
+import 'package:five_on_4_backend/src/features/core/domain/exceptions/jwt_exceptions.dart';
+import 'package:five_on_4_backend/src/wrappers/libraries/dart_jsonwebtoken/dart_jsonwebtoken_wrapper.dart';
 
 void main() {
   group("$DartJsonWebTokenWrapper", () {

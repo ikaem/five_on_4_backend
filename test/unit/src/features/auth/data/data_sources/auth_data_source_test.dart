@@ -2,13 +2,13 @@ import 'package:drift/drift.dart' hide isNull;
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/auth/data/data_sources/auth_data_source.dart';
-import '../../../../../../../bin/src/features/auth/data/data_sources/auth_data_source_impl.dart';
-import '../../../../../../../bin/src/features/auth/domain/values/new_auth_data_value.dart';
-import '../../../../../../../bin/src/features/auth/utils/constants/auth_type_constants.dart';
-import '../../../../../../../bin/src/features/core/utils/extensions/date_time_extension.dart';
-import '../../../../../../../bin/src/wrappers/libraries/crypt/crypt_wrapper.dart';
-import '../../../../../../../bin/src/wrappers/libraries/drift/app_database.dart';
+import 'package:five_on_4_backend/src/features/auth/data/data_sources/auth_data_source.dart';
+import 'package:five_on_4_backend/src/features/auth/data/data_sources/auth_data_source_impl.dart';
+import 'package:five_on_4_backend/src/features/auth/domain/values/new_auth_data_value.dart';
+import 'package:five_on_4_backend/src/features/auth/utils/constants/auth_type_constants.dart';
+import 'package:five_on_4_backend/src/features/core/utils/extensions/date_time_extension.dart';
+import 'package:five_on_4_backend/src/wrappers/libraries/crypt/crypt_wrapper.dart';
+import 'package:five_on_4_backend/src/wrappers/libraries/drift/app_database.dart';
 import '../../../../../../helpers/database/test_database.dart';
 
 Future<void> main() async {

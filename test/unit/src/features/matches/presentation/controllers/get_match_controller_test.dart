@@ -4,10 +4,10 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/core/domain/models/auth/auth_model.dart';
-import '../../../../../../../bin/src/features/matches/domain/models/match_model.dart';
-import '../../../../../../../bin/src/features/matches/domain/use_cases/get_match/get_match_use_case.dart';
-import '../../../../../../../bin/src/features/matches/presentation/controllers/get_match_controller.dart';
+import 'package:five_on_4_backend/src/features/core/domain/models/auth/auth_model.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/models/match_model.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/use_cases/get_match/get_match_use_case.dart';
+import 'package:five_on_4_backend/src/features/matches/presentation/controllers/get_match_controller.dart';
 import '../../../../../../helpers/response.dart';
 
 void main() {
