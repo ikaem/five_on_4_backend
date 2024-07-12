@@ -2,6 +2,7 @@ name: five_on_4_backend
 description: A server app using the shelf package and Docker.
 version: 1.0.0
 # repository: https://github.com/my_org/my_repo
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 environment:
   sdk: ^3.3.1
