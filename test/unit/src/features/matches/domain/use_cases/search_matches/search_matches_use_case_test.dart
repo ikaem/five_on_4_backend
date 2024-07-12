@@ -10,8 +10,11 @@ void main() {
   final matchesRepository = _MockMatchesRepository();
 
   // tested class
-
   final useCase = SearchMatchesUseCase(matchesRepository: matchesRepository);
+
+  setUpAll(() {
+    registerFallbackValue(MatchSearchFilterValue());
+  });
 
   tearDown(() {
     reset(matchesRepository);
@@ -43,14 +46,14 @@ void main() {
         ).thenAnswer((i) async => matchModels);
 
         // when
-        // final result = await useCase.call(
-        //   filter: MatchSearchFilterValue(
-        //     matchTitle: "title",
-        //   ),
-        // );
+        final result = await useCase.call(
+          filter: MatchSearchFilterValue(
+            matchTitle: "title",
+          ),
+        );
 
-        // // then
-        // expect(result, equals(matchModels));
+        // then
+        expect(result, equals(matchModels));
 
         // cleanup
       },
