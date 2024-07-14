@@ -21,6 +21,16 @@ class MatchesRouter {
   }) {
     final matchesRouter = Router();
 
+    // matchesRouter.post(
+    //   "/search",
+    //   Pipeline()
+    //       .addMiddleware(requestAuthorizationMiddleware())
+    //       .addMiddleware(someRandomMiddleware())
+    //       .addHandler((request) {
+    //         return Response.ok("Hello from matches router");
+    //       }),
+    // );
+
     matchesRouter.get(
       "/player-matches-overview",
       Pipeline()
