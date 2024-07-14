@@ -16,6 +16,8 @@ class SearchMatchesController {
   final SearchMatchesUseCase _searchMatchesUseCase;
 
   Future<Response> call(Request request) async {
+    // TODO this data is probably better to be in query params. that way we can make the route a GET one, which would make more sense
+    // TODO make this as a TICKET at some point
     final validatedBodyData = request.getValidatedBodyData();
     if (validatedBodyData == null) {
       final response = ResponseGenerator.failure(

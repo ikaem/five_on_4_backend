@@ -1,3 +1,8 @@
+import 'package:five_on_4_backend/src/features/matches/domain/use_cases/search_matches/search_matches_use_case.dart';
+import 'package:five_on_4_backend/src/features/matches/presentation/controllers/search_matches_controller.dart';
+import 'package:five_on_4_backend/src/features/matches/utils/middlewares/search_matches_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/matches/utils/validators/search_matches_request_validator.dart';
+
 import '../../../features/auth/data/data_sources/auth_data_source.dart';
 import '../../../features/auth/domain/repositories/auth_repository.dart';
 import '../../../features/auth/domain/use_cases/create_access_jwt/create_access_jwt_use_case.dart';
@@ -110,6 +115,7 @@ class InitializedUseCasesDependenciesValues {
     required this.createRefreshJwtCookieUseCase,
     required this.getRefreshTokenDataFromAccessJwtUseCase,
     required this.getPlayerMatchesOverviewUseCase,
+    required this.searchMatchesUseCase,
   });
 
   final GoogleLoginUseCase googleLoginUseCase;
@@ -133,6 +139,7 @@ class InitializedUseCasesDependenciesValues {
   final GetRefreshTokenDataFromAccessJwtUseCase
       getRefreshTokenDataFromAccessJwtUseCase;
   final GetPlayerMatchesOverviewUseCase getPlayerMatchesOverviewUseCase;
+  final SearchMatchesUseCase searchMatchesUseCase;
 }
 
 class InitialiazedControllersDependenciesValues {
@@ -146,6 +153,7 @@ class InitialiazedControllersDependenciesValues {
     required this.getAuthController,
     required this.refreshTokenController,
     required this.getPlayerMatchesOverviewController,
+    required this.searchMatchesController,
   });
 
   final LoginController loginController;
@@ -158,6 +166,7 @@ class InitialiazedControllersDependenciesValues {
   final GetAuthController getAuthController;
   final RefreshTokenController refreshTokenController;
   final GetPlayerMatchesOverviewController getPlayerMatchesOverviewController;
+  final SearchMatchesController searchMatchesController;
 }
 
 class InitializedValidatorsDependenciesValues {
@@ -168,6 +177,7 @@ class InitializedValidatorsDependenciesValues {
     required this.registerWithEmailAndPasswordRequestValidator,
     required this.authenticateWithGoogleRequestValidator,
     required this.getPlayerMatchesOverviewRequestValidator,
+    required this.searchMatchesRequestValidator,
   });
 
   final AuthorizeRequestValidator requestAuthorizationValidator;
@@ -179,6 +189,7 @@ class InitializedValidatorsDependenciesValues {
       authenticateWithGoogleRequestValidator;
   final GetPlayerMatchesOverviewRequestValidator
       getPlayerMatchesOverviewRequestValidator;
+  final SearchMatchesRequestValidator searchMatchesRequestValidator;
 }
 
 class InitializedMiddlewareWrappersDependenciesValues {
@@ -189,6 +200,7 @@ class InitializedMiddlewareWrappersDependenciesValues {
     required this.registerWithEmailAndPasswordRequestMiddlewareWrapper,
     required this.authenticateWithGoogleRequestMiddlewareWrapper,
     required this.getPlayerMatchesOverviewRequestMiddlewareWrapper,
+    required this.searchMatchesRequestMiddlewareWrapper,
   });
 
   final AuthorizeRequestMiddlewareWrapper authorizeRequestMiddlewareWrapper;
@@ -200,6 +212,8 @@ class InitializedMiddlewareWrappersDependenciesValues {
       authenticateWithGoogleRequestMiddlewareWrapper;
   final GetPlayerMatchesOverviewRequestMiddlewareWrapper
       getPlayerMatchesOverviewRequestMiddlewareWrapper;
+  final SearchMatchesRequestMiddlewareWrapper
+      searchMatchesRequestMiddlewareWrapper;
 }
 
 class InitializedRoutersDependenciesValues {

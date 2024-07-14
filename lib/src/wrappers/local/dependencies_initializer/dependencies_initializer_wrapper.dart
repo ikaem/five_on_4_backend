@@ -1,6 +1,10 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart' hide Response;
+import 'package:five_on_4_backend/src/features/matches/domain/use_cases/search_matches/search_matches_use_case.dart';
+import 'package:five_on_4_backend/src/features/matches/presentation/controllers/search_matches_controller.dart';
+import 'package:five_on_4_backend/src/features/matches/utils/middlewares/search_matches_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/matches/utils/validators/search_matches_request_validator.dart';
 
 import '../../../features/auth/data/data_sources/auth_data_source_impl.dart';
 import '../../../features/auth/domain/repositories/auth_repository_impl.dart';
@@ -263,6 +267,9 @@ InitializedUseCasesDependenciesValues getInitializedUseCases({
   final getPlayerMatchesOverviewUseCase = GetPlayerMatchesOverviewUseCase(
     matchesRepository: initializedRepositories.matchesRepository,
   );
+  final SearchMatchesUseCase searchMatchesUseCase = SearchMatchesUseCase(
+    matchesRepository: initializedRepositories.matchesRepository,
+  );
 
   return InitializedUseCasesDependenciesValues(
     googleLoginUseCase: googleLoginUseCase,
@@ -286,6 +293,7 @@ InitializedUseCasesDependenciesValues getInitializedUseCases({
     getRefreshTokenDataFromAccessJwtUseCase:
         getRefreshTokenDataFromAccessJwtUseCase,
     getPlayerMatchesOverviewUseCase: getPlayerMatchesOverviewUseCase,
+    searchMatchesUseCase: searchMatchesUseCase,
   );
 }
 
@@ -356,6 +364,11 @@ InitialiazedControllersDependenciesValues getInitializedControllers({
     getPlayerByIdUseCase: initializedUseCases.getPlayerByIdUseCase,
   );
 
+  final SearchMatchesController searchMatchesController =
+      SearchMatchesController(
+    searchMatchesUseCase: initializedUseCases.searchMatchesUseCase,
+  );
+
   return InitialiazedControllersDependenciesValues(
     googleLoginController: googleLoginController,
     getMatchController: getMatchController,
@@ -367,6 +380,7 @@ InitialiazedControllersDependenciesValues getInitializedControllers({
     getAuthController: getAuthController,
     refreshTokenController: refreshTokenController,
     getPlayerMatchesOverviewController: getPlayerMatchesOverviewController,
+    searchMatchesController: searchMatchesController,
   );
 }
 
@@ -389,6 +403,8 @@ InitializedValidatorsDependenciesValues getInitializedValidators({
       AuthenticateWithGoogleRequestValidator();
   final getPlayerMatchesOverviewRequestValidator =
       GetPlayerMatchesOverviewRequestValidator();
+  final SearchMatchesRequestValidator searchMatchesRequestValidator =
+      SearchMatchesRequestValidator();
 
   return InitializedValidatorsDependenciesValues(
     requestAuthorizationValidator: requestAuthorizationValidator,
@@ -400,6 +416,7 @@ InitializedValidatorsDependenciesValues getInitializedValidators({
         authenticateWithGoogleRequestValidator,
     getPlayerMatchesOverviewRequestValidator:
         getPlayerMatchesOverviewRequestValidator,
+    searchMatchesRequestValidator: searchMatchesRequestValidator,
   );
 }
 
@@ -433,6 +450,12 @@ InitializedMiddlewareWrappersDependenciesValues
     getPlayerMatchesOverviewRequestValidator:
         initializedValidators.getPlayerMatchesOverviewRequestValidator,
   );
+  final SearchMatchesRequestMiddlewareWrapper
+      searchMatchesRequestMiddlewareWrapper =
+      SearchMatchesRequestMiddlewareWrapper(
+    searchMatchesRequestValidator:
+        initializedValidators.searchMatchesRequestValidator,
+  );
 
   return InitializedMiddlewareWrappersDependenciesValues(
     authorizeRequestMiddlewareWrapper: requestAuthorizationMiddleware,
@@ -444,6 +467,8 @@ InitializedMiddlewareWrappersDependenciesValues
         authenticateWithGoogleRequestMiddlewareWrapper,
     getPlayerMatchesOverviewRequestMiddlewareWrapper:
         getPlayerMatchesOverviewRequestMiddlewareWrapper,
+    searchMatchesRequestMiddlewareWrapper:
+        searchMatchesRequestMiddlewareWrapper,
   );
 }
 
@@ -475,14 +500,17 @@ InitializedRoutersDependenciesValues getInitializedRouters({
   final matchesRouter = MatchesRouter(
     getMatchController: initializedControllers.getMatchController,
     createMatchController: initializedControllers.createMatchController,
+    searchMatchesController: initializedControllers.searchMatchesController,
+    getPlayerMatchesOverviewController:
+        initializedControllers.getPlayerMatchesOverviewController,
     requestAuthorizationMiddleware:
         initializedMiddlewareWrappers.authorizeRequestMiddlewareWrapper,
     matchCreateRequestMiddleware:
         initializedMiddlewareWrappers.matchCreateRequestMiddlewareWrapper,
-    getPlayerMatchesOverviewController:
-        initializedControllers.getPlayerMatchesOverviewController,
     getPlayerMatchesOverviewRequestMiddleware: initializedMiddlewareWrappers
         .getPlayerMatchesOverviewRequestMiddlewareWrapper,
+    searchMatchesRequestMiddlewareWrapper:
+        initializedMiddlewareWrappers.searchMatchesRequestMiddlewareWrapper,
   );
 
   return InitializedRoutersDependenciesValues(

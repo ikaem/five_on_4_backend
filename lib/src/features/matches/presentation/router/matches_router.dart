@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:five_on_4_backend/src/features/matches/presentation/controllers/search_matches_controller.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -14,22 +15,22 @@ class MatchesRouter {
     required CreateMatchController createMatchController,
     required GetPlayerMatchesOverviewController
         getPlayerMatchesOverviewController,
+    required SearchMatchesController searchMatchesController,
     // TODO this should be called requestAuthorizationRequestMiddleware
     required CustomMiddlewareWrapper requestAuthorizationMiddleware,
     required CustomMiddlewareWrapper matchCreateRequestMiddleware,
     required CustomMiddlewareWrapper getPlayerMatchesOverviewRequestMiddleware,
+    required CustomMiddlewareWrapper searchMatchesRequestMiddlewareWrapper,
   }) {
     final matchesRouter = Router();
 
-    // matchesRouter.post(
-    //   "/search",
-    //   Pipeline()
-    //       .addMiddleware(requestAuthorizationMiddleware())
-    //       .addMiddleware(someRandomMiddleware())
-    //       .addHandler((request) {
-    //         return Response.ok("Hello from matches router");
-    //       }),
-    // );
+    matchesRouter.post(
+      "/search",
+      Pipeline()
+          .addMiddleware(requestAuthorizationMiddleware())
+          .addMiddleware(searchMatchesRequestMiddlewareWrapper())
+          .addHandler(searchMatchesController.call),
+    );
 
     matchesRouter.get(
       "/player-matches-overview",
