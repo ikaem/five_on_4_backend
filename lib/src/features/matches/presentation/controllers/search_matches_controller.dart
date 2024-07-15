@@ -40,6 +40,7 @@ class SearchMatchesController {
     );
 
     final response = ResponseGenerator.success(
+      // TODO maybe Searched matches retrieved successfully.
       message: "Matches searched successfully.",
       data: _generateOkResponseData(
         matches: matches,
@@ -65,5 +66,12 @@ Map<String, Object> _generateOkResponseData({
 
   return {
     "matches": payloadMatches,
+    // TODO this is proof of concept
+    // TODO this will need pagination data
+    // "pagination": {
+    //   "total": payloadMatches.length,
+    //   "page": 1,
+    //   "perPage": 10,
+    // },
   };
 }
