@@ -65,7 +65,7 @@ class MatchesDataSourceImpl implements MatchesDataSource {
     if (matchTitle != null) {
       final matchTitleVariable = Variable.withString(matchTitle);
       final isSimilarTitleExpression = CustomExpression<bool>(
-        "LEVENSHTEIN(title, '${matchTitleVariable.value}') <= 2",
+        "LEVENSHTEIN(title, '${matchTitleVariable.value}') <= 3",
         precedence: Precedence.primary,
       );
 

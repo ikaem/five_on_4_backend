@@ -57,7 +57,7 @@ Middleware someRandomMiddleware() => (innerHandler) {
         // TODO here we can validate? and return responses
         return Future.sync(() => innerHandler(request)).then((response) {
           print("request here: $request");
-          print("inner handler here: $innerHandler");
+          // print("inner handler here: $innerHandler");
           return response;
         });
       };
@@ -70,7 +70,8 @@ final errorReturningMiddleware = createMiddleware(
   ) {
     // this will return
     log("Error: $error");
-    print("Error: $error");
+    log("Stacktrace: $stackTrace");
+    // print("Error: $error");
     return Response.internalServerError(
       body: jsonEncode(
         {

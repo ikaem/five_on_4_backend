@@ -52,9 +52,9 @@ extension RequestExtension on Request {
     return changedRequest;
   }
 
-  Map<String, Object>? getValidatedBodyData() {
+  Map<String, dynamic>? getValidatedBodyData() {
     final data = context[RequestConstants.VALIDATED_BODY_DATA.value]
-        as Map<String, Object>?;
+        as Map<String, dynamic>?;
 
     return data;
   }
