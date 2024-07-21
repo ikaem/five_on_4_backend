@@ -4,17 +4,17 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/auth/presentation/controllers/get_auth/get_auth_controller.dart';
-import '../../../../../../../bin/src/features/auth/presentation/controllers/google_login/google_login_controller.dart';
-import '../../../../../../../bin/src/features/auth/presentation/controllers/login/login_controller.dart';
-import '../../../../../../../bin/src/features/auth/presentation/controllers/logout/logout_controller.dart';
-import '../../../../../../../bin/src/features/auth/presentation/controllers/refresh_token/refresh_token_controller.dart';
-import '../../../../../../../bin/src/features/auth/presentation/controllers/register_with_email_and_password/register_with_email_and_password_controller.dart';
-import '../../../../../../../bin/src/features/auth/presentation/router/auth_router.dart';
-import '../../../../../../../bin/src/features/auth/utils/middlewares/authenticate_with_google_request_middleware_wrapper.dart';
-import '../../../../../../../bin/src/features/auth/utils/middlewares/authorize_request_middleware_wrapper.dart';
-import '../../../../../../../bin/src/features/auth/utils/middlewares/login_request_middleware_wrapper.dart';
-import '../../../../../../../bin/src/features/auth/utils/middlewares/register_with_email_and_password_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/auth/presentation/controllers/get_auth/get_auth_controller.dart';
+import 'package:five_on_4_backend/src/features/auth/presentation/controllers/google_login/google_login_controller.dart';
+import 'package:five_on_4_backend/src/features/auth/presentation/controllers/login/login_controller.dart';
+import 'package:five_on_4_backend/src/features/auth/presentation/controllers/logout/logout_controller.dart';
+import 'package:five_on_4_backend/src/features/auth/presentation/controllers/refresh_token/refresh_token_controller.dart';
+import 'package:five_on_4_backend/src/features/auth/presentation/controllers/register_with_email_and_password/register_with_email_and_password_controller.dart';
+import 'package:five_on_4_backend/src/features/auth/presentation/router/auth_router.dart';
+import 'package:five_on_4_backend/src/features/auth/utils/middlewares/authenticate_with_google_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/auth/utils/middlewares/authorize_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/auth/utils/middlewares/login_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/auth/utils/middlewares/register_with_email_and_password_request_middleware_wrapper.dart';
 
 void main() {
 // controllers

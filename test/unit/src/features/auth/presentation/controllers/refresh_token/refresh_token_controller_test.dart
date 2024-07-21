@@ -4,17 +4,17 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../../bin/src/features/auth/domain/use_cases/create_access_jwt/create_access_jwt_use_case.dart';
-import '../../../../../../../../bin/src/features/auth/domain/use_cases/create_refresh_jwt_cookie/create_refresh_jwt_cookie_use_case.dart';
-import '../../../../../../../../bin/src/features/auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
-import '../../../../../../../../bin/src/features/auth/presentation/controllers/refresh_token/refresh_token_controller.dart';
-import '../../../../../../../../bin/src/features/auth/utils/constants/auth_response_constants.dart';
-import '../../../../../../../../bin/src/features/core/domain/models/auth/auth_model.dart';
-import '../../../../../../../../bin/src/features/core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
-import '../../../../../../../../bin/src/features/core/domain/use_cases/get_cookie_by_name_in_request/get_cookie_by_name_in_request_use_case.dart';
-import '../../../../../../../../bin/src/features/core/domain/values/refresh_token_data_value.dart';
-import '../../../../../../../../bin/src/features/players/domain/models/player_model.dart';
-import '../../../../../../../../bin/src/features/players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
+import 'package:five_on_4_backend/src/features/auth/domain/use_cases/create_access_jwt/create_access_jwt_use_case.dart';
+import 'package:five_on_4_backend/src/features/auth/domain/use_cases/create_refresh_jwt_cookie/create_refresh_jwt_cookie_use_case.dart';
+import 'package:five_on_4_backend/src/features/auth/domain/use_cases/get_auth_by_id/get_auth_by_id_use_case.dart';
+import 'package:five_on_4_backend/src/features/auth/presentation/controllers/refresh_token/refresh_token_controller.dart';
+import 'package:five_on_4_backend/src/features/auth/utils/constants/auth_response_constants.dart';
+import 'package:five_on_4_backend/src/features/core/domain/models/auth/auth_model.dart';
+import 'package:five_on_4_backend/src/features/core/domain/use_cases/get_access_token_data_from_access_jwt/get_access_token_data_from_access_jwt_use_case.dart';
+import 'package:five_on_4_backend/src/features/core/domain/use_cases/get_cookie_by_name_in_request/get_cookie_by_name_in_request_use_case.dart';
+import 'package:five_on_4_backend/src/features/core/domain/values/refresh_token_data_value.dart';
+import 'package:five_on_4_backend/src/features/players/domain/models/player_model.dart';
+import 'package:five_on_4_backend/src/features/players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
 import '../../../../../../../helpers/response.dart';
 
 void main() {

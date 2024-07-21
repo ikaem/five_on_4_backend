@@ -4,8 +4,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/matches/utils/constants/match_create_request_body_key_constants.dart';
-import '../../../../../../../bin/src/features/matches/utils/validators/match_create_request_validator.dart';
+import 'package:five_on_4_backend/src/features/matches/utils/constants/match_create_request_body_key_constants.dart';
+import 'package:five_on_4_backend/src/features/matches/utils/validators/match_create_request_validator.dart';
 import '../../../../../../helpers/response.dart';
 
 void main() {

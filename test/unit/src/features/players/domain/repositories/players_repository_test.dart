@@ -1,13 +1,13 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/core/utils/extensions/date_time_extension.dart';
-import '../../../../../../../bin/src/features/players/data/data_sources/players_data_source.dart';
-import '../../../../../../../bin/src/features/players/domain/models/player_model.dart';
-import '../../../../../../../bin/src/features/players/domain/repositories/players_repository.dart';
-import '../../../../../../../bin/src/features/players/domain/repositories/players_repository_impl.dart';
-import '../../../../../../../bin/src/features/players/utils/converters/players_converter.dart';
-import '../../../../../../../bin/src/wrappers/libraries/drift/app_database.dart';
+import 'package:five_on_4_backend/src/features/core/utils/extensions/date_time_extension.dart';
+import 'package:five_on_4_backend/src/features/players/data/data_sources/players_data_source.dart';
+import 'package:five_on_4_backend/src/features/players/domain/models/player_model.dart';
+import 'package:five_on_4_backend/src/features/players/domain/repositories/players_repository.dart';
+import 'package:five_on_4_backend/src/features/players/domain/repositories/players_repository_impl.dart';
+import 'package:five_on_4_backend/src/features/players/utils/converters/players_converter.dart';
+import 'package:five_on_4_backend/src/wrappers/libraries/drift/app_database.dart';
 
 void main() {
   final playersDataSource = _MockPlayersDataSource();

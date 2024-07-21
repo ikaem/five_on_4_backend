@@ -1,8 +1,8 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../../bin/src/features/auth/domain/repositories/auth_repository.dart';
-import '../../../../../../../../bin/src/features/auth/domain/use_cases/register_with_email_and_password/register_with_email_and_password_use_case.dart';
+import 'package:five_on_4_backend/src/features/auth/domain/repositories/auth_repository.dart';
+import 'package:five_on_4_backend/src/features/auth/domain/use_cases/register_with_email_and_password/register_with_email_and_password_use_case.dart';
 
 void main() {
   final authRepository = _MockAuthRepository();

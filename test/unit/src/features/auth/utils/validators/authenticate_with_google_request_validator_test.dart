@@ -4,9 +4,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/auth/utils/constants/authenticate_with_google_request_body_key_constants.dart';
-import '../../../../../../../bin/src/features/auth/utils/validators/authenticate_with_google_request_validator.dart';
-import '../../../../../../../bin/src/features/core/utils/constants/request_constants.dart';
+import 'package:five_on_4_backend/src/features/auth/utils/constants/authenticate_with_google_request_body_key_constants.dart';
+import 'package:five_on_4_backend/src/features/auth/utils/validators/authenticate_with_google_request_validator.dart';
+import 'package:five_on_4_backend/src/features/core/utils/constants/request_constants.dart';
 import '../../../../../../helpers/response.dart';
 
 void main() {

@@ -1,16 +1,17 @@
 import 'dart:async';
 
+import 'package:five_on_4_backend/src/features/matches/presentation/controllers/search_matches_controller.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/matches/presentation/controllers/create_match_controller.dart';
-import '../../../../../../../bin/src/features/matches/presentation/controllers/get_match_controller.dart';
-import '../../../../../../../bin/src/features/matches/presentation/controllers/get_player_matches_overview_controller.dart';
-import '../../../../../../../bin/src/features/matches/presentation/router/matches_router.dart';
-import '../../../../../../../bin/src/features/matches/utils/middlewares/get_player_matches_overview_request_middleware_wrapper.dart';
-import '../../../../../../../bin/src/features/matches/utils/middlewares/match_create_request_middleware_wrapper.dart';
-import '../../../../../../../bin/src/wrappers/local/custom_middleware/custom_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/matches/presentation/controllers/create_match_controller.dart';
+import 'package:five_on_4_backend/src/features/matches/presentation/controllers/get_match_controller.dart';
+import 'package:five_on_4_backend/src/features/matches/presentation/controllers/get_player_matches_overview_controller.dart';
+import 'package:five_on_4_backend/src/features/matches/presentation/router/matches_router.dart';
+import 'package:five_on_4_backend/src/features/matches/utils/middlewares/get_player_matches_overview_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/matches/utils/middlewares/match_create_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/wrappers/local/custom_middleware/custom_middleware_wrapper.dart';
 
 // TODO stay here as a reference
 // Middleware function = (innerHandler) {
@@ -27,6 +28,7 @@ void main() {
   final createMatchController = _MockCreateMatchController();
   final getPlayerMatchesOverviewController =
       _MockGetPlayerMatchesOverviewController();
+  final searchMatchesController = _MockSearchMatchesController();
 
   // middleware
   final requestAuthorizationMiddleware =
@@ -35,12 +37,15 @@ void main() {
       _MockMatchCreateRequestMiddlewareWrapper();
   final getPlayerMatchesOverviewRequestMiddleware =
       _MockGetPlayerMatchesOverviewRequestMiddlewareWrapper();
+  final searchMatchesRequestMiddlewareWrapper =
+      _MockSearchMatchesRequestMiddlewareWrapper();
 
   // validators
   final authorizationRequestHandler = _MockMiddlewareRequestHandlerCallback();
   final matchCreateRequestHandler = _MockMiddlewareRequestHandlerCallback();
   final getPlayerMatchesOverviewRequestHandler =
       _MockMiddlewareRequestHandlerCallback();
+  final searchMatchesRequestHandler = _MockMiddlewareRequestHandlerCallback();
 
   setUp(() {
     // validators
@@ -55,6 +60,11 @@ void main() {
       return null;
     });
     when(() => getPlayerMatchesOverviewRequestHandler.call(any()))
+        .thenAnswer((invocation) async {
+      // NOTE return null to propagate request to the next middleware - the handler
+      return null;
+    });
+    when(() => searchMatchesRequestHandler.call(any()))
         .thenAnswer((invocation) async {
       // NOTE return null to propagate request to the next middleware - the handler
       return null;
@@ -76,6 +86,11 @@ void main() {
         requestHandler: getPlayerMatchesOverviewRequestHandler.call,
       ),
     );
+    when(() => searchMatchesRequestMiddlewareWrapper.call()).thenReturn(
+      createMiddleware(
+        requestHandler: searchMatchesRequestHandler.call,
+      ),
+    );
 
     // controllers
     when(() => createMatchController.call(any()))
@@ -89,24 +104,80 @@ void main() {
         .thenAnswer((invocation) async {
       return Response.ok("ok");
     });
+    when(() => searchMatchesController.call(any()))
+        .thenAnswer((invocation) async {
+      return Response.ok("ok");
+    });
   });
 
   tearDown(() {
     reset(getMatchController);
     reset(createMatchController);
     reset(getPlayerMatchesOverviewController);
+    reset(searchMatchesController);
     reset(requestAuthorizationMiddleware);
     reset(matchCreateRequestMiddleware);
     reset(getPlayerMatchesOverviewRequestMiddleware);
+    reset(searchMatchesRequestMiddlewareWrapper);
     reset(authorizationRequestHandler);
     reset(matchCreateRequestHandler);
     reset(getPlayerMatchesOverviewRequestHandler);
+    reset(searchMatchesRequestHandler);
   });
 
   setUpAll(() {
     registerFallbackValue(_FakeRequest());
   });
   group("$MatchesRouter", () {
+    group(
+      // TODO in future, this should be a get
+      "post /search",
+      () {
+        final realRequest = Request(
+          "get",
+          Uri.parse("https://example.com/"),
+        );
+
+        test(
+          "given AuthorizationMiddleware instance"
+          "when a request to the endpoint is made"
+          "then should call the AuthorizationMiddleware's request handler",
+          () async {
+            // setup
+
+            // given
+            final matchesRouter = MatchesRouter(
+              getMatchController: getMatchController,
+              createMatchController: createMatchController,
+              getPlayerMatchesOverviewController:
+                  getPlayerMatchesOverviewController,
+              searchMatchesController: searchMatchesController,
+              requestAuthorizationMiddleware: requestAuthorizationMiddleware,
+              matchCreateRequestMiddleware: matchCreateRequestMiddleware,
+              getPlayerMatchesOverviewRequestMiddleware:
+                  getPlayerMatchesOverviewRequestMiddleware,
+              searchMatchesRequestMiddlewareWrapper:
+                  searchMatchesRequestMiddlewareWrapper,
+            );
+
+            // when
+            await matchesRouter.router(realRequest);
+
+            // then
+            final captured = verify(
+              () => authorizationRequestHandler.call(captureAny()),
+            ).captured;
+            final capturedRequest = captured[0] as Request;
+
+            expect(capturedRequest.method, equals(realRequest.method));
+            expect(capturedRequest.url, equals(realRequest.url));
+
+            // cleanup
+          },
+        );
+      },
+    );
+
     group("get /player-matches-overview", () {
       final realRequest = Request(
           "get", Uri.parse("https://example.com/player-matches-overview"));
@@ -122,10 +193,13 @@ void main() {
             createMatchController: createMatchController,
             getPlayerMatchesOverviewController:
                 getPlayerMatchesOverviewController,
+            searchMatchesController: searchMatchesController,
             requestAuthorizationMiddleware: requestAuthorizationMiddleware,
             matchCreateRequestMiddleware: matchCreateRequestMiddleware,
             getPlayerMatchesOverviewRequestMiddleware:
                 getPlayerMatchesOverviewRequestMiddleware,
+            searchMatchesRequestMiddlewareWrapper:
+                searchMatchesRequestMiddlewareWrapper,
           );
 
           // given
@@ -157,10 +231,13 @@ void main() {
             createMatchController: createMatchController,
             getPlayerMatchesOverviewController:
                 getPlayerMatchesOverviewController,
+            searchMatchesController: searchMatchesController,
             requestAuthorizationMiddleware: requestAuthorizationMiddleware,
             matchCreateRequestMiddleware: matchCreateRequestMiddleware,
             getPlayerMatchesOverviewRequestMiddleware:
                 getPlayerMatchesOverviewRequestMiddleware,
+            searchMatchesRequestMiddlewareWrapper:
+                searchMatchesRequestMiddlewareWrapper,
           );
 
           // given
@@ -192,10 +269,13 @@ void main() {
             createMatchController: createMatchController,
             getPlayerMatchesOverviewController:
                 getPlayerMatchesOverviewController,
+            searchMatchesController: searchMatchesController,
             requestAuthorizationMiddleware: requestAuthorizationMiddleware,
             matchCreateRequestMiddleware: matchCreateRequestMiddleware,
             getPlayerMatchesOverviewRequestMiddleware:
                 getPlayerMatchesOverviewRequestMiddleware,
+            searchMatchesRequestMiddlewareWrapper:
+                searchMatchesRequestMiddlewareWrapper,
           );
 
           // given
@@ -232,10 +312,13 @@ void main() {
             createMatchController: createMatchController,
             getPlayerMatchesOverviewController:
                 getPlayerMatchesOverviewController,
+            searchMatchesController: searchMatchesController,
             requestAuthorizationMiddleware: requestAuthorizationMiddleware,
             matchCreateRequestMiddleware: matchCreateRequestMiddleware,
             getPlayerMatchesOverviewRequestMiddleware:
                 getPlayerMatchesOverviewRequestMiddleware,
+            searchMatchesRequestMiddlewareWrapper:
+                searchMatchesRequestMiddlewareWrapper,
           );
 
           // given
@@ -267,10 +350,13 @@ void main() {
             createMatchController: createMatchController,
             getPlayerMatchesOverviewController:
                 getPlayerMatchesOverviewController,
+            searchMatchesController: searchMatchesController,
             requestAuthorizationMiddleware: requestAuthorizationMiddleware,
             matchCreateRequestMiddleware: matchCreateRequestMiddleware,
             getPlayerMatchesOverviewRequestMiddleware:
                 getPlayerMatchesOverviewRequestMiddleware,
+            searchMatchesRequestMiddlewareWrapper:
+                searchMatchesRequestMiddlewareWrapper,
           );
 
           // given
@@ -302,10 +388,13 @@ void main() {
             createMatchController: createMatchController,
             getPlayerMatchesOverviewController:
                 getPlayerMatchesOverviewController,
+            searchMatchesController: searchMatchesController,
             requestAuthorizationMiddleware: requestAuthorizationMiddleware,
             matchCreateRequestMiddleware: matchCreateRequestMiddleware,
             getPlayerMatchesOverviewRequestMiddleware:
                 getPlayerMatchesOverviewRequestMiddleware,
+            searchMatchesRequestMiddlewareWrapper:
+                searchMatchesRequestMiddlewareWrapper,
           );
 
           // given
@@ -344,10 +433,13 @@ void main() {
             createMatchController: createMatchController,
             getPlayerMatchesOverviewController:
                 getPlayerMatchesOverviewController,
+            searchMatchesController: searchMatchesController,
             requestAuthorizationMiddleware: requestAuthorizationMiddleware,
             matchCreateRequestMiddleware: matchCreateRequestMiddleware,
             getPlayerMatchesOverviewRequestMiddleware:
                 getPlayerMatchesOverviewRequestMiddleware,
+            searchMatchesRequestMiddlewareWrapper:
+                searchMatchesRequestMiddlewareWrapper,
           );
           // given
 
@@ -377,10 +469,13 @@ void main() {
           createMatchController: createMatchController,
           getPlayerMatchesOverviewController:
               getPlayerMatchesOverviewController,
+          searchMatchesController: searchMatchesController,
           requestAuthorizationMiddleware: requestAuthorizationMiddleware,
           matchCreateRequestMiddleware: matchCreateRequestMiddleware,
           getPlayerMatchesOverviewRequestMiddleware:
               getPlayerMatchesOverviewRequestMiddleware,
+          searchMatchesRequestMiddlewareWrapper:
+              searchMatchesRequestMiddlewareWrapper,
         );
 
         // given
@@ -411,6 +506,9 @@ class _MockCreateMatchController extends Mock
 class _MockGetPlayerMatchesOverviewController extends Mock
     implements GetPlayerMatchesOverviewController {}
 
+class _MockSearchMatchesController extends Mock
+    implements SearchMatchesController {}
+
 // middleware
 class _MockRequestAuthorizationMiddlewareWrapper extends Mock
     implements CustomMiddlewareWrapper {}
@@ -420,6 +518,9 @@ class _MockMatchCreateRequestMiddlewareWrapper extends Mock
 
 class _MockGetPlayerMatchesOverviewRequestMiddlewareWrapper extends Mock
     implements GetPlayerMatchesOverviewRequestMiddlewareWrapper {}
+
+class _MockSearchMatchesRequestMiddlewareWrapper extends Mock
+    implements CustomMiddlewareWrapper {}
 
 // validator
 class _MockMiddlewareRequestHandlerCallback extends Mock {

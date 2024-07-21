@@ -1,10 +1,10 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../bin/src/features/auth/data/entities/google_validated_id_token_response/google_validated_id_token_response_entity.dart';
-import '../../../../../../bin/src/features/core/domain/values/http_request_value.dart';
-import '../../../../../../bin/src/wrappers/libraries/dio/dio_wrapper.dart';
-import '../../../../../../bin/src/wrappers/local/google_apis/google_apis_wrapper.dart';
+import 'package:five_on_4_backend/src/features/auth/data/entities/google_validated_id_token_response/google_validated_id_token_response_entity.dart';
+import 'package:five_on_4_backend/src/features/core/domain/values/http_request_value.dart';
+import 'package:five_on_4_backend/src/wrappers/libraries/dio/dio_wrapper.dart';
+import 'package:five_on_4_backend/src/wrappers/local/google_apis/google_apis_wrapper.dart';
 
 void main() {
   final dioWrapper = _MockDioWrapper();

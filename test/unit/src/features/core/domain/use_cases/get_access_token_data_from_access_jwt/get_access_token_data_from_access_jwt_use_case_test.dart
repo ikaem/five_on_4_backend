@@ -1,10 +1,10 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../../bin/src/features/core/domain/exceptions/jwt_exceptions.dart';
-import '../../../../../../../../bin/src/features/core/domain/use_cases/get_refresh_token_data_from_access_jwt/get_refresh_token_data_from_access_jwt_use_case.dart';
-import '../../../../../../../../bin/src/features/core/domain/values/access_token_data_value.dart';
-import '../../../../../../../../bin/src/wrappers/libraries/dart_jsonwebtoken/dart_jsonwebtoken_wrapper.dart';
+import 'package:five_on_4_backend/src/features/core/domain/exceptions/jwt_exceptions.dart';
+import 'package:five_on_4_backend/src/features/core/domain/use_cases/get_refresh_token_data_from_access_jwt/get_refresh_token_data_from_access_jwt_use_case.dart';
+import 'package:five_on_4_backend/src/features/core/domain/values/access_token_data_value.dart';
+import 'package:five_on_4_backend/src/wrappers/libraries/dart_jsonwebtoken/dart_jsonwebtoken_wrapper.dart';
 
 void main() {
   final dartJsonWebTokenWrapper = _MockDartJsonWebTokenWrapper();

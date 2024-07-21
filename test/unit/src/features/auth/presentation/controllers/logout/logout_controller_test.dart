@@ -2,7 +2,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../../bin/src/features/auth/presentation/controllers/logout/logout_controller.dart';
+import 'package:five_on_4_backend/src/features/auth/presentation/controllers/logout/logout_controller.dart';
 import '../../../../../../../helpers/response.dart';
 
 void main() {

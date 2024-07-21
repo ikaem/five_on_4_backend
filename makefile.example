@@ -7,7 +7,7 @@ run_dev:
 	PGPORT = \
 	AUTH_PASSWORD_SALT= \
 	JWT_SECRET= \
-	dart run bin/main.dart
+	dart run lib/main.dart
 
 
 generate: 
@@ -18,14 +18,14 @@ generate_clean_cache:
 
 
 generate_migrations:
-	dart run drift_dev schema dump bin/database-drift/database.dart drift_schemas && dart run drift_dev schema steps drift_schemas bin/database-drift/schema_versions.dart
+	dart run drift_dev schema dump lib/database-drift/database.dart drift_schemas && dart run drift_dev schema steps drift_schemas lib/database-drift/schema_versions.dart
 
 
 generate_migrations_schema:
-	dart run drift_dev schema dump bin/src/wrappers/libraries/drift/app_database.dart bin/src/wrappers/libraries/drift/migrations/schemas
+	dart run drift_dev schema dump lib/src/wrappers/libraries/drift/app_database.dart lib/src/wrappers/libraries/drift/migrations/schemas
 
 generate_migrations_steps:
-	dart run drift_dev schema steps bin/src/wrappers/libraries/drift/migrations/schemas bin/src/wrappers/libraries/drift/migrations/schema_versions/schema_versions.dart
+	dart run drift_dev schema steps lib/src/wrappers/libraries/drift/migrations/schemas lib/src/wrappers/libraries/drift/migrations/schema_versions/schema_versions.dart
 
 
 just_example_how_to_add_env_vars_to_built_app:

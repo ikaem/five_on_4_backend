@@ -1,11 +1,12 @@
 import 'package:drift/drift.dart' hide isNull;
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/core/utils/extensions/date_time_extension.dart';
-import '../../../../../../../bin/src/features/matches/data/data_sources/matches_data_source.dart';
-import '../../../../../../../bin/src/features/matches/data/data_sources/matches_data_source_impl.dart';
-import '../../../../../../../bin/src/features/matches/domain/values/create_match_value.dart';
-import '../../../../../../../bin/src/wrappers/libraries/drift/app_database.dart';
+import 'package:five_on_4_backend/src/features/core/utils/extensions/date_time_extension.dart';
+import 'package:five_on_4_backend/src/features/matches/data/data_sources/matches_data_source.dart';
+import 'package:five_on_4_backend/src/features/matches/data/data_sources/matches_data_source_impl.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/values/create_match_value.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/values/match_search_filter_value.dart';
+import 'package:five_on_4_backend/src/wrappers/libraries/drift/app_database.dart';
 import '../../../../../../helpers/database/test_database.dart';
 
 void main() {
@@ -15,17 +16,158 @@ void main() {
   late MatchesDataSource matchesDataSource;
 
   setUp(() async {
-    testDatabaseWrapper = await getTestDatabaseWrapper();
+    // testDatabaseWrapper = await getTestMemoryDatabaseWrapper();
+    testDatabaseWrapper = await getTestPostgresDatabaseWrapper();
     matchesDataSource = MatchesDataSourceImpl(
       databaseWrapper: testDatabaseWrapper.databaseWrapper,
     );
   });
 
   tearDown(() async {
+    await testDatabaseWrapper.databaseWrapper.clearAll();
     await testDatabaseWrapper.databaseWrapper.close();
   });
 
   group("$MatchesDataSource", () {
+    group(
+      ".searchMatches()",
+      () {
+        // TODO try
+        final matchEntityData1 = MatchEntityData(
+          id: 1,
+          title: "Ivan",
+          dateAndTime: DateTime.now().normalizedToSeconds,
+          location: "location",
+          description: "description",
+          createdAt: DateTime.now().normalizedToSeconds,
+          updatedAt: DateTime.now().normalizedToSeconds,
+        );
+        final matchEntityData2 = MatchEntityData(
+          id: 2,
+          title: "Ovan",
+          dateAndTime: DateTime.now().normalizedToSeconds,
+          location: "location",
+          description: "description",
+          createdAt: DateTime.now().normalizedToSeconds,
+          updatedAt: DateTime.now().normalizedToSeconds,
+        );
+        final matchEntityData3 = MatchEntityData(
+          id: 3,
+          title: "Ivanović",
+          dateAndTime: DateTime.now().normalizedToSeconds,
+          location: "location",
+          description: "description",
+          createdAt: DateTime.now().normalizedToSeconds,
+          updatedAt: DateTime.now().normalizedToSeconds,
+        );
+        final matchEntityData4 = MatchEntityData(
+          id: 4,
+          title: "Ovo",
+          dateAndTime: DateTime.now().normalizedToSeconds,
+          location: "location",
+          description: "description",
+          createdAt: DateTime.now().normalizedToSeconds,
+          updatedAt: DateTime.now().normalizedToSeconds,
+        );
+        final matchEntitieData5 = MatchEntityData(
+          id: 5,
+          title: "Ivo",
+          dateAndTime: DateTime.now().normalizedToSeconds,
+          location: "location",
+          description: "description",
+          createdAt: DateTime.now().normalizedToSeconds,
+          updatedAt: DateTime.now().normalizedToSeconds,
+        );
+        final matchEntitieData6 = MatchEntityData(
+          id: 6,
+          title: "Pivo",
+          dateAndTime: DateTime.now().normalizedToSeconds,
+          location: "location",
+          description: "description",
+          createdAt: DateTime.now().normalizedToSeconds,
+          updatedAt: DateTime.now().normalizedToSeconds,
+        );
+
+        final matchEntitiesData = [
+          matchEntityData1,
+          matchEntityData2,
+          matchEntityData3,
+          matchEntityData4,
+          matchEntitieData5,
+          matchEntitieData6,
+        ];
+        test(
+          "given existing matches in db "
+          "when .searchMatches() is called with specific matchName filter "
+          "then should return expected matches",
+          () async {
+            // setup
+            final MatchSearchFilterValue filter = MatchSearchFilterValue(
+              matchTitle: "Iv",
+            );
+
+            // given
+            await testDatabaseWrapper.databaseWrapper.transaction(() async {
+              for (final matchEntityData in matchEntitiesData) {
+                await testDatabaseWrapper.databaseWrapper.matchesRepo.insertOne(
+                  matchEntityData,
+                );
+              }
+            });
+
+            // when
+            final foundMatches = await matchesDataSource.searchMatches(
+              filter: filter,
+            );
+
+            // then
+            final expectedMatches = [
+              matchEntityData1,
+              matchEntityData4,
+              matchEntitieData5,
+            ];
+
+            expect(foundMatches, equals(expectedMatches));
+
+            print("what");
+
+            // cleanup
+          },
+        );
+
+        test(
+          "given existing matches in db"
+          "when .searchMatches() is called without specific matchName filter"
+          "then should return expected matches",
+          () async {
+            // setup
+            final MatchSearchFilterValue filter = MatchSearchFilterValue();
+
+            // given
+            await testDatabaseWrapper.databaseWrapper.transaction(() async {
+              for (final matchEntityData in matchEntitiesData) {
+                await testDatabaseWrapper.databaseWrapper.matchesRepo.insertOne(
+                  matchEntityData,
+                );
+              }
+            });
+
+            // when
+            final foundMatches = await matchesDataSource.searchMatches(
+              filter: filter,
+            );
+
+            // then
+            final expectedMatches = matchEntitiesData.getRange(0, 5);
+
+            expect(foundMatches, equals(expectedMatches));
+
+            // cleanup
+          },
+        );
+      },
+    );
+
     group(".getPlayerMatchesOverview", () {
       // should get 5 upcoming matches
       test(

@@ -8,13 +8,13 @@ import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
 
-import '../../../../../../../bin/src/features/core/utils/constants/request_constants.dart';
-import '../../../../../../../bin/src/features/matches/domain/models/match_model.dart';
-import '../../../../../../../bin/src/features/matches/domain/use_cases/get_player_matches_overview/get_player_matches_overview_use_case.dart';
-import '../../../../../../../bin/src/features/matches/presentation/controllers/get_player_matches_overview_controller.dart';
-import '../../../../../../../bin/src/features/matches/utils/constants/get_player_matches_overview_request_body_key_constants.dart';
-import '../../../../../../../bin/src/features/players/domain/models/player_model.dart';
-import '../../../../../../../bin/src/features/players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
+import 'package:five_on_4_backend/src/features/core/utils/constants/request_constants.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/models/match_model.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/use_cases/get_player_matches_overview/get_player_matches_overview_use_case.dart';
+import 'package:five_on_4_backend/src/features/matches/presentation/controllers/get_player_matches_overview_controller.dart';
+import 'package:five_on_4_backend/src/features/matches/utils/constants/get_player_matches_overview_request_body_key_constants.dart';
+import 'package:five_on_4_backend/src/features/players/domain/models/player_model.dart';
+import 'package:five_on_4_backend/src/features/players/domain/use_cases/get_player_by_id/get_player_by_id_use_case.dart';
 import '../../../../../../helpers/response.dart';
 
 void main() {
