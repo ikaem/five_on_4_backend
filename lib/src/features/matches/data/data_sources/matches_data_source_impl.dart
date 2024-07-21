@@ -64,6 +64,16 @@ class MatchesDataSourceImpl implements MatchesDataSource {
 
     if (matchTitle != null) {
       final matchTitleVariable = Variable.withString(matchTitle);
+      // TODO this is a bit silly - currently, "asd" for match title will return one match, even if there are only matches with these titles in db
+      /* 
+ivanović
+ivan
+ivka
+ivo
+ivor
+ovan
+      
+       */
       final isSimilarTitleExpression = CustomExpression<bool>(
         "LEVENSHTEIN(title, '${matchTitleVariable.value}') <= 3",
         precedence: Precedence.primary,
