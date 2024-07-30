@@ -1,14 +1,15 @@
-import 'dart:math';
-
 import 'package:drift/drift.dart' hide isNull;
 import 'package:five_on_4_backend/src/features/auth/domain/values/new_auth_data_value.dart';
 import 'package:five_on_4_backend/src/features/auth/utils/constants/auth_type_constants.dart';
+
+import 'package:five_on_4_backend/src/features/players/domain/values/players_search_filter_value.dart';
 import 'package:test/test.dart';
 
 import 'package:five_on_4_backend/src/features/core/utils/extensions/date_time_extension.dart';
 import 'package:five_on_4_backend/src/features/players/data/data_sources/players_data_source.dart';
 import 'package:five_on_4_backend/src/features/players/data/data_sources/players_data_source_impl.dart';
 import 'package:five_on_4_backend/src/wrappers/libraries/drift/app_database.dart';
+
 import '../../../../../../helpers/database/test_database.dart';
 
 void main() {
@@ -27,7 +28,7 @@ void main() {
   });
 
   tearDown(() async {
-    await testDatabaseWrapper.databaseWrapper.clearAll();
+    await testDatabaseWrapper.clearAll();
     await testDatabaseWrapper.databaseWrapper.close();
   });
 
@@ -143,6 +144,9 @@ void main() {
         "then should return expected player entity data",
         () async {
           // setup
+          await testDatabaseWrapper.databaseWrapper.authRepo.insertOne(
+            testAuthCompanion,
+          );
           await testDatabaseWrapper.databaseWrapper.playersRepo
               .insertOne(testPlayerCompanion);
 
@@ -194,8 +198,17 @@ void main() {
           final authId = 1;
 
           // given
+          final authCompanion = AuthEntityCompanion.insert(
+            id: Value(authId),
+            email: "email",
+            password: Value("password"),
+            authType: AuthTypeConstants.emailPassword.name,
+            createdAt: DateTime.now().normalizedToSeconds,
+            updatedAt: DateTime.now().normalizedToSeconds,
+          );
 
           final playerCompanion = PlayerEntityCompanion.insert(
+            id: Value(1),
             firstName: "firstName",
             lastName: "lastName",
             nickname: "nickname",
@@ -203,6 +216,9 @@ void main() {
             updatedAt: DateTime.now().normalizedToSeconds,
             authId: authId,
           );
+
+          await testDatabaseWrapper.databaseWrapper.authRepo
+              .insertOne(authCompanion);
 
           await testDatabaseWrapper.databaseWrapper.playersRepo
               .insertOne(playerCompanion);
@@ -232,6 +248,15 @@ void main() {
     });
   });
 }
+
+final testAuthCompanion = AuthEntityCompanion.insert(
+  id: Value(1),
+  email: "email",
+  password: Value("password"),
+  authType: AuthTypeConstants.emailPassword.name,
+  createdAt: DateTime.now().normalizedToSeconds,
+  updatedAt: DateTime.now().normalizedToSeconds,
+);
 
 final testPlayerCompanion = PlayerEntityCompanion.insert(
   id: Value(1),
@@ -339,32 +364,3 @@ final _playerEntitiesData = _authValues.map(
     );
   },
 ).toList();
-
-
-
-// final authEntitiesData = [
-//   AuthEntityData(
-//     id: 1,
-//     email: _authValues[0].email,
-//     password: _authValues[0].hashedPassword,
-//     authType: _authValues[0].authType.name,
-//     createdAt: DateTime.now().normalizedToSeconds,
-//     updatedAt: DateTime.now().normalizedToSeconds,
-//   ),
-//   AuthEntityData(
-//     id: 2,
-//     email: _authValues[1].email,
-//     password: _authValues[1].hashedPassword,
-//     authType: _authValues[1].authType.name,
-//     createdAt: DateTime.now().normalizedToSeconds,
-//     updatedAt: DateTime.now().normalizedToSeconds,
-//   ),
-//   AuthEntityData(
-//     id: 3,
-//     email: _authValues[2].email,
-//     password: _authValues[2].hashedPassword,
-//     authType: _authValues[2].authType.name,
-//     createdAt: DateTime.now().normalizedToSeconds,
-//     updatedAt: DateTime.now().normalizedToSeconds,
-//   ),
-// ];

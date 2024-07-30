@@ -24,7 +24,7 @@ void main() {
   });
 
   tearDown(() async {
-    await testDatabaseWrapper.databaseWrapper.clearAll();
+    await testDatabaseWrapper.clearAll();
     await testDatabaseWrapper.databaseWrapper.close();
   });
 
