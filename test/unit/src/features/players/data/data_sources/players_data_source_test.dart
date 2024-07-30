@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:drift/drift.dart' hide isNull;
+import 'package:five_on_4_backend/src/features/auth/domain/values/new_auth_data_value.dart';
+import 'package:five_on_4_backend/src/features/auth/utils/constants/auth_type_constants.dart';
 import 'package:test/test.dart';
 
 import 'package:five_on_4_backend/src/features/core/utils/extensions/date_time_extension.dart';
@@ -23,10 +27,59 @@ void main() {
   });
 
   tearDown(() async {
+    await testDatabaseWrapper.databaseWrapper.clearAll();
     await testDatabaseWrapper.databaseWrapper.close();
   });
 
   group("$PlayersDataSource", () {
+    group(
+      ".searchPlayers",
+      () {
+        test(
+          "given existing players in db "
+          "when .searchPlayers() is called with a [nameTerm] filter "
+          "then should return  players that match the filter",
+          () async {
+            // setup
+            final PlayersSearchFilterValue filter = PlayersSearchFilterValue(
+              nameTerm: "ronaldo",
+            );
+
+            // given
+            await testDatabaseWrapper.databaseWrapper.transaction(
+              () async {
+                for (final authEntityData in _authEntitiesData) {
+                  await testDatabaseWrapper.databaseWrapper.authRepo
+                      .insertOne(authEntityData);
+                }
+
+                for (final playerEntityData in _playerEntitiesData) {
+                  await testDatabaseWrapper.databaseWrapper.playersRepo
+                      .insertOne(playerEntityData);
+                }
+              },
+            );
+
+            // when
+            final foundPlayers =
+                await playersDataSource.searchPlayers(filter: filter);
+
+            // then
+            final expectedPlayers = [
+              _playerEntitiesData[0],
+              _playerEntitiesData[1],
+              _playerEntitiesData[2],
+              _playerEntitiesData[3],
+            ];
+
+            expect(foundPlayers, equals(expectedPlayers));
+
+            // cleanup
+          },
+        );
+      },
+    );
+
     group(".getPlayerById()", () {
       test(
         "given an invalid id "
@@ -165,3 +218,119 @@ final testPlayerEntityData = PlayerEntityData(
   updatedAt: testPlayerCompanion.updatedAt.value,
   authId: testPlayerCompanion.authId.value,
 );
+
+final _authValues = [
+  NewAuthDataValueEmailPassword(
+    email: "email1",
+    hashedPassword: "hashedPassword1",
+    firstName: "Ivan",
+    lastName: "Lokavić",
+    nickname: "ronaldo",
+  ),
+  NewAuthDataValueEmailPassword(
+    email: "email2",
+    hashedPassword: "hashedPassword2",
+    firstName: "Ovan",
+    lastName: "Lokvić",
+    nickname: "ronaldinho",
+  ),
+  NewAuthDataValueEmailPassword(
+    email: "email3",
+    hashedPassword: "hashedPassword3",
+    firstName: "Pvan",
+    lastName: "Lovrić",
+    nickname: "romuldo",
+  ),
+  NewAuthDataValueEmailPassword(
+    email: "email4",
+    hashedPassword: "hashedPassword4",
+    firstName: "Qvan",
+    lastName: "Livić",
+    nickname: "rivaldo",
+  ),
+  NewAuthDataValueEmailPassword(
+    email: "email5",
+    hashedPassword: "hashedPassword5",
+    firstName: "Rvan",
+    lastName: "Lović",
+    nickname: "bebeto",
+  ),
+  NewAuthDataValueEmailPassword(
+    email: "email6",
+    hashedPassword: "hashedPassword6",
+    firstName: "Svan",
+    lastName: "Lovać",
+    nickname: "raul",
+  ),
+  NewAuthDataValueEmailPassword(
+    email: "email7",
+    hashedPassword: "hashedPassword7",
+    firstName: "Tvan",
+    lastName: "Lorvić",
+    nickname: "cristiano",
+  ),
+  NewAuthDataValueEmailPassword(
+    email: "email8",
+    hashedPassword: "hashedPassword8",
+    firstName: "Uvan",
+    lastName: "Lovkić",
+    nickname: "messi",
+  ),
+];
+
+final _authEntitiesData = _authValues.map(
+  (authValue) {
+    return AuthEntityData(
+      id: _authValues.indexOf(authValue) + 1,
+      email: authValue.email,
+      password: authValue.hashedPassword,
+      authType: authValue.authType.name,
+      createdAt: DateTime.now().normalizedToSeconds,
+      updatedAt: DateTime.now().normalizedToSeconds,
+    );
+  },
+).toList();
+
+final _playerEntitiesData = _authValues.map(
+  (authValue) {
+    return PlayerEntityData(
+      id: _authValues.indexOf(authValue) + 1,
+      authId: _authValues.indexOf(authValue) + 1,
+      firstName: authValue.firstName,
+      lastName: authValue.lastName,
+      nickname: authValue.nickname,
+      createdAt: DateTime.now().normalizedToSeconds,
+      updatedAt: DateTime.now().normalizedToSeconds,
+      teamId: null,
+    );
+  },
+).toList();
+
+
+
+// final authEntitiesData = [
+//   AuthEntityData(
+//     id: 1,
+//     email: _authValues[0].email,
+//     password: _authValues[0].hashedPassword,
+//     authType: _authValues[0].authType.name,
+//     createdAt: DateTime.now().normalizedToSeconds,
+//     updatedAt: DateTime.now().normalizedToSeconds,
+//   ),
+//   AuthEntityData(
+//     id: 2,
+//     email: _authValues[1].email,
+//     password: _authValues[1].hashedPassword,
+//     authType: _authValues[1].authType.name,
+//     createdAt: DateTime.now().normalizedToSeconds,
+//     updatedAt: DateTime.now().normalizedToSeconds,
+//   ),
+//   AuthEntityData(
+//     id: 3,
+//     email: _authValues[2].email,
+//     password: _authValues[2].hashedPassword,
+//     authType: _authValues[2].authType.name,
+//     createdAt: DateTime.now().normalizedToSeconds,
+//     updatedAt: DateTime.now().normalizedToSeconds,
+//   ),
+// ];

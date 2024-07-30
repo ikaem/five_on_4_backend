@@ -59,9 +59,18 @@ class DatabaseWrapper {
 // TODO make this only for testing - maybe as some kind of extension in tests only
   Future<void> clearAll() async {
     await transaction(() async {
-      for (final table in db.allTables) {
-        await db.delete(table).go();
-      }
+      // for (final table in db.allTables) {
+      //   await db.delete(table).go();
+      // }
+
+      // TODO this should be done only on test db - so maybe we can create it on testdb wrapper
+      // TODO make sure this is done in order i guess
+      // 1. delete matches
+      await db.delete(db.playerEntity).go();
+      // 2. delete players
+      await db.delete(db.playerEntity).go();
+      // 3. delete auth
+      await db.delete(db.authEntity).go();
     });
   }
 

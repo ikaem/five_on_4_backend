@@ -34,6 +34,7 @@ class MatchesDataSourceImpl implements MatchesDataSource {
     required MatchSearchFilterValue filter,
   }) async {
     final matchTitle = filter.matchTitle;
+    // TODO test case when there no valid search filters
 
     final select = _databaseWrapper.matchesRepo.select();
 
@@ -62,7 +63,10 @@ class MatchesDataSourceImpl implements MatchesDataSource {
     SimpleSelectStatement<$MatchEntityTable, MatchEntityData> findMatches =
         select;
 
+    // TODO we should not search if there is not filters at all - just return empty stuff - we dont want to search all
+
     if (matchTitle != null) {
+      // TODO I hope this will handle sanitization
       final matchTitleVariable = Variable.withString(matchTitle);
       // TODO this is a bit silly - currently, "asd" for match title will return one match, even if there are only matches with these titles in db
       /* 
@@ -75,6 +79,7 @@ ovan
       
        */
       final isSimilarTitleExpression = CustomExpression<bool>(
+        // TODO maybe levenhstein is not that good for this - maybe there is better
         "LEVENSHTEIN(title, '${matchTitleVariable.value}') <= 3",
         precedence: Precedence.primary,
       );
