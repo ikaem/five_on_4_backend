@@ -77,6 +77,40 @@ void main() {
             // cleanup
           },
         );
+
+        test(
+          "given existing players in db "
+          "when .searchPlayers() is called with no filters "
+          "then should return no found matches",
+          () async {
+            // setup
+            final PlayersSearchFilterValue filter = PlayersSearchFilterValue();
+
+            // given
+            await testDatabaseWrapper.databaseWrapper.transaction(
+              () async {
+                for (final authEntityData in _authEntitiesData) {
+                  await testDatabaseWrapper.databaseWrapper.authRepo
+                      .insertOne(authEntityData);
+                }
+
+                for (final playerEntityData in _playerEntitiesData) {
+                  await testDatabaseWrapper.databaseWrapper.playersRepo
+                      .insertOne(playerEntityData);
+                }
+              },
+            );
+
+            // when
+            final foundPlayers =
+                await playersDataSource.searchPlayers(filter: filter);
+
+            // then
+            expect(foundPlayers, isEmpty);
+
+            // cleanup
+          },
+        );
       },
     );
 
