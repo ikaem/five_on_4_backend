@@ -1,3 +1,5 @@
+import 'package:five_on_4_backend/src/features/players/domain/values/players_search_filter_value.dart';
+
 import '../../data/data_sources/players_data_source.dart';
 import '../../utils/converters/players_converter.dart';
 import '../models/player_model.dart';
@@ -41,5 +43,24 @@ class PlayersRepositoryImpl implements PlayersRepository {
     final model = PlayersConverter.modelFromEntity(entity: playerEntityData);
 
     return model;
+  }
+
+  @override
+  Future<List<PlayerModel>> searchPlayers({
+    required PlayersSearchFilterValue filter,
+  }) async {
+    final players = await _playersDataSource.searchPlayers(
+      filter: filter,
+    );
+
+    final playerModels = players
+        .map(
+          (player) => PlayersConverter.modelFromEntity(
+            entity: player,
+          ),
+        )
+        .toList();
+
+    return playerModels;
   }
 }
