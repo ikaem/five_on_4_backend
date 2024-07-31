@@ -51,6 +51,7 @@ class SearchMatchesController {
   }
 }
 
+// TODO maybe better use dynamic here instead of Object
 Map<String, Object> _generateOkResponseData({
   required List<MatchModel> matches,
 }) {
