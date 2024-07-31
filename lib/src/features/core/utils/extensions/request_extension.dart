@@ -24,7 +24,9 @@ extension RequestExtension on Request {
     required T? Function(String value) parser,
   }) {
     try {
+      // TODO why not using request.params here?
       final shelfRouterParamsKey = "shelf_router/params";
+      // TODO where is this context coming from?
       final paramsMap = context[shelfRouterParamsKey] as Map<String, String>;
 
       final paramValue = paramsMap[paramName];
@@ -52,8 +54,27 @@ extension RequestExtension on Request {
     return changedRequest;
   }
 
+  // NOTE: this copies current request, and adding validated url query params to the context
+  Request getChangedRequestWithValidatedUrlQueryParams(
+      Map<String, Object?> data) {
+    final changedRequest = change(
+      context: {
+        RequestConstants.VALIDATED_URL_QUERY_PARAMS.value: data,
+      },
+    );
+
+    return changedRequest;
+  }
+
   Map<String, dynamic>? getValidatedBodyData() {
     final data = context[RequestConstants.VALIDATED_BODY_DATA.value]
+        as Map<String, dynamic>?;
+
+    return data;
+  }
+
+  Map<String, dynamic>? getValidatedUrlQueryParams() {
+    final data = context[RequestConstants.VALIDATED_URL_QUERY_PARAMS.value]
         as Map<String, dynamic>?;
 
     return data;
