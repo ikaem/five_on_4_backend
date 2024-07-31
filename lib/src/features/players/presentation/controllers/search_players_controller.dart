@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:five_on_4_backend/src/features/core/utils/extensions/request_extension.dart';
 import 'package:five_on_4_backend/src/features/core/utils/helpers/response_generator.dart';
-import 'package:five_on_4_backend/src/features/matches/domain/models/match_model.dart';
 import 'package:five_on_4_backend/src/features/players/domain/models/player_model.dart';
 import 'package:five_on_4_backend/src/features/players/domain/use_cases/search_players/search_players_use_case.dart';
 import 'package:five_on_4_backend/src/features/players/domain/values/players_search_filter_value.dart';
