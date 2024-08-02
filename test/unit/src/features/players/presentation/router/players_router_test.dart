@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:five_on_4_backend/src/features/auth/utils/middlewares/authorize_request_middleware_wrapper.dart';
-import 'package:five_on_4_backend/src/features/auth/utils/validators/authorize_request_validator.dart';
-import 'package:five_on_4_backend/src/features/matches/presentation/controllers/search_matches_controller.dart';
+import 'package:five_on_4_backend/src/features/players/presentation/controllers/search_players_controller.dart';
 import 'package:five_on_4_backend/src/features/players/presentation/router/players_router.dart';
 import 'package:five_on_4_backend/src/features/players/utils/middlewares/search_players_request_middleware_wrapper.dart';
 import 'package:mocktail/mocktail.dart';
@@ -11,7 +10,7 @@ import 'package:test/test.dart';
 
 void main() {
   // controllers
-  final searchMatchesController = _MockSearchMatchesController();
+  final searchPlayersController = _MockSearchPlayersController();
 
   // request handlers - not validators here - we dont care about it - this is effectively inner handlers
   final authorizationMiddlewareRequestHandler =
@@ -70,13 +69,13 @@ void main() {
     );
 
     // controllers
-    when(() => searchMatchesController.call(any())).thenAnswer(
+    when(() => searchPlayersController.call(any())).thenAnswer(
       (_) async => Response.ok('searchMatchesController'),
     );
   });
 
   tearDown(() {
-    reset(searchMatchesController);
+    reset(searchPlayersController);
     // middleware wrappers
     reset(requestAuthorizationMiddleware);
     reset(searchPlayersMiddlewareRequestHandler);
@@ -98,7 +97,7 @@ void main() {
 
           // given
           final playersRouter = PlayersRouter(
-            searchMatchesController: searchMatchesController,
+            searchPlayersController: searchPlayersController,
             requestAuthorizationMiddleware: requestAuthorizationMiddleware,
             searchPlayersRequestMiddlewareWrapper:
                 searchPlayersMiddlewareWrapper,
@@ -139,7 +138,7 @@ void main() {
 
           // given
           final playersRouter = PlayersRouter(
-            searchMatchesController: searchMatchesController,
+            searchPlayersController: searchPlayersController,
             requestAuthorizationMiddleware: requestAuthorizationMiddleware,
             searchPlayersRequestMiddlewareWrapper:
                 searchPlayersMiddlewareWrapper,
@@ -178,7 +177,7 @@ void main() {
         () async {
           // setup
           final playersRouter = PlayersRouter(
-            searchMatchesController: searchMatchesController,
+            searchPlayersController: searchPlayersController,
             requestAuthorizationMiddleware: requestAuthorizationMiddleware,
             searchPlayersRequestMiddlewareWrapper:
                 searchPlayersMiddlewareWrapper,
@@ -190,7 +189,7 @@ void main() {
           await playersRouter.router(realRequest);
 
           // then
-          final captured = verify(() => searchMatchesController.call(
+          final captured = verify(() => searchPlayersController.call(
                 captureAny(),
               ));
           final capturedRequest = captured.captured.single as Request;
@@ -214,8 +213,8 @@ void main() {
   });
 }
 
-class _MockSearchMatchesController extends Mock
-    implements SearchMatchesController {}
+class _MockSearchPlayersController extends Mock
+    implements SearchPlayersController {}
 
 class _MockAuthorizeRequestMiddlewareWrapper extends Mock
     implements AuthorizeRequestMiddlewareWrapper {}

@@ -2,6 +2,11 @@ import 'package:five_on_4_backend/src/features/matches/domain/use_cases/search_m
 import 'package:five_on_4_backend/src/features/matches/presentation/controllers/search_matches_controller.dart';
 import 'package:five_on_4_backend/src/features/matches/utils/middlewares/search_matches_request_middleware_wrapper.dart';
 import 'package:five_on_4_backend/src/features/matches/utils/validators/search_matches_request_validator.dart';
+import 'package:five_on_4_backend/src/features/players/domain/use_cases/search_players/search_players_use_case.dart';
+import 'package:five_on_4_backend/src/features/players/presentation/controllers/search_players_controller.dart';
+import 'package:five_on_4_backend/src/features/players/presentation/router/players_router.dart';
+import 'package:five_on_4_backend/src/features/players/utils/middlewares/search_players_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/players/utils/validators/search_players_request_validator.dart';
 
 import '../../../features/auth/data/data_sources/auth_data_source.dart';
 import '../../../features/auth/domain/repositories/auth_repository.dart';
@@ -116,6 +121,7 @@ class InitializedUseCasesDependenciesValues {
     required this.getRefreshTokenDataFromAccessJwtUseCase,
     required this.getPlayerMatchesOverviewUseCase,
     required this.searchMatchesUseCase,
+    required this.searchPlayersUseCase,
   });
 
   final GoogleLoginUseCase googleLoginUseCase;
@@ -140,6 +146,7 @@ class InitializedUseCasesDependenciesValues {
       getRefreshTokenDataFromAccessJwtUseCase;
   final GetPlayerMatchesOverviewUseCase getPlayerMatchesOverviewUseCase;
   final SearchMatchesUseCase searchMatchesUseCase;
+  final SearchPlayersUseCase searchPlayersUseCase;
 }
 
 class InitialiazedControllersDependenciesValues {
@@ -154,6 +161,7 @@ class InitialiazedControllersDependenciesValues {
     required this.refreshTokenController,
     required this.getPlayerMatchesOverviewController,
     required this.searchMatchesController,
+    required this.searchPlayersController,
   });
 
   final LoginController loginController;
@@ -167,6 +175,7 @@ class InitialiazedControllersDependenciesValues {
   final RefreshTokenController refreshTokenController;
   final GetPlayerMatchesOverviewController getPlayerMatchesOverviewController;
   final SearchMatchesController searchMatchesController;
+  final SearchPlayersController searchPlayersController;
 }
 
 class InitializedValidatorsDependenciesValues {
@@ -178,6 +187,7 @@ class InitializedValidatorsDependenciesValues {
     required this.authenticateWithGoogleRequestValidator,
     required this.getPlayerMatchesOverviewRequestValidator,
     required this.searchMatchesRequestValidator,
+    required this.searchPlayersRequestValidator,
   });
 
   final AuthorizeRequestValidator requestAuthorizationValidator;
@@ -190,6 +200,7 @@ class InitializedValidatorsDependenciesValues {
   final GetPlayerMatchesOverviewRequestValidator
       getPlayerMatchesOverviewRequestValidator;
   final SearchMatchesRequestValidator searchMatchesRequestValidator;
+  final SearchPlayersRequestValidator searchPlayersRequestValidator;
 }
 
 class InitializedMiddlewareWrappersDependenciesValues {
@@ -201,6 +212,7 @@ class InitializedMiddlewareWrappersDependenciesValues {
     required this.authenticateWithGoogleRequestMiddlewareWrapper,
     required this.getPlayerMatchesOverviewRequestMiddlewareWrapper,
     required this.searchMatchesRequestMiddlewareWrapper,
+    required this.searchPlayersMiddlewareWrapper,
   });
 
   final AuthorizeRequestMiddlewareWrapper authorizeRequestMiddlewareWrapper;
@@ -214,14 +226,17 @@ class InitializedMiddlewareWrappersDependenciesValues {
       getPlayerMatchesOverviewRequestMiddlewareWrapper;
   final SearchMatchesRequestMiddlewareWrapper
       searchMatchesRequestMiddlewareWrapper;
+  final SearchPlayersRequestMiddlewareWrapper searchPlayersMiddlewareWrapper;
 }
 
 class InitializedRoutersDependenciesValues {
   const InitializedRoutersDependenciesValues({
     required this.authRouter,
     required this.matchesRouter,
+    required this.playersRouter,
   });
 
   final AuthRouter authRouter;
   final MatchesRouter matchesRouter;
+  final PlayersRouter playersRouter;
 }
