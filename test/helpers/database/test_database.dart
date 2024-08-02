@@ -12,19 +12,17 @@ class TestDatabaseWrapper {
 
   final DatabaseWrapper databaseWrapper;
 
-  // Future<void> clearAll() async {
-  //   // TODO not needed even
-  //   await databaseWrapper.transaction(() async {
-  //     for (final table in databaseWrapper.db.allTables) {
-  //       // TODO not sure if all should happening
-  //       // TODO maybe we dont even need to do this
-  //       await databaseWrapper.db.delete(table).go();
-  //     }
-
-  //     // await db.delete(db.playerEntity).go();
-  //     // await db.delete(db.authEntity).go();
-  //   });
-  // }
+  Future<void> clearAll() async {
+    await databaseWrapper.transaction(() async {
+      // TODO make sure this is done in order i guess
+      // 1. delete matches
+      await databaseWrapper.db.delete(databaseWrapper.db.playerEntity).go();
+      // 2. delete players
+      await databaseWrapper.db.delete(databaseWrapper.db.playerEntity).go();
+      // 3. delete auth
+      await databaseWrapper.db.delete(databaseWrapper.db.authEntity).go();
+    });
+  }
 }
 
 // TODO probably deprecated

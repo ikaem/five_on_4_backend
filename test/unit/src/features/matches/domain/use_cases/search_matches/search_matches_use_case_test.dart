@@ -21,43 +21,46 @@ void main() {
   });
 
   group("$SearchMatchesUseCase", () {
-    // given repository returns searched matches
-    test(
-      "given given MatchesRepository.searchMatches returns searched matches"
-      "when .call() is called "
-      "then should return expected matches",
-      () async {
-        // setup
-        final matchModels = List.generate(3, (index) {
-          return MatchModel(
-            dateAndTime: DateTime.now().millisecondsSinceEpoch,
-            description: "description",
-            id: index + 1,
-            location: "location",
-            title: "title",
+    group(".call()", () {
+      test(
+        "given MatchesRepository.searchMatches returns searched matches"
+        "when .call() is called "
+        "then should return expected matches",
+        () async {
+          // setup
+          final matchModels = List.generate(3, (index) {
+            return MatchModel(
+              dateAndTime: DateTime.now().millisecondsSinceEpoch,
+              description: "description",
+              id: index + 1,
+              location: "location",
+              title: "title",
+            );
+          });
+
+          // given
+          when(
+            () => matchesRepository.searchMatches(
+              filter: any(named: "filter"),
+            ),
+          ).thenAnswer((i) async => matchModels);
+
+          // when
+          final result = await useCase.call(
+            filter: MatchSearchFilterValue(
+              matchTitle: "title",
+            ),
           );
-        });
 
-        // given
-        when(
-          () => matchesRepository.searchMatches(
-            filter: any(named: "filter"),
-          ),
-        ).thenAnswer((i) async => matchModels);
+          // then
+          expect(result, equals(matchModels));
 
-        // when
-        final result = await useCase.call(
-          filter: MatchSearchFilterValue(
-            matchTitle: "title",
-          ),
-        );
+          // cleanup
+        },
+      );
+    });
 
-        // then
-        expect(result, equals(matchModels));
-
-        // cleanup
-      },
-    );
+    // given repository returns searched matches
   });
 }
 

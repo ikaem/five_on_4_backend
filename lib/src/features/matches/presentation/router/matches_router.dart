@@ -17,6 +17,8 @@ class MatchesRouter {
         getPlayerMatchesOverviewController,
     required SearchMatchesController searchMatchesController,
     // TODO this should be called requestAuthorizationRequestMiddleware
+    // TODO why not use actual type here - why this interface? or
+    // TODO make a ticket to use actual types
     required CustomMiddlewareWrapper requestAuthorizationMiddleware,
     required CustomMiddlewareWrapper matchCreateRequestMiddleware,
     required CustomMiddlewareWrapper getPlayerMatchesOverviewRequestMiddleware,

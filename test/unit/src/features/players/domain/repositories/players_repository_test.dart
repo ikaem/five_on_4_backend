@@ -1,3 +1,4 @@
+import 'package:five_on_4_backend/src/features/players/domain/values/players_search_filter_value.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
@@ -17,11 +18,67 @@ void main() {
     playersDataSource: playersDataSource,
   );
 
+  setUpAll(() {
+    registerFallbackValue(_FakePlayersSearchFilterValue());
+  });
+
   tearDown(() {
     reset(playersDataSource);
   });
 
   group("$PlayersRepository", () {
+    group(
+      ".searchPlayers()",
+      () {
+        test(
+          "given players data source returns search matches"
+          "when .searchPlayers() is called "
+          "then should return expected players",
+          () async {
+            // setup
+            final playersEntitiesData = List.generate(3, (index) {
+              return PlayerEntityData(
+                id: index + 1,
+                firstName: "firstName",
+                lastName: "lastName",
+                nickname: "nickname",
+                createdAt: DateTime.now().normalizedToSeconds,
+                updatedAt: DateTime.now().normalizedToSeconds,
+                authId: 1,
+              );
+            });
+
+            // given
+            when(() => playersDataSource.searchPlayers(
+                  filter: any(named: "filter"),
+                )).thenAnswer((_) => Future.value(playersEntitiesData));
+
+            // when
+            final result = await playersRepository.searchPlayers(
+              filter: PlayersSearchFilterValue(
+                nameTerm: "name",
+              ),
+            );
+
+            // then
+            final expectedPlayerValues = playersEntitiesData
+                .map((entity) =>
+                    PlayersConverter.modelFromEntity(entity: entity))
+                .toList();
+
+            expect(result, equals(expectedPlayerValues));
+            verify(() => playersDataSource.searchPlayers(
+                  filter: PlayersSearchFilterValue(
+                    nameTerm: "name",
+                  ),
+                ));
+
+            // cleanup
+          },
+        );
+      },
+    );
+
     group(".getPlayerById()", () {
       test(
         "given an invalid id "
@@ -133,6 +190,9 @@ void main() {
 }
 
 class _MockPlayersDataSource extends Mock implements PlayersDataSource {}
+
+class _FakePlayersSearchFilterValue extends Fake
+    implements PlayersSearchFilterValue {}
 
 // TODO move somewhere to share in tests possibly
 final testPlayerEntityData = PlayerEntityData(
