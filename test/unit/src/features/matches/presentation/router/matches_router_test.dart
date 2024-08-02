@@ -48,7 +48,7 @@ void main() {
   final searchMatchesRequestHandler = _MockMiddlewareRequestHandlerCallback();
 
   setUp(() {
-    // validators
+    // validators - these are not validators - these are
     when(() => authorizationRequestHandler.call(any()))
         .thenAnswer((invocation) async {
       // NOTE return null to propagate request to the next middleware - the handler
@@ -71,6 +71,9 @@ void main() {
     });
 
     // middleware
+    // TODO this is ok, i guess - we already that middleware calls the validator
+    // here we just want to test that middware will call the handler with correct rquest
+    // here we just want to verify that whatever request is passed to the middleware, middleware will pass it on
     when(() => requestAuthorizationMiddleware.call()).thenReturn(
       createMiddleware(
         requestHandler: authorizationRequestHandler.call,
@@ -135,12 +138,17 @@ void main() {
       () {
         final realRequest = Request(
           "get",
+          // TODO this is bad test - it does not actually test /search - it test something else
           Uri.parse("https://example.com/"),
         );
+
+        // TODO missing test for controller
 
         test(
           "given AuthorizationMiddleware instance"
           "when a request to the endpoint is made"
+          // TODO we effectively test here that middleware is triggered
+          // NOTE: and for controller, we test that the controller is triggered
           "then should call the AuthorizationMiddleware's request handler",
           () async {
             // setup
@@ -185,7 +193,7 @@ void main() {
       test(
         "given AuthorizationMiddleware instance"
         "when a request to the endpoint is made"
-        "then should call the AuthorizationMiddleware's request handler",
+        "then should call the AuthorizationMiddleware's request handler with correct request",
         () async {
           // setup
           final matchesRouter = MatchesRouter(
