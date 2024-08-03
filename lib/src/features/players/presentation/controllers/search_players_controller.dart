@@ -54,8 +54,10 @@ Map<String, dynamic> _generateOkResponseData({
       .map((e) => ({
             "id": e.id,
             "name": e.name,
+            // TODO auth id should not be exposed
             "authId": e.authId,
             "nickname": e.nickname,
+            // TODO we should add avatar url here - this should be on each player
           }))
       .toList();
 
