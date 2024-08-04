@@ -72,7 +72,9 @@ class _MockPlayersRepository extends Mock implements PlayersRepository {}
 
 final testPlayerModel = PlayerModel(
   id: 1,
-  name: "name",
+  // name: "name",
+  firstName: "firstName",
+  lastName: "lastName",
   nickname: "nickname",
   authId: 1,
 );

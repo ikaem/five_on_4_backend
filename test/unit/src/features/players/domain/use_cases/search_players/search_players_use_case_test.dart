@@ -30,7 +30,9 @@ void main() {
           final playerModels = List.generate(3, (index) {
             return PlayerModel(
               id: index + 1,
-              name: "name",
+              // name: "name",
+              firstName: "firstName",
+              lastName: "lastName",
               nickname: "nickname",
               authId: 1,
             );

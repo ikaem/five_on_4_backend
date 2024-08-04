@@ -297,7 +297,9 @@ void main() {
               .thenAnswer((_) async {
             final foundPlayer = PlayerModel(
               id: _testPlayerModel.id,
-              name: _testPlayerModel.name,
+              // name: _testPlayerModel.name,
+              firstName: _testPlayerModel.firstName,
+              lastName: _testPlayerModel.lastName,
               nickname: _testPlayerModel.nickname,
               authId: 2,
             );
@@ -401,7 +403,9 @@ final _testAuthModel = AuthModel(
 
 final _testPlayerModel = PlayerModel(
   id: 1,
-  name: "name",
+  // name: "name",
+  firstName: "firstName",
+  lastName: "lastName",
   nickname: "nickname",
   authId: 1,
 );

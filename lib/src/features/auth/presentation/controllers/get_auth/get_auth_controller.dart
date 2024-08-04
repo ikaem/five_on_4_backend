@@ -92,7 +92,10 @@ class GetAuthController {
           message: "User authentication retrieved successfully.",
           data: generateAuthOkResponseData(
             playerId: player.id,
-            playerName: player.name,
+            // TODO was here before
+            // playerName: player.name,
+            // TODO temp solution
+            playerName: '${player.firstName} ${player.lastName}',
             playerNickname: player.nickname,
           ),
         );

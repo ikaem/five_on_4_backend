@@ -282,7 +282,9 @@ void main() {
             final player = PlayerModel(
               id: _testPlayerModel.id,
               nickname: _testPlayerModel.nickname,
-              name: _testPlayerModel.name,
+              // name: _testPlayerModel.name,
+              firstName: _testPlayerModel.firstName,
+              lastName: _testPlayerModel.lastName,
               authId: 2,
             );
             return player;
@@ -311,6 +313,10 @@ void main() {
         "then should return expected response",
         () async {
           // setup
+          final refreshTokenCookie = Cookie.fromSetCookieValue(
+            "refresh_token=token; HttpOnly; Secure; Path=/",
+          );
+
           when(() => getCookieByNameInRequestUseCase(
                 request: any(named: "request"),
                 cookieName: any(named: "cookieName"),
@@ -329,6 +335,10 @@ void main() {
                 authId: 1,
                 playerId: 1,
               )).thenReturn("access_token");
+          when(() => createRefreshJwtCookieUseCase(
+                authId: 1,
+                playerId: 1,
+              )).thenReturn(refreshTokenCookie);
 
           // given
           when(() => request.headers).thenReturn({
@@ -364,6 +374,9 @@ void main() {
         () async {
           // setup
           final accessToken = "access_token";
+          final refreshTokenCookie = Cookie.fromSetCookieValue(
+            "refresh_token=token; HttpOnly; Secure; Path=/",
+          );
 
           when(() => getCookieByNameInRequestUseCase(
                 request: any(named: "request"),
@@ -379,6 +392,10 @@ void main() {
               .thenAnswer((_) async => _testAuthModel);
           when(() => getPlayerByIdUseCase(id: 1))
               .thenAnswer((_) async => _testPlayerModel);
+          when(() => createRefreshJwtCookieUseCase(
+                authId: 1,
+                playerId: 1,
+              )).thenReturn(refreshTokenCookie);
 
           // given
           when(() => request.headers).thenReturn({
@@ -432,6 +449,10 @@ void main() {
                 authId: 1,
                 playerId: 1,
               )).thenReturn("accessToken");
+          when(() => createRefreshJwtCookieUseCase(
+                authId: 1,
+                playerId: 1,
+              )).thenReturn(refreshTokenCookie);
 
           // given
           when(() => request.headers).thenReturn({
@@ -439,10 +460,6 @@ void main() {
                 Cookie.fromSetCookieValue("refresh_token=valid_token")
                     .toString(),
           });
-          when(() => createRefreshJwtCookieUseCase(
-                authId: 1,
-                playerId: 1,
-              )).thenReturn(refreshTokenCookie);
 
           // when
           final response = await controller(request);
@@ -496,7 +513,9 @@ final _testPlayerModel = PlayerModel(
   id: 1,
   authId: 1,
   nickname: "nickname",
-  name: "name",
+  // name: "name",
+  firstName: "firstName",
+  lastName: "lastName",
 );
 final _testRefreshCookie = Cookie.fromSetCookieValue(
   "refresh_token=token; HttpOnly; Secure; Path=/",

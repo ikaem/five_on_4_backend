@@ -79,7 +79,8 @@ class GoogleLoginController {
       message: "User authenticated successfully.",
       data: generateAuthOkResponseData(
         playerId: player.id,
-        playerName: player.name,
+        // playerName: player.name,
+        playerName: "${player.firstName} ${player.lastName}",
         playerNickname: player.nickname,
       ),
       accessToken: accessToken,

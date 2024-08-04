@@ -6,11 +6,13 @@ abstract class PlayersConverter {
     required PlayerEntityData entity,
   }) {
     // TOD Otest this
-    final name = '${entity.firstName} ${entity.lastName}';
+    // final name = '${entity.firstName} ${entity.lastName}';
 
     final model = PlayerModel(
       id: entity.id,
-      name: name,
+      // name: name,
+      firstName: entity.firstName,
+      lastName: entity.lastName,
       nickname: entity.nickname,
       authId: entity.authId,
     );

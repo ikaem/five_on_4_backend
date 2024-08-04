@@ -107,7 +107,9 @@ void main() {
               3,
               (index) => PlayerModel(
                     id: index + 1,
-                    name: "name",
+                    // name: "name",
+                    firstName: "firstName",
+                    lastName: "lastName",
                     authId: index + 1,
                     nickname: "nickname",
                   ));
@@ -133,7 +135,9 @@ void main() {
               "players": responsePlayers
                   .map((e) => {
                         "id": e.id,
-                        "name": e.name,
+                        // "name": e.name,
+                        "firstName": e.firstName,
+                        "lastName": e.lastName,
                         "authId": e.authId,
                         "nickname": e.nickname,
                       })

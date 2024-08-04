@@ -128,7 +128,9 @@ void main() {
           when(() => getPlayerByIdUseCase(id: playerId)).thenAnswer(
             (_) async => PlayerModel(
               id: playerId,
-              name: "name",
+              // name: "name",
+              firstName: "firstName",
+              lastName: "lastName",
               authId: 1,
               nickname: "nickname",
             ),

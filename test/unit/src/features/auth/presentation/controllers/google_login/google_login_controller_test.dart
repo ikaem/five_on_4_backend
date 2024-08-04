@@ -178,7 +178,9 @@ void main() {
           final expectedResponse = generateTestOkResponse(
             responseData: {
               "id": _testPlayerModel.id,
-              "name": _testPlayerModel.name,
+              // "name": _testPlayerModel.name,
+              "name":
+                  "${_testPlayerModel.firstName} ${_testPlayerModel.lastName}",
               "nickname": _testPlayerModel.nickname,
             },
             responseMessage: "User authenticated successfully.",
@@ -304,7 +306,9 @@ final _testPlayerModel = PlayerModel(
   id: 1,
   authId: 1,
   nickname: "nickname",
-  name: "name",
+  // name: "name",
+  firstName: "firstName",
+  lastName: "lastName",
 );
 
 final _testRefreshCookie = Cookie.fromSetCookieValue(

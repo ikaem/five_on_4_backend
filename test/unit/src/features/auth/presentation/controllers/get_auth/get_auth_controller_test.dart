@@ -276,7 +276,9 @@ void main() {
             final player = PlayerModel(
               id: _testPlayerModel.id,
               nickname: _testPlayerModel.nickname,
-              name: _testPlayerModel.name,
+              // name: _testPlayerModel.name,
+              firstName: "firstName",
+              lastName: "lastName",
               authId: 2,
             );
             return player;
@@ -336,7 +338,9 @@ void main() {
           final expectedResponse = generateTestOkResponse(
             responseData: {
               "id": _testPlayerModel.id,
-              "name": _testPlayerModel.name,
+              // "name": _testPlayerModel.name,
+              "firstName": _testPlayerModel.firstName,
+              "lastName": _testPlayerModel.lastName,
               "nickname": _testPlayerModel.nickname,
             },
             responseMessage: "User authentication retrieved successfully.",
@@ -377,5 +381,7 @@ final _testPlayerModel = PlayerModel(
   id: 1,
   authId: 1,
   nickname: "nickname",
-  name: "name",
+  // name: "name",
+  firstName: "firstName",
+  lastName: "lastName",
 );

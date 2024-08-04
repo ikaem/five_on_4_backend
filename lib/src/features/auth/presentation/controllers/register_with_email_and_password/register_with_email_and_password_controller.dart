@@ -110,7 +110,9 @@ class RegisterWithEmailAndPasswordController {
       message: "User registered successfully",
       data: generateAuthOkResponseData(
         playerId: player.id,
-        playerName: player.name,
+        // TODO temp solution - there is same logic for login and so on with google, so it should be unified somehow
+        // playerName: player.name,
+        playerName: '${player.firstName} ${player.lastName}',
         playerNickname: player.nickname,
       ),
       accessToken: accessToken,

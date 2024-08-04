@@ -281,7 +281,10 @@ void main() {
           // then
           final expectedResponseData = {
             "id": _testPlayerModel.id,
-            "name": _testPlayerModel.name,
+            // "name": _testPlayerModel.name,
+            // "firstName": _testPlayerModel.firstName,
+            "name":
+                "${_testPlayerModel.firstName} ${_testPlayerModel.lastName}",
             "nickname": _testPlayerModel.nickname,
           };
           final expectedResponse = generateTestOkResponse(
@@ -436,7 +439,9 @@ final _testPlayerModel = PlayerModel(
   id: 1,
   authId: 1,
   nickname: "nickname",
-  name: "name",
+  // name: "name",
+  firstName: "firstName",
+  lastName: "lastName",
 );
 
 final _testRefreshCookie = Cookie.fromSetCookieValue(

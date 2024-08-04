@@ -53,8 +53,10 @@ Map<String, dynamic> _generateOkResponseData({
   final payloadPlayers = players
       .map((e) => ({
             "id": e.id,
-            "name": e.name,
-            // TODO auth id should not be exposed
+            // "name": e.name,
+            "firstName": e.firstName,
+            "lastName": e.lastName,
+            // TODO auth id should not be exposed - make ticket and remove it later
             "authId": e.authId,
             "nickname": e.nickname,
             // TODO we should add avatar url here - this should be on each player

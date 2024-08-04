@@ -175,8 +175,10 @@ void main() {
           // then
           final expectedPlayer = PlayerModel(
             id: testPlayerEntityData.id,
-            name:
-                "${testPlayerEntityData.firstName} ${testPlayerEntityData.lastName}",
+            // name:
+            //     "${testPlayerEntityData.firstName} ${testPlayerEntityData.lastName}",
+            firstName: testPlayerEntityData.firstName,
+            lastName: testPlayerEntityData.lastName,
             nickname: testPlayerEntityData.nickname,
             authId: testPlayerEntityData.authId,
           );
