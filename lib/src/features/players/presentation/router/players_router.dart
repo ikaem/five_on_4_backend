@@ -19,7 +19,7 @@ class PlayersRouter {
     playersRouter.get(
       "/search",
       Pipeline()
-          // .addMiddleware(requestAuthorizationMiddleware())
+          .addMiddleware(requestAuthorizationMiddleware())
           .addMiddleware(searchPlayersRequestMiddlewareWrapper())
           .addHandler(searchPlayersController.call),
     );
