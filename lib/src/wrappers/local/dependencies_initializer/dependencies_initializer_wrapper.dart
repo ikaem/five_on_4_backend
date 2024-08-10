@@ -6,6 +6,7 @@ import 'package:five_on_4_backend/src/features/matches/presentation/controllers/
 import 'package:five_on_4_backend/src/features/matches/utils/middlewares/search_matches_request_middleware_wrapper.dart';
 import 'package:five_on_4_backend/src/features/matches/utils/validators/search_matches_request_validator.dart';
 import 'package:five_on_4_backend/src/features/players/domain/use_cases/search_players/search_players_use_case.dart';
+import 'package:five_on_4_backend/src/features/players/presentation/controllers/get_player_controller.dart';
 import 'package:five_on_4_backend/src/features/players/presentation/controllers/search_players_controller.dart';
 import 'package:five_on_4_backend/src/features/players/presentation/router/players_router.dart';
 import 'package:five_on_4_backend/src/features/players/utils/middlewares/search_players_request_middleware_wrapper.dart';
@@ -384,6 +385,8 @@ InitialiazedControllersDependenciesValues getInitializedControllers({
     searchPlayersUseCase: initializedUseCases.searchPlayersUseCase,
   );
 
+  final GetPlayerController getPlayerController = GetPlayerController();
+
   return InitialiazedControllersDependenciesValues(
     googleLoginController: googleLoginController,
     getMatchController: getMatchController,
@@ -397,6 +400,7 @@ InitialiazedControllersDependenciesValues getInitializedControllers({
     getPlayerMatchesOverviewController: getPlayerMatchesOverviewController,
     searchMatchesController: searchMatchesController,
     searchPlayersController: searchPlayersController,
+    getPlayerController: getPlayerController,
   );
 }
 
@@ -541,6 +545,7 @@ InitializedRoutersDependenciesValues getInitializedRouters({
 
   final playersRouter = PlayersRouter(
     searchPlayersController: initializedControllers.searchPlayersController,
+    getPlayerController: initializedControllers.getPlayerController,
     requestAuthorizationMiddleware:
         initializedMiddlewareWrappers.authorizeRequestMiddlewareWrapper,
     searchPlayersRequestMiddlewareWrapper:
