@@ -16,6 +16,7 @@ class GetPlayerController {
   final GetPlayerByIdUseCase _getPlayerByIdUseCase;
 
 // TODO temp only this
+  // Future<Response> call(Request request, String id) async {
   Future<Response> call(Request request) async {
     final validatedUrlParametersData = request.getValidatedUrlParametersData();
     if (validatedUrlParametersData == null) {

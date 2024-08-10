@@ -19,16 +19,19 @@ class PlayersRouter {
     final playersRouter = Router();
 
     playersRouter.get(
-      "/<id>",
-      // getPlayerController.call,
-      Pipeline().addHandler(getPlayerController.call),
-    );
-    playersRouter.get(
       "/search",
+      // searchPlayersController.call,
       Pipeline()
           .addMiddleware(requestAuthorizationMiddleware())
           .addMiddleware(searchPlayersRequestMiddlewareWrapper())
           .addHandler(searchPlayersController.call),
+    );
+    playersRouter.get(
+      "/<id>",
+      // getPlayerController.call,
+      Pipeline().addHandler(getPlayerController.call),
+      // Pipeline().addHandler((request) =>
+      //     getPlayerController.call(request, request.params["id"]!)),
     );
     // TODO test for now - no middlewares
 
