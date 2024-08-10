@@ -18,12 +18,11 @@ class PlayersRouter {
   }) {
     final playersRouter = Router();
 
-    // TODO test for now - no middlewares
     playersRouter.get(
       "/<id>",
-      getPlayerController.call,
+      // getPlayerController.call,
+      Pipeline().addHandler(getPlayerController.call),
     );
-
     playersRouter.get(
       "/search",
       Pipeline()
@@ -31,6 +30,7 @@ class PlayersRouter {
           .addMiddleware(searchPlayersRequestMiddlewareWrapper())
           .addHandler(searchPlayersController.call),
     );
+    // TODO test for now - no middlewares
 
     _router = playersRouter;
   }

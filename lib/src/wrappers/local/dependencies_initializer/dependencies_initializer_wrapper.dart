@@ -385,7 +385,9 @@ InitialiazedControllersDependenciesValues getInitializedControllers({
     searchPlayersUseCase: initializedUseCases.searchPlayersUseCase,
   );
 
-  final GetPlayerController getPlayerController = GetPlayerController();
+  final GetPlayerController getPlayerController = GetPlayerController(
+    getPlayerByIdUseCase: initializedUseCases.getPlayerByIdUseCase,
+  );
 
   return InitialiazedControllersDependenciesValues(
     googleLoginController: googleLoginController,

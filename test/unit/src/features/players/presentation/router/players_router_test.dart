@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:five_on_4_backend/src/features/auth/utils/middlewares/authorize_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/players/presentation/controllers/get_player_controller.dart';
 import 'package:five_on_4_backend/src/features/players/presentation/controllers/search_players_controller.dart';
 import 'package:five_on_4_backend/src/features/players/presentation/router/players_router.dart';
 import 'package:five_on_4_backend/src/features/players/utils/middlewares/search_players_request_middleware_wrapper.dart';
@@ -11,6 +12,7 @@ import 'package:test/test.dart';
 void main() {
   // controllers
   final searchPlayersController = _MockSearchPlayersController();
+  final getPlayerController = _MockGetPlayerController();
 
   // request handlers - not validators here - we dont care about it - this is effectively inner handlers
   final authorizationMiddlewareRequestHandler =
@@ -72,10 +74,14 @@ void main() {
     when(() => searchPlayersController.call(any())).thenAnswer(
       (_) async => Response.ok('searchMatchesController'),
     );
+    when(() => getPlayerController.call(any())).thenAnswer(
+      (_) async => Response.ok('getPlayerController'),
+    );
   });
 
   tearDown(() {
     reset(searchPlayersController);
+    reset(getPlayerController);
     // middleware wrappers
     reset(requestAuthorizationMiddleware);
     reset(searchPlayersMiddlewareRequestHandler);
@@ -98,6 +104,7 @@ void main() {
           // given
           final playersRouter = PlayersRouter(
             searchPlayersController: searchPlayersController,
+            getPlayerController: getPlayerController,
             requestAuthorizationMiddleware: requestAuthorizationMiddleware,
             searchPlayersRequestMiddlewareWrapper:
                 searchPlayersMiddlewareWrapper,
@@ -139,6 +146,7 @@ void main() {
           // given
           final playersRouter = PlayersRouter(
             searchPlayersController: searchPlayersController,
+            getPlayerController: getPlayerController,
             requestAuthorizationMiddleware: requestAuthorizationMiddleware,
             searchPlayersRequestMiddlewareWrapper:
                 searchPlayersMiddlewareWrapper,
@@ -178,6 +186,7 @@ void main() {
           // setup
           final playersRouter = PlayersRouter(
             searchPlayersController: searchPlayersController,
+            getPlayerController: getPlayerController,
             requestAuthorizationMiddleware: requestAuthorizationMiddleware,
             searchPlayersRequestMiddlewareWrapper:
                 searchPlayersMiddlewareWrapper,
@@ -215,6 +224,8 @@ void main() {
 
 class _MockSearchPlayersController extends Mock
     implements SearchPlayersController {}
+
+class _MockGetPlayerController extends Mock implements GetPlayerController {}
 
 class _MockAuthorizeRequestMiddlewareWrapper extends Mock
     implements AuthorizeRequestMiddlewareWrapper {}
