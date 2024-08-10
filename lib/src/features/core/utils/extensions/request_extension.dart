@@ -100,6 +100,13 @@ extension RequestExtension on Request {
     return changedRequest;
   }
 
+  Map<String, dynamic>? getValidatedUrlParametersData() {
+    final data = context[RequestConstants.VALIDATED_URL_PARAMETERS_DATA.value]
+        as Map<String, dynamic>?;
+
+    return data;
+  }
+
   Map<String, dynamic>? getValidatedBodyData() {
     final data = context[RequestConstants.VALIDATED_BODY_DATA.value]
         as Map<String, dynamic>?;

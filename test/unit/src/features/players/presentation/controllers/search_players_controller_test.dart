@@ -32,126 +32,131 @@ void main() {
   group(
     "$SearchPlayersController",
     () {
-      test(
-        "given request validation has not been done"
-        "when [.call()] is called"
-        "then should return expected response",
-        () async {
-          // setup
+      group(".call()", () {
+        test(
+          "given request validation has not been done"
+          "when [.call()] is called"
+          "then should return expected response",
+          () async {
+            // setup
 
-          // given
-          // normally, validatedUrlParams is an object inside context
-          when(() => request.context).thenReturn({});
+            // given
+            // normally, validatedUrlParams is an object inside context
+            when(() => request.context).thenReturn({});
 
-          // when
-          final response = await controller(request);
-          final responseString = await response.readAsString();
+            // when
+            final response = await controller(request);
+            final responseString = await response.readAsString();
 
-          // then
-          final expectedResponse = generateTestInternalServerErrorResponse(
-              responseMessage: "Request url query params not validated.");
-          final expectedResponseString = await expectedResponse.readAsString();
+            // then
+            final expectedResponse = generateTestInternalServerErrorResponse(
+                responseMessage: "Request url query params not validated.");
+            final expectedResponseString =
+                await expectedResponse.readAsString();
 
-          expect(responseString, equals(expectedResponseString));
-          expect(response.statusCode, equals(expectedResponse.statusCode));
+            expect(responseString, equals(expectedResponseString));
+            expect(response.statusCode, equals(expectedResponse.statusCode));
 
-          // cleanup
-        },
-      );
+            // cleanup
+          },
+        );
 
-      test(
-        "given request validation has been done"
-        "when [.call()] is called"
-        "then should call [SearchPlayersUseCase] with correct arguments",
-        () async {
-          // setup
-          final validatedUrlQueryParamsDataMap = {
-            SearchPlayersRequestBodyKeyConstants.NAME_TERM.value: "name",
-          };
+        test(
+          "given request validation has been done"
+          "when [.call()] is called"
+          "then should call [SearchPlayersUseCase] with correct arguments",
+          () async {
+            // setup
+            final validatedUrlQueryParamsDataMap = {
+              SearchPlayersRequestBodyKeyConstants.NAME_TERM.value: "name",
+            };
 
-          when(() => searchPlayersUseCase(
-                filter: any(named: "filter"),
-              )).thenAnswer((_) async => []);
+            when(() => searchPlayersUseCase(
+                  filter: any(named: "filter"),
+                )).thenAnswer((_) async => []);
 
-          // given
-          when(() => request.context).thenReturn({
-            RequestConstants.VALIDATED_URL_QUERY_PARAMS.value:
-                validatedUrlQueryParamsDataMap,
-          });
+            // given
+            when(() => request.context).thenReturn({
+              RequestConstants.VALIDATED_URL_QUERY_PARAMS.value:
+                  validatedUrlQueryParamsDataMap,
+            });
 
-          // when
-          await controller(request);
+            // when
+            await controller(request);
 
-          // then
-          final expectedFilter = PlayersSearchFilterValue(
-            nameTerm: "name",
-          );
+            // then
+            final expectedFilter = PlayersSearchFilterValue(
+              nameTerm: "name",
+            );
 
-          verify(() => searchPlayersUseCase(filter: expectedFilter)).called(1);
+            verify(() => searchPlayersUseCase(filter: expectedFilter))
+                .called(1);
 
-          // cleanup
-        },
-      );
+            // cleanup
+          },
+        );
 
-      test(
-        "given [SearchPlayersUseCase] returns list of players"
-        "when [.call()] is called"
-        "then should return expected response",
-        () async {
-          // setup
-          final validatedUrlQueryParamsDataMap = {
-            SearchPlayersRequestBodyKeyConstants.NAME_TERM.value: "name",
-          };
+        test(
+          "given [SearchPlayersUseCase] returns list of players"
+          "when [.call()] is called"
+          "then should return expected response",
+          () async {
+            // setup
+            final validatedUrlQueryParamsDataMap = {
+              SearchPlayersRequestBodyKeyConstants.NAME_TERM.value: "name",
+            };
 
-          final responsePlayers = List.generate(
-              3,
-              (index) => PlayerModel(
-                    id: index + 1,
-                    // name: "name",
-                    firstName: "firstName",
-                    lastName: "lastName",
-                    authId: index + 1,
-                    nickname: "nickname",
-                  ));
+            final responsePlayers = List.generate(
+                3,
+                (index) => PlayerModel(
+                      id: index + 1,
+                      // name: "name",
+                      firstName: "firstName",
+                      lastName: "lastName",
+                      authId: index + 1,
+                      nickname: "nickname",
+                    ));
 
-          when(() => request.context).thenReturn({
-            RequestConstants.VALIDATED_URL_QUERY_PARAMS.value:
-                validatedUrlQueryParamsDataMap,
-          });
+            when(() => request.context).thenReturn({
+              RequestConstants.VALIDATED_URL_QUERY_PARAMS.value:
+                  validatedUrlQueryParamsDataMap,
+            });
 
-          // given
-          when(() => searchPlayersUseCase(
-                filter: any(named: "filter"),
-              )).thenAnswer((_) async => responsePlayers);
+            // given
+            when(() => searchPlayersUseCase(
+                  filter: any(named: "filter"),
+                )).thenAnswer((_) async => responsePlayers);
 
-          // when
-          final response = await controller(request);
-          final responseString = await response.readAsString();
+            // when
+            final response = await controller(request);
+            final responseString = await response.readAsString();
 
-          // then
-          final expectedResponse = generateTestOkResponse(
-            responseMessage: "Players searched successfully.",
-            responseData: {
-              "players": responsePlayers
-                  .map((e) => {
-                        "id": e.id,
-                        // "name": e.name,
-                        "firstName": e.firstName,
-                        "lastName": e.lastName,
-                        "authId": e.authId,
-                        "nickname": e.nickname,
-                      })
-                  .toList(),
-            },
-          );
-          final expectedResponseString = await expectedResponse.readAsString();
+            // then
+            final expectedResponse = generateTestOkResponse(
+              responseMessage: "Players searched successfully.",
+              responseData: {
+                "players": responsePlayers
+                    .map((e) => {
+                          "id": e.id,
+                          // "name": e.name,
+                          "firstName": e.firstName,
+                          "lastName": e.lastName,
+                          "authId": e.authId,
+                          "nickname": e.nickname,
+                        })
+                    .toList(),
+              },
+            );
+            final expectedResponseString =
+                await expectedResponse.readAsString();
 
-          expect(responseString, equals(expectedResponseString));
-          expect(response.statusCode, equals(expectedResponse.statusCode));
+            expect(responseString, equals(expectedResponseString));
+            expect(response.statusCode, equals(expectedResponse.statusCode));
 
-          // cleanup
-        },
-      );
+            // cleanup
+          },
+        );
+      });
     },
   );
 }
