@@ -6,7 +6,9 @@ import 'package:five_on_4_backend/src/features/players/domain/use_cases/search_p
 import 'package:five_on_4_backend/src/features/players/presentation/controllers/get_player_controller.dart';
 import 'package:five_on_4_backend/src/features/players/presentation/controllers/search_players_controller.dart';
 import 'package:five_on_4_backend/src/features/players/presentation/router/players_router.dart';
+import 'package:five_on_4_backend/src/features/players/utils/middlewares/get_player_request_middleware_wrapper.dart';
 import 'package:five_on_4_backend/src/features/players/utils/middlewares/search_players_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/players/utils/validators/get_player_request_validator.dart';
 import 'package:five_on_4_backend/src/features/players/utils/validators/search_players_request_validator.dart';
 
 import '../../../features/auth/data/data_sources/auth_data_source.dart';
@@ -191,6 +193,7 @@ class InitializedValidatorsDependenciesValues {
     required this.getPlayerMatchesOverviewRequestValidator,
     required this.searchMatchesRequestValidator,
     required this.searchPlayersRequestValidator,
+    required this.getPlayerRequestValidator,
   });
 
   final AuthorizeRequestValidator requestAuthorizationValidator;
@@ -204,6 +207,7 @@ class InitializedValidatorsDependenciesValues {
       getPlayerMatchesOverviewRequestValidator;
   final SearchMatchesRequestValidator searchMatchesRequestValidator;
   final SearchPlayersRequestValidator searchPlayersRequestValidator;
+  final GetPlayerRequestValidator getPlayerRequestValidator;
 }
 
 class InitializedMiddlewareWrappersDependenciesValues {
@@ -216,6 +220,7 @@ class InitializedMiddlewareWrappersDependenciesValues {
     required this.getPlayerMatchesOverviewRequestMiddlewareWrapper,
     required this.searchMatchesRequestMiddlewareWrapper,
     required this.searchPlayersMiddlewareWrapper,
+    required this.getPlayerRequestMiddlewareWrapper,
   });
 
   final AuthorizeRequestMiddlewareWrapper authorizeRequestMiddlewareWrapper;
@@ -230,6 +235,7 @@ class InitializedMiddlewareWrappersDependenciesValues {
   final SearchMatchesRequestMiddlewareWrapper
       searchMatchesRequestMiddlewareWrapper;
   final SearchPlayersRequestMiddlewareWrapper searchPlayersMiddlewareWrapper;
+  final GetPlayerRequestMiddlewareWrapper getPlayerRequestMiddlewareWrapper;
 }
 
 class InitializedRoutersDependenciesValues {

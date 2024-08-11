@@ -9,7 +9,9 @@ import 'package:five_on_4_backend/src/features/players/domain/use_cases/search_p
 import 'package:five_on_4_backend/src/features/players/presentation/controllers/get_player_controller.dart';
 import 'package:five_on_4_backend/src/features/players/presentation/controllers/search_players_controller.dart';
 import 'package:five_on_4_backend/src/features/players/presentation/router/players_router.dart';
+import 'package:five_on_4_backend/src/features/players/utils/middlewares/get_player_request_middleware_wrapper.dart';
 import 'package:five_on_4_backend/src/features/players/utils/middlewares/search_players_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/players/utils/validators/get_player_request_validator.dart';
 import 'package:five_on_4_backend/src/features/players/utils/validators/search_players_request_validator.dart';
 
 import '../../../features/auth/data/data_sources/auth_data_source_impl.dart';
@@ -429,6 +431,8 @@ InitializedValidatorsDependenciesValues getInitializedValidators({
       SearchMatchesRequestValidator();
   final SearchPlayersRequestValidator searchPlayersRequestValidator =
       SearchPlayersRequestValidator();
+  final GetPlayerRequestValidator getPlayerRequestValidator =
+      GetPlayerRequestValidator();
 
   return InitializedValidatorsDependenciesValues(
     requestAuthorizationValidator: requestAuthorizationValidator,
@@ -442,6 +446,7 @@ InitializedValidatorsDependenciesValues getInitializedValidators({
         getPlayerMatchesOverviewRequestValidator,
     searchMatchesRequestValidator: searchMatchesRequestValidator,
     searchPlayersRequestValidator: searchPlayersRequestValidator,
+    getPlayerRequestValidator: getPlayerRequestValidator,
   );
 }
 
@@ -487,6 +492,10 @@ InitializedMiddlewareWrappersDependenciesValues
     searchPlayersRequestValidator:
         initializedValidators.searchPlayersRequestValidator,
   );
+  final GetPlayerRequestMiddlewareWrapper getPlayerRequestMiddlewareWrapper =
+      GetPlayerRequestMiddlewareWrapper(
+    getPlayerRequestValidator: initializedValidators.getPlayerRequestValidator,
+  );
 
   return InitializedMiddlewareWrappersDependenciesValues(
     authorizeRequestMiddlewareWrapper: requestAuthorizationMiddleware,
@@ -501,6 +510,7 @@ InitializedMiddlewareWrappersDependenciesValues
     searchMatchesRequestMiddlewareWrapper:
         searchMatchesRequestMiddlewareWrapper,
     searchPlayersMiddlewareWrapper: searchPlayersRequestMiddlewareWrapper,
+    getPlayerRequestMiddlewareWrapper: getPlayerRequestMiddlewareWrapper,
   );
 }
 
@@ -552,6 +562,8 @@ InitializedRoutersDependenciesValues getInitializedRouters({
         initializedMiddlewareWrappers.authorizeRequestMiddlewareWrapper,
     searchPlayersRequestMiddlewareWrapper:
         initializedMiddlewareWrappers.searchPlayersMiddlewareWrapper,
+    getPlayerRequestMiddlewareWrapper:
+        initializedMiddlewareWrappers.getPlayerRequestMiddlewareWrapper,
   );
 
   return InitializedRoutersDependenciesValues(
