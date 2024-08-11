@@ -1,6 +1,7 @@
 import 'package:five_on_4_backend/src/features/auth/utils/middlewares/authorize_request_middleware_wrapper.dart';
 import 'package:five_on_4_backend/src/features/players/presentation/controllers/get_player_controller.dart';
 import 'package:five_on_4_backend/src/features/players/presentation/controllers/search_players_controller.dart';
+import 'package:five_on_4_backend/src/features/players/utils/middlewares/get_player_request_middleware_wrapper.dart';
 import 'package:five_on_4_backend/src/features/players/utils/middlewares/search_players_request_middleware_wrapper.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -15,6 +16,8 @@ class PlayersRouter {
     required SearchPlayersRequestMiddlewareWrapper
         searchPlayersRequestMiddlewareWrapper,
     required AuthorizeRequestMiddlewareWrapper requestAuthorizationMiddleware,
+    required GetPlayerRequestMiddlewareWrapper
+        getPlayerRequestMiddlewareWrapper,
   }) {
     final playersRouter = Router();
 
@@ -29,7 +32,10 @@ class PlayersRouter {
     playersRouter.get(
       "/<id>",
       // getPlayerController.call,
-      Pipeline().addHandler(getPlayerController.call),
+      Pipeline()
+          .addMiddleware(requestAuthorizationMiddleware())
+          .addMiddleware(getPlayerRequestMiddlewareWrapper())
+          .addHandler(getPlayerController.call),
       // Pipeline().addHandler((request) =>
       //     getPlayerController.call(request, request.params["id"]!)),
     );
