@@ -1,4 +1,5 @@
 import 'package:five_on_4_backend/src/features/players/presentation/router/players_router.dart';
+import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 import '../../../auth/presentation/router/auth_router.dart';
@@ -14,8 +15,25 @@ class AppRouter {
     _router.mount("/auth", authRouter.router.call);
     _router.mount("/matches", matchesRouter.router.call);
     _router.mount("/players", playersRouter.router.call);
+
+    // _router.get("/search", (request) {
+    //   return Response.ok("Hello, World!");
+    // });
+
+    // _router.get("/", (request) {
+    //   return Response.ok("Hello, World!");
+    // });
+
+    // // TODO catch all need to be below all other routes
+    // // TODO test only
+    // _router.get("/<id>", (request) {
+    //   return Response.ok("Hello, World!");
+    // });
   }
 
   final Router _router;
   Router get router => _router;
 }
+
+// issue to list all routes on app start
+// https://github.com/dart-lang/shelf/issues/383

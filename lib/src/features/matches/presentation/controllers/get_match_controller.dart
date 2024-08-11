@@ -9,7 +9,7 @@ import '../../domain/models/match_model.dart';
 import '../../domain/use_cases/get_match/get_match_use_case.dart';
 
 class GetMatchController {
-  GetMatchController({
+  const GetMatchController({
     required GetMatchUseCase getMatchUseCase,
   }) : _getMatchUseCase = getMatchUseCase;
 

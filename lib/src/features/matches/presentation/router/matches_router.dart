@@ -50,6 +50,7 @@ class MatchesRouter {
           .addHandler(createMatchController.call),
     );
 
+// dynamic routes have to be last, so as not to catch other routes requests
     matchesRouter.get(
       "/<id>",
       Pipeline()
