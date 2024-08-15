@@ -101,6 +101,8 @@ make generate_migrations_steps
 ```
 make generate
 ```
+7. add in tests when delete this table now
+- make sure it does not reference anything - if it does, you will have to delete its contents before deltingthe tabel that is referenced
 
 <!-- TODO possibly deprecated -->
 ## How to do db migrations

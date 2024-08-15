@@ -43,7 +43,8 @@ class AuthDataSourceImpl implements AuthDataSource {
           createdAt: createdAt,
           updatedAt: updatedAt,
         );
-        final authId = await _databaseWrapper.authRepo.insertOne(authCompanion);
+        final authId =
+            await _databaseWrapper.authsRepo.insertOne(authCompanion);
 
         final playerCompanion = PlayerEntityCompanion.insert(
           firstName: authValue.firstName,
@@ -65,7 +66,7 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   Future<AuthEntityData?> getAuthByEmail({required String email}) async {
-    final select = _databaseWrapper.authRepo.select();
+    final select = _databaseWrapper.authsRepo.select();
     final findAuth = select..where((tbl) => tbl.email.equals(email));
 
     final auth = await findAuth.getSingleOrNull();
@@ -80,7 +81,7 @@ class AuthDataSourceImpl implements AuthDataSource {
   }) async {
     // final hashedPassword = _cryptWrapper.getHashedValue(value: password);
     // TODO password will be hashed
-    final select = _databaseWrapper.authRepo.select();
+    final select = _databaseWrapper.authsRepo.select();
     final findAuth = select
       ..where((tbl) => tbl.email.equals(email))
       ..where((tbl) => tbl.password.equals(hashedPassword));
@@ -92,7 +93,7 @@ class AuthDataSourceImpl implements AuthDataSource {
 
   @override
   Future<AuthEntityData?> getAuthById({required int id}) async {
-    final select = _databaseWrapper.authRepo.select();
+    final select = _databaseWrapper.authsRepo.select();
     final findAuth = select..where((tbl) => tbl.id.equals(id));
 
     final auth = await findAuth.getSingleOrNull();
