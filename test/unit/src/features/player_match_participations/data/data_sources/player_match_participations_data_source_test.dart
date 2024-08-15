@@ -3,7 +3,9 @@ import 'package:five_on_4_backend/src/features/core/utils/extensions/date_time_e
 import 'package:five_on_4_backend/src/features/player_match_participations/data/data_sources/player_match_participations_data_source.dart';
 import 'package:five_on_4_backend/src/features/player_match_participations/data/data_sources/player_match_participations_data_source_impl.dart';
 import 'package:five_on_4_backend/src/features/player_match_participations/data/entities/player_match_participation_entity.dart';
+import 'package:five_on_4_backend/src/server.dart';
 import 'package:five_on_4_backend/src/wrappers/libraries/drift/app_database.dart';
+import 'package:postgres/postgres.dart';
 import 'package:test/test.dart';
 
 import '../../../../../../helpers/database/test_database.dart';
@@ -172,6 +174,49 @@ void main() {
 
 // should not allow to create duplicate participation for the same player and match
 // TODO this should probably involve some table constraints - that the combination of player and match is unique
+
+        test(
+          "given a participation for a player a match exists"
+          "when call to [.createParticipation()] is made with the same player and match"
+          "then should throw an exception",
+          () async {
+            // setup
+            final CreatePlayerMatchParticipationValue createValue =
+                CreatePlayerMatchParticipationValue(
+              playerId: playerId,
+              matchId: matchId,
+              createdAt:
+                  DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+              updatedAt:
+                  DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+            );
+
+            // given
+            await playerMatchParticipationsDataSource.createParticipation(
+              value: createValue,
+            );
+
+            expect(
+              () => playerMatchParticipationsDataSource.createParticipation(
+                value: createValue,
+              ),
+              throwsA(predicate((e) {
+                if (e is! ServerException) return false;
+
+                final message = e.message;
+
+                final isExpected = message ==
+                    'duplicate key value violates unique constraint "player_match_participation_entity_player_id_match_id_key"';
+
+                return isExpected;
+              })),
+            );
+
+            // then
+
+            // cleanup
+          },
+        );
       },
     );
   });

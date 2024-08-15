@@ -439,10 +439,112 @@ i1.GeneratedColumn<int> _column_19(String aliasedName) =>
         type: i1.DriftSqlType.int,
         defaultConstraints: i1.GeneratedColumn.constraintIsAlways(
             'REFERENCES match_entity (id)'));
+
+final class Schema5 extends i0.VersionedSchema {
+  Schema5({required super.database}) : super(version: 5);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    authEntity,
+    teamEntity,
+    playerEntity,
+    matchEntity,
+    playerMatchParticipationEntity,
+  ];
+  late final Shape0 authEntity = Shape0(
+      source: i0.VersionedTable(
+        entityName: 'auth_entity',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [],
+        columns: [
+          _column_0,
+          _column_1,
+          _column_15,
+          _column_3,
+          _column_4,
+          _column_5,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape1 teamEntity = Shape1(
+      source: i0.VersionedTable(
+        entityName: 'team_entity',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [],
+        columns: [
+          _column_0,
+          _column_6,
+          _column_7,
+          _column_4,
+          _column_5,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape2 playerEntity = Shape2(
+      source: i0.VersionedTable(
+        entityName: 'player_entity',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [],
+        columns: [
+          _column_0,
+          _column_8,
+          _column_9,
+          _column_10,
+          _column_4,
+          _column_5,
+          _column_11,
+          _column_16,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape4 matchEntity = Shape4(
+      source: i0.VersionedTable(
+        entityName: 'match_entity',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [],
+        columns: [
+          _column_0,
+          _column_17,
+          _column_13,
+          _column_14,
+          _column_7,
+          _column_4,
+          _column_5,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape5 playerMatchParticipationEntity = Shape5(
+      source: i0.VersionedTable(
+        entityName: 'player_match_participation_entity',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'UNIQUE(player_id, match_id)',
+        ],
+        columns: [
+          _column_0,
+          _column_4,
+          _column_5,
+          _column_18,
+          _column_19,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+}
+
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
+  required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -461,6 +563,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from3To4(migrator, schema);
         return 4;
+      case 4:
+        final schema = Schema5(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from4To5(migrator, schema);
+        return 5;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -471,10 +578,12 @@ i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
+  required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
 }) =>
     i0.VersionedSchema.stepByStepHelper(
         step: migrationSteps(
       from1To2: from1To2,
       from2To3: from2To3,
       from3To4: from3To4,
+      from4To5: from4To5,
     ));

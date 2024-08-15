@@ -11,4 +11,10 @@ class PlayerMatchParticipationEntity extends Table {
   // refs
   IntColumn get playerId => integer().references(PlayerEntity, #id)();
   IntColumn get matchId => integer().references(MatchEntity, #id)();
+
+  @override
+  // TODO: implement uniqueKeys
+  List<Set<Column<Object>>>? get uniqueKeys => [
+        {playerId, matchId}
+      ];
 }

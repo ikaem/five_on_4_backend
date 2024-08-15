@@ -1482,6 +1482,10 @@ class $PlayerMatchParticipationEntityTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {playerId, matchId},
+      ];
+  @override
   PlayerMatchParticipationEntityData map(Map<String, dynamic> data,
       {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
