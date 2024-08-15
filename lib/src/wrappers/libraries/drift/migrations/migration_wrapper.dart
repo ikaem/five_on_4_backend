@@ -16,6 +16,9 @@ class MigrationWrapper {
         // await m.createTable(schema.somethingElse);
         await m.addColumn(schema.matchEntity, schema.matchEntity.title);
       },
+      from3To4: (Migrator m, Schema4 schema) async {
+        await m.createTable(schema.playerMatchParticipationEntity);
+      },
     ),
     beforeOpen: (details) async {
       // some populate things if needed

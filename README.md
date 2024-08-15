@@ -61,6 +61,48 @@ You should see the logging printed in the first terminal:
 5. this is how to run docker compose in separate dir
    1. https://medium.com/@unhandlederror/how-to-run-docker-compose-from-another-directory-e94e081a80cc 
 
+
+## How to do db migrations v2
+1. make sure version 1 schema exists
+   1. wiuth migration 1
+   2. if not, create it with maake generate_migrations_schema
+2. make changes 
+- add new table
+- or add new column
+- or change column type
+- - or some such
+- add table to app database
+  - it might show some const constructor error - restart VSC
+1. increase "schemaVersion" on AppDatabase by 1
+<!-- 2. run make generate --> -> maybe not this
+1. run the following command
+```
+make generate_migrations_schema
+```
+1. run the following command
+```
+make generate_migrations_steps
+```
+1. add next migration to migration_wrapper that matches your db modification. for example:
+```
+    onUpgrade: stepByStep(
+      from1To2: (m, schema) async {
+        // await m.addColumn(schema.users, schema.users.nickname);
+        await m.createTable(schema.matchEntity);
+      },
+      from2To3: (m, schema) async {
+        // await m.createTable(schema.somethingElse);
+        await m.addColumn(schema.matchEntity, schema.matchEntity.title);
+      },
+    ),
+
+```
+6. run the following command
+```
+make generate
+```
+
+<!-- TODO possibly deprecated -->
 ## How to do db migrations
 1. make sure version 1 schema exists
    1. wiuth migration 1
@@ -98,6 +140,8 @@ make generate_migrations_steps
 ```
 make generate
 ```
+
+
 
 
 ## Docs for tools
