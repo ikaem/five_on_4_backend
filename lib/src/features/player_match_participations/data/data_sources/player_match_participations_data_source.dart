@@ -3,9 +3,9 @@ import 'package:five_on_4_backend/src/features/player_match_participations/data/
 
 abstract interface class PlayerMatchParticipationsDataSource {
   // TODO deprecated
-  Future<int> createParticipation({
-    required CreatePlayerMatchParticipationValue value,
-  });
+  // Future<int> createParticipation({
+  //   required CreatePlayerMatchParticipationValue value,
+  // });
 
   // TODO create storeParticipation - it should be upsert, and it should use that unique combination to always write on the same one? right? not sure?
   Future<int> storeParticipation({

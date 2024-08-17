@@ -448,194 +448,194 @@ void main() {
     });
 
     // TODO deprecated - use storeParticipation instead
-    group(
-      ".createParticipation",
-      () {
-        final playerId = 1;
-        final matchId = 1;
+//     group(
+//       ".createParticipation",
+//       () {
+//         final playerId = 1;
+//         final matchId = 1;
 
-        setUp(() async {
-          // // need to add player and match to the database - to have refs
-          // // TODO maybe add this to setup
-          final AuthEntityCompanion authCompanion = AuthEntityCompanion.insert(
-            id: Value(1),
-            email: "email",
-            authType: "authType",
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          );
-          final PlayerEntityCompanion playerCompanion =
-              PlayerEntityCompanion.insert(
-            id: Value(playerId),
-            firstName: "firstName",
-            lastName: "lastName",
-            nickname: "nickname",
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-            authId: 1,
-          );
-          final MatchEntityCompanion matchCompanion =
-              MatchEntityCompanion.insert(
-            id: Value(matchId),
-            title: "title",
-            description: "description",
-            dateAndTime: DateTime.now(),
-            location: "location",
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          );
+//         setUp(() async {
+//           // // need to add player and match to the database - to have refs
+//           // // TODO maybe add this to setup
+//           final AuthEntityCompanion authCompanion = AuthEntityCompanion.insert(
+//             id: Value(1),
+//             email: "email",
+//             authType: "authType",
+//             createdAt: DateTime.now(),
+//             updatedAt: DateTime.now(),
+//           );
+//           final PlayerEntityCompanion playerCompanion =
+//               PlayerEntityCompanion.insert(
+//             id: Value(playerId),
+//             firstName: "firstName",
+//             lastName: "lastName",
+//             nickname: "nickname",
+//             createdAt: DateTime.now(),
+//             updatedAt: DateTime.now(),
+//             authId: 1,
+//           );
+//           final MatchEntityCompanion matchCompanion =
+//               MatchEntityCompanion.insert(
+//             id: Value(matchId),
+//             title: "title",
+//             description: "description",
+//             dateAndTime: DateTime.now(),
+//             location: "location",
+//             createdAt: DateTime.now(),
+//             updatedAt: DateTime.now(),
+//           );
 
-          await testDatabaseWrapper.databaseWrapper.authsRepo.insertOne(
-            authCompanion,
-          );
-          await testDatabaseWrapper.databaseWrapper.playersRepo.insertOne(
-            playerCompanion,
-          );
-          await testDatabaseWrapper.databaseWrapper.matchesRepo.insertOne(
-            matchCompanion,
-          );
-        });
+//           await testDatabaseWrapper.databaseWrapper.authsRepo.insertOne(
+//             authCompanion,
+//           );
+//           await testDatabaseWrapper.databaseWrapper.playersRepo.insertOne(
+//             playerCompanion,
+//           );
+//           await testDatabaseWrapper.databaseWrapper.matchesRepo.insertOne(
+//             matchCompanion,
+//           );
+//         });
 
-        // shoud return expected id - check db that it has exaclty one item, and it has that id
-        test(
-          "given valid [CreatePlayerMatchParticipationValue]"
-          "when [.createParticipation()] is called"
-          "then should return the id of the created participation",
-          () async {
-            // setup
+//         // shoud return expected id - check db that it has exaclty one item, and it has that id
+//         test(
+//           "given valid [CreatePlayerMatchParticipationValue]"
+//           "when [.createParticipation()] is called"
+//           "then should return the id of the created participation",
+//           () async {
+//             // setup
 
-            // given
-            final CreatePlayerMatchParticipationValue createValue =
-                CreatePlayerMatchParticipationValue(
-              playerId: playerId,
-              matchId: matchId,
-              createdAt:
-                  DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
-              updatedAt:
-                  DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
-            );
+//             // given
+//             final CreatePlayerMatchParticipationValue createValue =
+//                 CreatePlayerMatchParticipationValue(
+//               playerId: playerId,
+//               matchId: matchId,
+//               createdAt:
+//                   DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+//               updatedAt:
+//                   DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+//             );
 
-            // when
-            final id =
-                await playerMatchParticipationsDataSource.createParticipation(
-              value: createValue,
-            );
+//             // when
+//             final id =
+//                 await playerMatchParticipationsDataSource.createParticipation(
+//               value: createValue,
+//             );
 
-            // then
-            // get all participations - there should be one
-            final select = testDatabaseWrapper
-                .databaseWrapper.playerMatchParticipationsRepo
-                .select();
-            final participations = await select.get();
+//             // then
+//             // get all participations - there should be one
+//             final select = testDatabaseWrapper
+//                 .databaseWrapper.playerMatchParticipationsRepo
+//                 .select();
+//             final participations = await select.get();
 
-            expect(participations.length, equals(1));
-            expect(participations.first.id, equals(id));
+//             expect(participations.length, equals(1));
+//             expect(participations.first.id, equals(id));
 
-            // cleanup
-          },
-        );
+//             // cleanup
+//           },
+//         );
 
-        // should store in db
-        test(
-          "given valid [CreatePlayerMatchParticipationValue]"
-          "when [.createParticipation()] is called"
-          "then should store the participation in the databse ",
-          () async {
-            // setup
+//         // should store in db
+//         test(
+//           "given valid [CreatePlayerMatchParticipationValue]"
+//           "when [.createParticipation()] is called"
+//           "then should store the participation in the databse ",
+//           () async {
+//             // setup
 
-            // given
+//             // given
 
-            final CreatePlayerMatchParticipationValue createValue =
-                CreatePlayerMatchParticipationValue(
-              playerId: playerId,
-              matchId: matchId,
-              createdAt:
-                  DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
-              updatedAt:
-                  DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
-            );
+//             final CreatePlayerMatchParticipationValue createValue =
+//                 CreatePlayerMatchParticipationValue(
+//               playerId: playerId,
+//               matchId: matchId,
+//               createdAt:
+//                   DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+//               updatedAt:
+//                   DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+//             );
 
-            // when
+//             // when
 
-            final id =
-                await playerMatchParticipationsDataSource.createParticipation(
-              value: createValue,
-            );
+//             final id =
+//                 await playerMatchParticipationsDataSource.createParticipation(
+//               value: createValue,
+//             );
 
-            // then
+//             // then
 
-            final expectedMatch = PlayerMatchParticipationEntityData(
-              id: id,
-              createdAt:
-                  DateTime.fromMillisecondsSinceEpoch(createValue.createdAt),
-              updatedAt:
-                  DateTime.fromMillisecondsSinceEpoch(createValue.updatedAt),
-              playerId: playerId,
-              matchId: matchId,
-              status: PlayerMatchParticipationStatus.unknown,
-            );
+//             final expectedMatch = PlayerMatchParticipationEntityData(
+//               id: id,
+//               createdAt:
+//                   DateTime.fromMillisecondsSinceEpoch(createValue.createdAt),
+//               updatedAt:
+//                   DateTime.fromMillisecondsSinceEpoch(createValue.updatedAt),
+//               playerId: playerId,
+//               matchId: matchId,
+//               status: PlayerMatchParticipationStatus.unknown,
+//             );
 
-            final select = testDatabaseWrapper
-                .databaseWrapper.playerMatchParticipationsRepo
-                .select();
-            final findParticipationSelect = select
-              ..where((tbl) => tbl.id.equals(id));
+//             final select = testDatabaseWrapper
+//                 .databaseWrapper.playerMatchParticipationsRepo
+//                 .select();
+//             final findParticipationSelect = select
+//               ..where((tbl) => tbl.id.equals(id));
 
-            final participation =
-                await findParticipationSelect.getSingleOrNull();
+//             final participation =
+//                 await findParticipationSelect.getSingleOrNull();
 
-            expect(participation, equals(expectedMatch));
+//             expect(participation, equals(expectedMatch));
 
-            // cleanup
-          },
-        );
+//             // cleanup
+//           },
+//         );
 
-// should not allow to create duplicate participation for the same player and match
-// TODO this should probably involve some table constraints - that the combination of player and match is unique
+// // should not allow to create duplicate participation for the same player and match
+// // TODO this should probably involve some table constraints - that the combination of player and match is unique
 
-        test(
-          "given a participation for a player a match exists"
-          "when call to [.createParticipation()] is made with the same player and match"
-          "then should throw an exception",
-          () async {
-            // setup
-            final CreatePlayerMatchParticipationValue createValue =
-                CreatePlayerMatchParticipationValue(
-              playerId: playerId,
-              matchId: matchId,
-              createdAt:
-                  DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
-              updatedAt:
-                  DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
-            );
+//         test(
+//           "given a participation for a player a match exists"
+//           "when call to [.createParticipation()] is made with the same player and match"
+//           "then should throw an exception",
+//           () async {
+//             // setup
+//             final CreatePlayerMatchParticipationValue createValue =
+//                 CreatePlayerMatchParticipationValue(
+//               playerId: playerId,
+//               matchId: matchId,
+//               createdAt:
+//                   DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+//               updatedAt:
+//                   DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+//             );
 
-            // given
-            await playerMatchParticipationsDataSource.createParticipation(
-              value: createValue,
-            );
+//             // given
+//             await playerMatchParticipationsDataSource.createParticipation(
+//               value: createValue,
+//             );
 
-            expect(
-              () => playerMatchParticipationsDataSource.createParticipation(
-                value: createValue,
-              ),
-              throwsA(predicate((e) {
-                if (e is! ServerException) return false;
+//             expect(
+//               () => playerMatchParticipationsDataSource.createParticipation(
+//                 value: createValue,
+//               ),
+//               throwsA(predicate((e) {
+//                 if (e is! ServerException) return false;
 
-                final message = e.message;
+//                 final message = e.message;
 
-                final isExpected = message ==
-                    'duplicate key value violates unique constraint "player_match_participation_entity_player_id_match_id_key"';
+//                 final isExpected = message ==
+//                     'duplicate key value violates unique constraint "player_match_participation_entity_player_id_match_id_key"';
 
-                return isExpected;
-              })),
-            );
+//                 return isExpected;
+//               })),
+//             );
 
-            // then
+//             // then
 
-            // cleanup
-          },
-        );
-      },
-    );
+//             // cleanup
+//           },
+//         );
+//       },
+//     );
   });
 }

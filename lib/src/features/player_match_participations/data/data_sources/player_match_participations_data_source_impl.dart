@@ -45,28 +45,28 @@ class PlayerMatchParticipationsDataSourceImpl
     return id;
   }
 
-  @override
-  Future<int> createParticipation({
-    required CreatePlayerMatchParticipationValue value,
-  }) async {
-    final createdAtTime = DateTime.fromMillisecondsSinceEpoch(value.createdAt)
-        .normalizedToSeconds;
-    final updatedTime = DateTime.fromMillisecondsSinceEpoch(value.updatedAt)
-        .normalizedToSeconds;
+  // @override
+  // Future<int> createParticipation({
+  //   required CreatePlayerMatchParticipationValue value,
+  // }) async {
+  //   final createdAtTime = DateTime.fromMillisecondsSinceEpoch(value.createdAt)
+  //       .normalizedToSeconds;
+  //   final updatedTime = DateTime.fromMillisecondsSinceEpoch(value.updatedAt)
+  //       .normalizedToSeconds;
 
-    final companion = PlayerMatchParticipationEntityCompanion.insert(
-      createdAt: createdAtTime,
-      updatedAt: updatedTime,
-      playerId: value.playerId,
-      matchId: value.matchId,
-      status: PlayerMatchParticipationStatus.unknown,
-    );
+  //   final companion = PlayerMatchParticipationEntityCompanion.insert(
+  //     createdAt: createdAtTime,
+  //     updatedAt: updatedTime,
+  //     playerId: value.playerId,
+  //     matchId: value.matchId,
+  //     status: PlayerMatchParticipationStatus.unknown,
+  //   );
 
-    final id =
-        _databaseWrapper.playerMatchParticipationsRepo.insertOne(companion);
+  //   final id =
+  //       _databaseWrapper.playerMatchParticipationsRepo.insertOne(companion);
 
-    return id;
-  }
+  //   return id;
+  // }
 }
 
 // TODO move to values later
