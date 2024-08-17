@@ -28,4 +28,5 @@ enum PlayerMatchParticipationStatus {
   arriving,
   notArriving,
   // TODO if any other are added, they need to be added at the end of list to account for indexes of each enum and avoid migration
+  unknown,
 }

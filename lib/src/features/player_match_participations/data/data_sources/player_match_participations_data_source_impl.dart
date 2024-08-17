@@ -27,7 +27,7 @@ class PlayerMatchParticipationsDataSourceImpl
       updatedAt: updatedTime,
       playerId: value.playerId,
       matchId: value.matchId,
-      status: PlayerMatchParticipationStatus.pendingDecision,
+      status: PlayerMatchParticipationStatus.unknown,
     );
 
     final id =
