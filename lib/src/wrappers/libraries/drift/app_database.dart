@@ -31,7 +31,7 @@ class AppDatabase extends _$AppDatabase {
   final MigrationWrapper _migrationWrapper = MigrationWrapper();
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => _migrationWrapper.migration;

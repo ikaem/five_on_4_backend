@@ -155,6 +155,7 @@ void main() {
                   DateTime.fromMillisecondsSinceEpoch(createValue.updatedAt),
               playerId: playerId,
               matchId: matchId,
+              status: PlayerMatchParticipationStatus.pendingDecision,
             );
 
             final select = testDatabaseWrapper

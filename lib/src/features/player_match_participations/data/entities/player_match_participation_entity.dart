@@ -8,6 +8,7 @@ class PlayerMatchParticipationEntity extends Table {
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
   // TODO maybe there are some accepted values
+  IntColumn get status => intEnum<PlayerMatchParticipationStatus>()();
 
   // refs
   IntColumn get playerId => integer().references(PlayerEntity, #id)();
@@ -18,4 +19,13 @@ class PlayerMatchParticipationEntity extends Table {
   List<Set<Column<Object>>>? get uniqueKeys => [
         {playerId, matchId}
       ];
+}
+
+// TODO not sure if this could be private
+// TODO leave this here for now
+enum PlayerMatchParticipationStatus {
+  pendingDecision,
+  arriving,
+  notArriving,
+  // TODO if any other are added, they need to be added at the end of list to account for indexes of each enum and avoid migration
 }

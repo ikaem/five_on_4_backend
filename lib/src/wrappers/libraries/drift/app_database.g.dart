@@ -1417,6 +1417,13 @@ class $PlayerMatchParticipationEntityTable
   late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
       'updated_at', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumnWithTypeConverter<PlayerMatchParticipationStatus,
+      int> status = GeneratedColumn<int>('status', aliasedName, false,
+          type: DriftSqlType.int, requiredDuringInsert: true)
+      .withConverter<PlayerMatchParticipationStatus>(
+          $PlayerMatchParticipationEntityTable.$converterstatus);
   static const VerificationMeta _playerIdMeta =
       const VerificationMeta('playerId');
   @override
@@ -1437,7 +1444,7 @@ class $PlayerMatchParticipationEntityTable
           GeneratedColumn.constraintIsAlways('REFERENCES match_entity (id)'));
   @override
   List<GeneratedColumn> get $columns =>
-      [id, createdAt, updatedAt, playerId, matchId];
+      [id, createdAt, updatedAt, status, playerId, matchId];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1464,6 +1471,7 @@ class $PlayerMatchParticipationEntityTable
     } else if (isInserting) {
       context.missing(_updatedAtMeta);
     }
+    context.handle(_statusMeta, const VerificationResult.success());
     if (data.containsKey('player_id')) {
       context.handle(_playerIdMeta,
           playerId.isAcceptableOrUnknown(data['player_id']!, _playerIdMeta));
@@ -1496,6 +1504,9 @@ class $PlayerMatchParticipationEntityTable
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       updatedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+      status: $PlayerMatchParticipationEntityTable.$converterstatus.fromSql(
+          attachedDatabase.typeMapping
+              .read(DriftSqlType.int, data['${effectivePrefix}status'])!),
       playerId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}player_id'])!,
       matchId: attachedDatabase.typeMapping
@@ -1507,6 +1518,11 @@ class $PlayerMatchParticipationEntityTable
   $PlayerMatchParticipationEntityTable createAlias(String alias) {
     return $PlayerMatchParticipationEntityTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<PlayerMatchParticipationStatus, int, int>
+      $converterstatus =
+      const EnumIndexConverter<PlayerMatchParticipationStatus>(
+          PlayerMatchParticipationStatus.values);
 }
 
 class PlayerMatchParticipationEntityData extends DataClass
@@ -1514,12 +1530,14 @@ class PlayerMatchParticipationEntityData extends DataClass
   final int id;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final PlayerMatchParticipationStatus status;
   final int playerId;
   final int matchId;
   const PlayerMatchParticipationEntityData(
       {required this.id,
       required this.createdAt,
       required this.updatedAt,
+      required this.status,
       required this.playerId,
       required this.matchId});
   @override
@@ -1528,6 +1546,10 @@ class PlayerMatchParticipationEntityData extends DataClass
     map['id'] = Variable<int>(id);
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
+    {
+      map['status'] = Variable<int>(
+          $PlayerMatchParticipationEntityTable.$converterstatus.toSql(status));
+    }
     map['player_id'] = Variable<int>(playerId);
     map['match_id'] = Variable<int>(matchId);
     return map;
@@ -1538,6 +1560,7 @@ class PlayerMatchParticipationEntityData extends DataClass
       id: Value(id),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
+      status: Value(status),
       playerId: Value(playerId),
       matchId: Value(matchId),
     );
@@ -1550,6 +1573,8 @@ class PlayerMatchParticipationEntityData extends DataClass
       id: serializer.fromJson<int>(json['id']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      status: $PlayerMatchParticipationEntityTable.$converterstatus
+          .fromJson(serializer.fromJson<int>(json['status'])),
       playerId: serializer.fromJson<int>(json['playerId']),
       matchId: serializer.fromJson<int>(json['matchId']),
     );
@@ -1561,6 +1586,8 @@ class PlayerMatchParticipationEntityData extends DataClass
       'id': serializer.toJson<int>(id),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'status': serializer.toJson<int>(
+          $PlayerMatchParticipationEntityTable.$converterstatus.toJson(status)),
       'playerId': serializer.toJson<int>(playerId),
       'matchId': serializer.toJson<int>(matchId),
     };
@@ -1570,12 +1597,14 @@ class PlayerMatchParticipationEntityData extends DataClass
           {int? id,
           DateTime? createdAt,
           DateTime? updatedAt,
+          PlayerMatchParticipationStatus? status,
           int? playerId,
           int? matchId}) =>
       PlayerMatchParticipationEntityData(
         id: id ?? this.id,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
+        status: status ?? this.status,
         playerId: playerId ?? this.playerId,
         matchId: matchId ?? this.matchId,
       );
@@ -1585,6 +1614,7 @@ class PlayerMatchParticipationEntityData extends DataClass
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('status: $status, ')
           ..write('playerId: $playerId, ')
           ..write('matchId: $matchId')
           ..write(')'))
@@ -1592,7 +1622,8 @@ class PlayerMatchParticipationEntityData extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(id, createdAt, updatedAt, playerId, matchId);
+  int get hashCode =>
+      Object.hash(id, createdAt, updatedAt, status, playerId, matchId);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1600,6 +1631,7 @@ class PlayerMatchParticipationEntityData extends DataClass
           other.id == this.id &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
+          other.status == this.status &&
           other.playerId == this.playerId &&
           other.matchId == this.matchId);
 }
@@ -1609,12 +1641,14 @@ class PlayerMatchParticipationEntityCompanion
   final Value<int> id;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
+  final Value<PlayerMatchParticipationStatus> status;
   final Value<int> playerId;
   final Value<int> matchId;
   const PlayerMatchParticipationEntityCompanion({
     this.id = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
+    this.status = const Value.absent(),
     this.playerId = const Value.absent(),
     this.matchId = const Value.absent(),
   });
@@ -1622,16 +1656,19 @@ class PlayerMatchParticipationEntityCompanion
     this.id = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
+    required PlayerMatchParticipationStatus status,
     required int playerId,
     required int matchId,
   })  : createdAt = Value(createdAt),
         updatedAt = Value(updatedAt),
+        status = Value(status),
         playerId = Value(playerId),
         matchId = Value(matchId);
   static Insertable<PlayerMatchParticipationEntityData> custom({
     Expression<int>? id,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
+    Expression<int>? status,
     Expression<int>? playerId,
     Expression<int>? matchId,
   }) {
@@ -1639,6 +1676,7 @@ class PlayerMatchParticipationEntityCompanion
       if (id != null) 'id': id,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
+      if (status != null) 'status': status,
       if (playerId != null) 'player_id': playerId,
       if (matchId != null) 'match_id': matchId,
     });
@@ -1648,12 +1686,14 @@ class PlayerMatchParticipationEntityCompanion
       {Value<int>? id,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
+      Value<PlayerMatchParticipationStatus>? status,
       Value<int>? playerId,
       Value<int>? matchId}) {
     return PlayerMatchParticipationEntityCompanion(
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      status: status ?? this.status,
       playerId: playerId ?? this.playerId,
       matchId: matchId ?? this.matchId,
     );
@@ -1671,6 +1711,11 @@ class PlayerMatchParticipationEntityCompanion
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
+    if (status.present) {
+      map['status'] = Variable<int>($PlayerMatchParticipationEntityTable
+          .$converterstatus
+          .toSql(status.value));
+    }
     if (playerId.present) {
       map['player_id'] = Variable<int>(playerId.value);
     }
@@ -1686,6 +1731,7 @@ class PlayerMatchParticipationEntityCompanion
           ..write('id: $id, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
+          ..write('status: $status, ')
           ..write('playerId: $playerId, ')
           ..write('matchId: $matchId')
           ..write(')'))

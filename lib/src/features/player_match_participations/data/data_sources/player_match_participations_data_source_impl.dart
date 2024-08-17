@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:five_on_4_backend/src/features/core/utils/extensions/date_time_extension.dart';
 import 'package:five_on_4_backend/src/features/player_match_participations/data/data_sources/player_match_participations_data_source.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/data/entities/player_match_participation_entity.dart';
 import 'package:five_on_4_backend/src/wrappers/libraries/drift/app_database.dart';
 import 'package:five_on_4_backend/src/wrappers/local/database/database_wrapper.dart';
 
@@ -26,6 +27,7 @@ class PlayerMatchParticipationsDataSourceImpl
       updatedAt: updatedTime,
       playerId: value.playerId,
       matchId: value.matchId,
+      status: PlayerMatchParticipationStatus.pendingDecision,
     );
 
     final id =

@@ -31,6 +31,10 @@ class MigrationWrapper {
         // await m.drop(schema.playerMatchParticipationEntity);
         // await m.createTable(schema.playerMatchParticipationEntity);
       },
+      from5To6: (Migrator m, Schema6 schema) async {
+        await m.addColumn(schema.playerMatchParticipationEntity,
+            schema.playerMatchParticipationEntity.status);
+      },
     ),
     beforeOpen: (details) async {
       // some populate things if needed
