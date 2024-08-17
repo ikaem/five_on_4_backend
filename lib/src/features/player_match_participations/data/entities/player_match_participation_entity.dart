@@ -7,6 +7,7 @@ class PlayerMatchParticipationEntity extends Table {
 
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
+  // TODO maybe there are some accepted values
 
   // refs
   IntColumn get playerId => integer().references(PlayerEntity, #id)();
