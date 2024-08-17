@@ -225,24 +225,226 @@ void main() {
           final select = testDatabaseWrapper
               .databaseWrapper.playerMatchParticipationsRepo
               .select();
-          final findParticipationSelect = await select.get();
+          final participations = await select.get();
 
-          expect(findParticipationSelect.length, equals(1));
-          expect(findParticipationSelect.first, equals(expectedMatch));
+          expect(participations.length, equals(1));
+          expect(participations.first, equals(expectedMatch));
 
           // cleanup
         },
       );
 
-      // should not allow to create duplicate participation for the same player and match
-
       // should store pending decision participation
+      test(
+        "given [StorePlayerMatchParticipationValue] with status [PlayerMatchParticipationStatus.pendingDecision]"
+        "when [.storeParticipation()] is called"
+        "then should store the participation with expected status",
+        () async {
+          // setup
+
+          final StorePlayerMatchParticipationValue storeValue =
+              StorePlayerMatchParticipationValue(
+            playerId: playerId,
+            matchId: matchId,
+            createdAt:
+                DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+            updatedAt:
+                DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+            status: PlayerMatchParticipationStatus.pendingDecision,
+          );
+
+          // when
+
+          final id =
+              await playerMatchParticipationsDataSource.storeParticipation(
+            value: storeValue,
+          );
+
+          // then
+
+          final expectedMatch = PlayerMatchParticipationEntityData(
+            id: id,
+            createdAt:
+                DateTime.fromMillisecondsSinceEpoch(storeValue.createdAt),
+            updatedAt:
+                DateTime.fromMillisecondsSinceEpoch(storeValue.updatedAt),
+            playerId: playerId,
+            matchId: matchId,
+            status: PlayerMatchParticipationStatus.pendingDecision,
+          );
+
+          final select = testDatabaseWrapper
+              .databaseWrapper.playerMatchParticipationsRepo
+              .select();
+          final findParticipationSelect = select
+            ..where((tbl) => tbl.id.equals(id));
+
+          final participation = await findParticipationSelect.getSingleOrNull();
+
+          expect(participation, equals(expectedMatch));
+
+          // cleanup
+        },
+      );
 
       // should store arriving participation
+      test(
+        "given [StorePlayerMatchParticipationValue] with status [PlayerMatchParticipationStatus.arriving]"
+        "when [.storeParticipation()] is called"
+        "then should store the participation with expected status",
+        () async {
+          // setup
+
+          final StorePlayerMatchParticipationValue storeValue =
+              StorePlayerMatchParticipationValue(
+            playerId: playerId,
+            matchId: matchId,
+            createdAt:
+                DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+            updatedAt:
+                DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+            status: PlayerMatchParticipationStatus.arriving,
+          );
+
+          // when
+
+          final id =
+              await playerMatchParticipationsDataSource.storeParticipation(
+            value: storeValue,
+          );
+
+          // then
+
+          final expectedMatch = PlayerMatchParticipationEntityData(
+            id: id,
+            createdAt:
+                DateTime.fromMillisecondsSinceEpoch(storeValue.createdAt),
+            updatedAt:
+                DateTime.fromMillisecondsSinceEpoch(storeValue.updatedAt),
+            playerId: playerId,
+            matchId: matchId,
+            status: PlayerMatchParticipationStatus.arriving,
+          );
+
+          final select = testDatabaseWrapper
+              .databaseWrapper.playerMatchParticipationsRepo
+              .select();
+          final findParticipationSelect = select
+            ..where((tbl) => tbl.id.equals(id));
+
+          final participation = await findParticipationSelect.getSingleOrNull();
+
+          expect(participation, equals(expectedMatch));
+
+          // cleanup
+        },
+      );
 
       // should store not arriving participation
+      test(
+        "given [StorePlayerMatchParticipationValue] with status [PlayerMatchParticipationStatus.notArriving]"
+        "when [.storeParticipation()] is called"
+        "then should store the participation with expected status",
+        () async {
+          // setup
+
+          final StorePlayerMatchParticipationValue storeValue =
+              StorePlayerMatchParticipationValue(
+            playerId: playerId,
+            matchId: matchId,
+            createdAt:
+                DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+            updatedAt:
+                DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+            status: PlayerMatchParticipationStatus.notArriving,
+          );
+
+          // when
+
+          final id =
+              await playerMatchParticipationsDataSource.storeParticipation(
+            value: storeValue,
+          );
+
+          // then
+
+          final expectedMatch = PlayerMatchParticipationEntityData(
+            id: id,
+            createdAt:
+                DateTime.fromMillisecondsSinceEpoch(storeValue.createdAt),
+            updatedAt:
+                DateTime.fromMillisecondsSinceEpoch(storeValue.updatedAt),
+            playerId: playerId,
+            matchId: matchId,
+            status: PlayerMatchParticipationStatus.notArriving,
+          );
+
+          final select = testDatabaseWrapper
+              .databaseWrapper.playerMatchParticipationsRepo
+              .select();
+          final findParticipationSelect = select
+            ..where((tbl) => tbl.id.equals(id));
+
+          final participation = await findParticipationSelect.getSingleOrNull();
+
+          expect(participation, equals(expectedMatch));
+
+          // cleanup
+        },
+      );
 
       // should store unknown participation
+      test(
+        "given [StorePlayerMatchParticipationValue] with status [PlayerMatchParticipationStatus.unknown]"
+        "when [.storeParticipation()] is called"
+        "then should store the participation with expected status",
+        () async {
+          // setup
+
+          final StorePlayerMatchParticipationValue storeValue =
+              StorePlayerMatchParticipationValue(
+            playerId: playerId,
+            matchId: matchId,
+            createdAt:
+                DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+            updatedAt:
+                DateTime.now().normalizedToSeconds.millisecondsSinceEpoch,
+            status: PlayerMatchParticipationStatus.unknown,
+          );
+
+          // when
+
+          final id =
+              await playerMatchParticipationsDataSource.storeParticipation(
+            value: storeValue,
+          );
+
+          // then
+
+          final expectedMatch = PlayerMatchParticipationEntityData(
+            id: id,
+            createdAt:
+                DateTime.fromMillisecondsSinceEpoch(storeValue.createdAt),
+            updatedAt:
+                DateTime.fromMillisecondsSinceEpoch(storeValue.updatedAt),
+            playerId: playerId,
+            matchId: matchId,
+            status: PlayerMatchParticipationStatus.unknown,
+          );
+
+          final select = testDatabaseWrapper
+              .databaseWrapper.playerMatchParticipationsRepo
+              .select();
+          final findParticipationSelect = select
+            ..where((tbl) => tbl.id.equals(id));
+
+          final participation = await findParticipationSelect.getSingleOrNull();
+
+          expect(participation, equals(expectedMatch));
+
+          // cleanup
+        },
+      );
     });
 
     // TODO deprecated - use storeParticipation instead

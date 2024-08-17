@@ -28,8 +28,19 @@ class PlayerMatchParticipationsDataSourceImpl
       status: value.status,
     );
 
-    final id = await _databaseWrapper.playerMatchParticipationsRepo
-        .insertOnConflictUpdate(companion);
+    // TODO custom upsert with do update when stuff other than priry key is conflicted - in this case, we have conflictiong unieue constraint consititn of player id and match id
+    final id = await _databaseWrapper.playerMatchParticipationsRepo.insertOne(
+      companion,
+      onConflict: DoUpdate.withExcluded((old, excluded) {
+        return PlayerMatchParticipationEntityCompanion.custom(
+          // NOTE - excluded is the new value that was attempted to be inserted
+          status: excluded.status,
+        );
+      }, target: [
+        _databaseWrapper.playerMatchParticipationsRepo.playerId,
+        _databaseWrapper.playerMatchParticipationsRepo.matchId,
+      ]),
+    );
 
     return id;
   }
