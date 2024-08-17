@@ -14,6 +14,27 @@ class PlayerMatchParticipationsDataSourceImpl
   final DatabaseWrapper _databaseWrapper;
 
   @override
+  Future<int> storeParticipation(
+      {required StorePlayerMatchParticipationValue value}) async {
+    // TODO dont need transaction i think
+
+    final companion = PlayerMatchParticipationEntityCompanion.insert(
+      createdAt: DateTime.fromMillisecondsSinceEpoch(value.createdAt)
+          .normalizedToSeconds,
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(value.updatedAt)
+          .normalizedToSeconds,
+      playerId: value.playerId,
+      matchId: value.matchId,
+      status: value.status,
+    );
+
+    final id = await _databaseWrapper.playerMatchParticipationsRepo
+        .insertOnConflictUpdate(companion);
+
+    return id;
+  }
+
+  @override
   Future<int> createParticipation({
     required CreatePlayerMatchParticipationValue value,
   }) async {
