@@ -4,7 +4,7 @@ import 'package:five_on_4_backend/src/features/core/utils/extensions/request_ext
 import 'package:five_on_4_backend/src/features/core/utils/helpers/response_generator.dart';
 import 'package:five_on_4_backend/src/features/core/utils/validators/request_validator.dart';
 import 'package:five_on_4_backend/src/features/player_match_participations/data/entities/player_match_participation_entity.dart';
-import 'package:five_on_4_backend/src/features/player_match_participations/utils/constants/player_match_participate_request_query_params_key_constants.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/utils/constants/store_player_match_participation_request_query_params_key_constants.dart';
 import 'package:shelf/shelf.dart';
 
 class StorePlayerMatchParticipateRequestValidator implements RequestValidator {
@@ -18,12 +18,14 @@ class StorePlayerMatchParticipateRequestValidator implements RequestValidator {
       final requestQueryParams = request.url.queryParameters;
 
       final status = requestQueryParams[
-          PlayerMatchParticipateRequestQueryParamsKeyConstants
+          StorePlayerMatchParticipationRequestQueryParamsKeyConstants
               .PARTICIPATION_STATUS.value];
       final matchId = requestQueryParams[
-          PlayerMatchParticipateRequestQueryParamsKeyConstants.MATCH_ID.value];
+          StorePlayerMatchParticipationRequestQueryParamsKeyConstants
+              .MATCH_ID.value];
       final playerId = requestQueryParams[
-          PlayerMatchParticipateRequestQueryParamsKeyConstants.PLAYER_ID.value];
+          StorePlayerMatchParticipationRequestQueryParamsKeyConstants
+              .PLAYER_ID.value];
 
       if (status == null) {
         final response = ResponseGenerator.failure(
@@ -85,12 +87,12 @@ class StorePlayerMatchParticipateRequestValidator implements RequestValidator {
       }
 
       final validatedUrlQueryParamsData = {
-        PlayerMatchParticipateRequestQueryParamsKeyConstants
+        StorePlayerMatchParticipationRequestQueryParamsKeyConstants
             .PARTICIPATION_STATUS.value: validStatus.name,
-        PlayerMatchParticipateRequestQueryParamsKeyConstants.MATCH_ID.value:
-            validMatchId,
-        PlayerMatchParticipateRequestQueryParamsKeyConstants.PLAYER_ID.value:
-            validPlayerId,
+        StorePlayerMatchParticipationRequestQueryParamsKeyConstants
+            .MATCH_ID.value: validMatchId,
+        StorePlayerMatchParticipationRequestQueryParamsKeyConstants
+            .PLAYER_ID.value: validPlayerId,
       };
 
       final changedRequest =
