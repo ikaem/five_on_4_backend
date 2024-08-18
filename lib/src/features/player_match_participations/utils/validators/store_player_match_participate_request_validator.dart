@@ -7,8 +7,8 @@ import 'package:five_on_4_backend/src/features/player_match_participations/data/
 import 'package:five_on_4_backend/src/features/player_match_participations/utils/constants/player_match_participate_request_query_params_key_constants.dart';
 import 'package:shelf/shelf.dart';
 
-class PlayerMatchParticipateRequestValidator implements RequestValidator {
-  const PlayerMatchParticipateRequestValidator();
+class StorePlayerMatchParticipateRequestValidator implements RequestValidator {
+  const StorePlayerMatchParticipateRequestValidator();
 
   @override
   ValidationHandler validate({

@@ -1,5 +1,5 @@
 import 'package:five_on_4_backend/src/features/core/utils/constants/request_constants.dart';
-import 'package:five_on_4_backend/src/features/player_match_participations/utils/validators/player_match_participate_request_validator.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/utils/validators/store_player_match_participate_request_validator.dart';
 import 'package:five_on_4_backend/src/features/players/utils/validators/search_players_request_validator.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
@@ -12,7 +12,7 @@ void main() {
   final validatedRequestHandler = _MockValidatedRequestHandlderWrapper();
 
   // tested class
-  final validator = const PlayerMatchParticipateRequestValidator();
+  final validator = const StorePlayerMatchParticipateRequestValidator();
 
   setUpAll(() {
     registerFallbackValue(_FakeRequest());
@@ -23,7 +23,7 @@ void main() {
     reset(validatedRequestHandler);
   });
 
-  group("$PlayerMatchParticipateRequestValidator", () {
+  group("$StorePlayerMatchParticipateRequestValidator", () {
     group(
       ".validate()",
       () {
@@ -35,8 +35,8 @@ void main() {
           () async {
             // setup
             // TODO lets leave it like this for now - the url
-            final uri =
-                Uri.parse("http://www.test.com/match-participation/store");
+            final uri = Uri.parse(
+                "http://www.test.com/player-match-participation/store");
 
             // final someRequest = Request("post", uri);
 
@@ -70,7 +70,7 @@ void main() {
           () async {
             // setup
             final uri = Uri.parse(
-                "http://www.test.com/match-participation/store?participation_status=pendingDecision");
+                "http://www.test.com/player-match-participation/store?participation_status=pendingDecision");
 
             // given
             when(() => request.url).thenReturn(uri);
@@ -102,7 +102,7 @@ void main() {
           () async {
             // setup
             final uri = Uri.parse(
-                "http://www.test.com/match-participation/store?participation_status=pendingDecision&match_id=1");
+                "http://www.test.com/player-match-participation/store?participation_status=pendingDecision&match_id=1");
 
             // given
             when(() => request.url).thenReturn(uri);
@@ -134,7 +134,7 @@ void main() {
           () async {
             // setup
             final uri = Uri.parse(
-                "http://www.test.com/match-participation/store?participation_status=invalidStatus&match_id=1&player_id=1");
+                "http://www.test.com/player-match-participation/store?participation_status=invalidStatus&match_id=1&player_id=1");
 
             // given
             when(() => request.url).thenReturn(uri);
@@ -166,7 +166,7 @@ void main() {
           () async {
             // setup
             final uri = Uri.parse(
-                "http://www.test.com/match-participation/store?participation_status=pendingDecision&match_id=invalidMatchId&player_id=1");
+                "http://www.test.com/player-match-participation/store?participation_status=pendingDecision&match_id=invalidMatchId&player_id=1");
 
             // given
             when(() => request.url).thenReturn(uri);
@@ -198,7 +198,7 @@ void main() {
           () async {
             // setup
             final uri = Uri.parse(
-                "http://www.test.com/match-participation/store?participation_status=pendingDecision&match_id=1&player_id=invalidPlayerId");
+                "http://www.test.com/player-match-participation/store?participation_status=pendingDecision&match_id=1&player_id=invalidPlayerId");
 
             // given
             when(() => request.url).thenReturn(uri);
@@ -232,7 +232,7 @@ void main() {
             final fakeRequest = _FakeRequest();
 
             final uri = Uri.parse(
-                "http://www.test.com/match-participation/store?participation_status=pendingDecision&match_id=1&player_id=1");
+                "http://www.test.com/player-match-participation/store?participation_status=pendingDecision&match_id=1&player_id=1");
 
             final validatedRequestHandlerResponse = Response(200);
             when(() => validatedRequestHandler.call(any()))
@@ -267,7 +267,7 @@ void main() {
             final realRequest = Request(
               "post",
               Uri.parse(
-                  "http://www.test.com/match-participation/store?participation_status=pendingDecision&match_id=1&player_id=1"),
+                  "http://www.test.com/player-match-participation/store?participation_status=pendingDecision&match_id=1&player_id=1"),
             );
 
             // when
@@ -312,7 +312,7 @@ void main() {
             final realRequest = Request(
               "post",
               Uri.parse(
-                  "http://www.test.com/match-participation/store?participation_status=arriving&match_id=1&player_id=1"),
+                  "http://www.test.com/player-match-participation/store?participation_status=arriving&match_id=1&player_id=1"),
             );
 
             // when
@@ -357,7 +357,7 @@ void main() {
             final realRequest = Request(
               "post",
               Uri.parse(
-                  "http://www.test.com/match-participation/store?participation_status=notArriving&match_id=1&player_id=1"),
+                  "http://www.test.com/player-match-participation/store?participation_status=notArriving&match_id=1&player_id=1"),
             );
 
             // when
