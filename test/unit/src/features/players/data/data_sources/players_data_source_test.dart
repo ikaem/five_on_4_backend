@@ -50,7 +50,7 @@ void main() {
             await testDatabaseWrapper.databaseWrapper.transaction(
               () async {
                 for (final authEntityData in _authEntitiesData) {
-                  await testDatabaseWrapper.databaseWrapper.authRepo
+                  await testDatabaseWrapper.databaseWrapper.authsRepo
                       .insertOne(authEntityData);
                 }
 
@@ -91,7 +91,7 @@ void main() {
             await testDatabaseWrapper.databaseWrapper.transaction(
               () async {
                 for (final authEntityData in _authEntitiesData) {
-                  await testDatabaseWrapper.databaseWrapper.authRepo
+                  await testDatabaseWrapper.databaseWrapper.authsRepo
                       .insertOne(authEntityData);
                 }
 
@@ -144,7 +144,7 @@ void main() {
         "then should return expected player entity data",
         () async {
           // setup
-          await testDatabaseWrapper.databaseWrapper.authRepo.insertOne(
+          await testDatabaseWrapper.databaseWrapper.authsRepo.insertOne(
             testAuthCompanion,
           );
           await testDatabaseWrapper.databaseWrapper.playersRepo
@@ -217,7 +217,7 @@ void main() {
             authId: authId,
           );
 
-          await testDatabaseWrapper.databaseWrapper.authRepo
+          await testDatabaseWrapper.databaseWrapper.authsRepo
               .insertOne(authCompanion);
 
           await testDatabaseWrapper.databaseWrapper.playersRepo

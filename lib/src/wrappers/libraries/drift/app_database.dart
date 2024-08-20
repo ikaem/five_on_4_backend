@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/data/entities/player_match_participation_entity.dart';
 
 import '../../../features/auth/data/entities/auth/auth_entity.dart';
 import '../../../features/matches/data/entities/match/match_entity.dart';
@@ -14,6 +15,7 @@ part "app_database.g.dart";
     PlayerEntity,
     TeamEntity,
     MatchEntity,
+    PlayerMatchParticipationEntity,
   ],
   queries: {
     "current_timestamp": "SELECT CURRENT_TIMESTAMP;",
@@ -29,7 +31,7 @@ class AppDatabase extends _$AppDatabase {
   final MigrationWrapper _migrationWrapper = MigrationWrapper();
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => _migrationWrapper.migration;

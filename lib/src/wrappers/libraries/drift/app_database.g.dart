@@ -1387,12 +1387,367 @@ class MatchEntityCompanion extends UpdateCompanion<MatchEntityData> {
   }
 }
 
+class $PlayerMatchParticipationEntityTable
+    extends PlayerMatchParticipationEntity
+    with
+        TableInfo<$PlayerMatchParticipationEntityTable,
+            PlayerMatchParticipationEntityData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PlayerMatchParticipationEntityTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumnWithTypeConverter<PlayerMatchParticipationStatus,
+      int> status = GeneratedColumn<int>('status', aliasedName, false,
+          type: DriftSqlType.int, requiredDuringInsert: true)
+      .withConverter<PlayerMatchParticipationStatus>(
+          $PlayerMatchParticipationEntityTable.$converterstatus);
+  static const VerificationMeta _playerIdMeta =
+      const VerificationMeta('playerId');
+  @override
+  late final GeneratedColumn<int> playerId = GeneratedColumn<int>(
+      'player_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES player_entity (id)'));
+  static const VerificationMeta _matchIdMeta =
+      const VerificationMeta('matchId');
+  @override
+  late final GeneratedColumn<int> matchId = GeneratedColumn<int>(
+      'match_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES match_entity (id)'));
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, createdAt, updatedAt, status, playerId, matchId];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'player_match_participation_entity';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<PlayerMatchParticipationEntityData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    context.handle(_statusMeta, const VerificationResult.success());
+    if (data.containsKey('player_id')) {
+      context.handle(_playerIdMeta,
+          playerId.isAcceptableOrUnknown(data['player_id']!, _playerIdMeta));
+    } else if (isInserting) {
+      context.missing(_playerIdMeta);
+    }
+    if (data.containsKey('match_id')) {
+      context.handle(_matchIdMeta,
+          matchId.isAcceptableOrUnknown(data['match_id']!, _matchIdMeta));
+    } else if (isInserting) {
+      context.missing(_matchIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {playerId, matchId},
+      ];
+  @override
+  PlayerMatchParticipationEntityData map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlayerMatchParticipationEntityData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+      status: $PlayerMatchParticipationEntityTable.$converterstatus.fromSql(
+          attachedDatabase.typeMapping
+              .read(DriftSqlType.int, data['${effectivePrefix}status'])!),
+      playerId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}player_id'])!,
+      matchId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}match_id'])!,
+    );
+  }
+
+  @override
+  $PlayerMatchParticipationEntityTable createAlias(String alias) {
+    return $PlayerMatchParticipationEntityTable(attachedDatabase, alias);
+  }
+
+  static JsonTypeConverter2<PlayerMatchParticipationStatus, int, int>
+      $converterstatus =
+      const EnumIndexConverter<PlayerMatchParticipationStatus>(
+          PlayerMatchParticipationStatus.values);
+}
+
+class PlayerMatchParticipationEntityData extends DataClass
+    implements Insertable<PlayerMatchParticipationEntityData> {
+  final int id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final PlayerMatchParticipationStatus status;
+  final int playerId;
+  final int matchId;
+  const PlayerMatchParticipationEntityData(
+      {required this.id,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.status,
+      required this.playerId,
+      required this.matchId});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    {
+      map['status'] = Variable<int>(
+          $PlayerMatchParticipationEntityTable.$converterstatus.toSql(status));
+    }
+    map['player_id'] = Variable<int>(playerId);
+    map['match_id'] = Variable<int>(matchId);
+    return map;
+  }
+
+  PlayerMatchParticipationEntityCompanion toCompanion(bool nullToAbsent) {
+    return PlayerMatchParticipationEntityCompanion(
+      id: Value(id),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      status: Value(status),
+      playerId: Value(playerId),
+      matchId: Value(matchId),
+    );
+  }
+
+  factory PlayerMatchParticipationEntityData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlayerMatchParticipationEntityData(
+      id: serializer.fromJson<int>(json['id']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      status: $PlayerMatchParticipationEntityTable.$converterstatus
+          .fromJson(serializer.fromJson<int>(json['status'])),
+      playerId: serializer.fromJson<int>(json['playerId']),
+      matchId: serializer.fromJson<int>(json['matchId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'status': serializer.toJson<int>(
+          $PlayerMatchParticipationEntityTable.$converterstatus.toJson(status)),
+      'playerId': serializer.toJson<int>(playerId),
+      'matchId': serializer.toJson<int>(matchId),
+    };
+  }
+
+  PlayerMatchParticipationEntityData copyWith(
+          {int? id,
+          DateTime? createdAt,
+          DateTime? updatedAt,
+          PlayerMatchParticipationStatus? status,
+          int? playerId,
+          int? matchId}) =>
+      PlayerMatchParticipationEntityData(
+        id: id ?? this.id,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        status: status ?? this.status,
+        playerId: playerId ?? this.playerId,
+        matchId: matchId ?? this.matchId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('PlayerMatchParticipationEntityData(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('status: $status, ')
+          ..write('playerId: $playerId, ')
+          ..write('matchId: $matchId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, createdAt, updatedAt, status, playerId, matchId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlayerMatchParticipationEntityData &&
+          other.id == this.id &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.status == this.status &&
+          other.playerId == this.playerId &&
+          other.matchId == this.matchId);
+}
+
+class PlayerMatchParticipationEntityCompanion
+    extends UpdateCompanion<PlayerMatchParticipationEntityData> {
+  final Value<int> id;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<PlayerMatchParticipationStatus> status;
+  final Value<int> playerId;
+  final Value<int> matchId;
+  const PlayerMatchParticipationEntityCompanion({
+    this.id = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.status = const Value.absent(),
+    this.playerId = const Value.absent(),
+    this.matchId = const Value.absent(),
+  });
+  PlayerMatchParticipationEntityCompanion.insert({
+    this.id = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required PlayerMatchParticipationStatus status,
+    required int playerId,
+    required int matchId,
+  })  : createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt),
+        status = Value(status),
+        playerId = Value(playerId),
+        matchId = Value(matchId);
+  static Insertable<PlayerMatchParticipationEntityData> custom({
+    Expression<int>? id,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? status,
+    Expression<int>? playerId,
+    Expression<int>? matchId,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (status != null) 'status': status,
+      if (playerId != null) 'player_id': playerId,
+      if (matchId != null) 'match_id': matchId,
+    });
+  }
+
+  PlayerMatchParticipationEntityCompanion copyWith(
+      {Value<int>? id,
+      Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt,
+      Value<PlayerMatchParticipationStatus>? status,
+      Value<int>? playerId,
+      Value<int>? matchId}) {
+    return PlayerMatchParticipationEntityCompanion(
+      id: id ?? this.id,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      status: status ?? this.status,
+      playerId: playerId ?? this.playerId,
+      matchId: matchId ?? this.matchId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<int>($PlayerMatchParticipationEntityTable
+          .$converterstatus
+          .toSql(status.value));
+    }
+    if (playerId.present) {
+      map['player_id'] = Variable<int>(playerId.value);
+    }
+    if (matchId.present) {
+      map['match_id'] = Variable<int>(matchId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlayerMatchParticipationEntityCompanion(')
+          ..write('id: $id, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('status: $status, ')
+          ..write('playerId: $playerId, ')
+          ..write('matchId: $matchId')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   late final $AuthEntityTable authEntity = $AuthEntityTable(this);
   late final $TeamEntityTable teamEntity = $TeamEntityTable(this);
   late final $PlayerEntityTable playerEntity = $PlayerEntityTable(this);
   late final $MatchEntityTable matchEntity = $MatchEntityTable(this);
+  late final $PlayerMatchParticipationEntityTable
+      playerMatchParticipationEntity =
+      $PlayerMatchParticipationEntityTable(this);
   Selectable<String> current_timestamp() {
     return customSelect('SELECT CURRENT_TIMESTAMP AS _c0',
         variables: [],
@@ -1403,6 +1758,11 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [authEntity, teamEntity, playerEntity, matchEntity];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+        authEntity,
+        teamEntity,
+        playerEntity,
+        matchEntity,
+        playerMatchParticipationEntity
+      ];
 }

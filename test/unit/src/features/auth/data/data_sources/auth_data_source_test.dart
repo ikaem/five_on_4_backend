@@ -63,7 +63,7 @@ Future<void> main() async {
               await authDataSource.createAuth(authValue: dataValueGoogle);
 
           // then
-          final select = testDatabaseWrapper.databaseWrapper.authRepo.select();
+          final select = testDatabaseWrapper.databaseWrapper.authsRepo.select();
           final findAuth = select..where((tbl) => tbl.id.equals(authId));
           final auth = await findAuth.getSingleOrNull();
 
@@ -165,7 +165,7 @@ Future<void> main() async {
           final hashedPassword = testAuthCompanion.password.value;
 
           // given
-          await testDatabaseWrapper.databaseWrapper.authRepo
+          await testDatabaseWrapper.databaseWrapper.authsRepo
               .insertOne(testAuthCompanion);
 
           // when
@@ -194,7 +194,7 @@ Future<void> main() async {
           // setup
           final email = testAuthCompanion.email.value;
 
-          await testDatabaseWrapper.databaseWrapper.authRepo
+          await testDatabaseWrapper.databaseWrapper.authsRepo
               .insertOne(testAuthCompanion);
 
           // when
@@ -258,7 +258,7 @@ Future<void> main() async {
         "then should return expected auth",
         () async {
           // setup
-          await testDatabaseWrapper.databaseWrapper.authRepo
+          await testDatabaseWrapper.databaseWrapper.authsRepo
               .insertOne(testAuthCompanion);
 
           // given
