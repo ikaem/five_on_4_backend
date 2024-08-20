@@ -5,6 +5,15 @@ import 'package:five_on_4_backend/src/features/matches/domain/use_cases/search_m
 import 'package:five_on_4_backend/src/features/matches/presentation/controllers/search_matches_controller.dart';
 import 'package:five_on_4_backend/src/features/matches/utils/middlewares/search_matches_request_middleware_wrapper.dart';
 import 'package:five_on_4_backend/src/features/matches/utils/validators/search_matches_request_validator.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/data/data_sources/player_match_participations_data_source_impl.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/domain/repositories/player_match_participations_repository_impl.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/domain/use_cases/dont_join_match/dont_join_match_use_case.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/domain/use_cases/invite_to_match/invite_to_match_use_case.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/domain/use_cases/join_match/join_match_use_case.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/presentation/controllers/store_player_match_participation_controller.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/presentation/router/player_match_participation_router.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/utils/middlewares/store_player_match_participation_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/utils/validators/store_player_match_participate_request_validator.dart';
 import 'package:five_on_4_backend/src/features/players/domain/use_cases/search_players/search_players_use_case.dart';
 import 'package:five_on_4_backend/src/features/players/presentation/controllers/get_player_controller.dart';
 import 'package:five_on_4_backend/src/features/players/presentation/controllers/search_players_controller.dart';
@@ -145,6 +154,8 @@ class DependenciesInitializerWrapper {
       authRouter: initializedRouters.authRouter,
       matchesRouter: initializedRouters.matchesRouter,
       playersRouter: initializedRouters.playersRouter,
+      playerMatchParticipationRouter:
+          initializedRouters.playerMatchParticipationRouter,
     );
     _appRouter = appRouter;
   }
@@ -186,10 +197,16 @@ InitializedDataSourcesDependenciesValues getInitializedDataSources({
   final matchesDataSource =
       MatchesDataSourceImpl(databaseWrapper: databaseWrapper);
 
+  final playerMatchParticipationsDataSource =
+      PlayerMatchParticipationsDataSourceImpl(
+    databaseWrapper: databaseWrapper,
+  );
+
   return InitializedDataSourcesDependenciesValues(
     authDataSource: authDataSource,
     playersDataSource: playersDataSource,
     matchesDataSource: matchesDataSource,
+    playerMatchParticipationsDataSource: playerMatchParticipationsDataSource,
   );
 }
 
@@ -209,11 +226,17 @@ InitializedRepositoriesDependenciesValues getInitializedRepositories({
   final matchesRepository = MatchesRepositoryImpl(
     matchesDataSource: initializedDataSources.matchesDataSource,
   );
+  final playerMatchParticipationsRepository =
+      PlayerMatchParticipationsRepositoryImpl(
+    playerMatchParticipationsDataSource:
+        initializedDataSources.playerMatchParticipationsDataSource,
+  );
 
   return InitializedRepositoriesDependenciesValues(
     authRepository: authRepository,
     playersRepository: playersRepository,
     matchesRepository: matchesRepository,
+    playerMatchParticipationsRepository: playerMatchParticipationsRepository,
   );
 }
 
@@ -282,6 +305,18 @@ InitializedUseCasesDependenciesValues getInitializedUseCases({
   final SearchPlayersUseCase searchPlayersUseCase = SearchPlayersUseCase(
     playersRepository: initializedRepositories.playersRepository,
   );
+  final JoinMatchUseCase joinMatchUseCase = JoinMatchUseCase(
+    playerMatchParticipationsRepository:
+        initializedRepositories.playerMatchParticipationsRepository,
+  );
+  final InviteToMatchUseCase inviteToMatchUseCase = InviteToMatchUseCase(
+    playerMatchParticipationsRepository:
+        initializedRepositories.playerMatchParticipationsRepository,
+  );
+  final DontJoinMatchUseCase dontJoinMatchUseCase = DontJoinMatchUseCase(
+    playerMatchParticipationsRepository:
+        initializedRepositories.playerMatchParticipationsRepository,
+  );
 
   return InitializedUseCasesDependenciesValues(
     googleLoginUseCase: googleLoginUseCase,
@@ -307,6 +342,9 @@ InitializedUseCasesDependenciesValues getInitializedUseCases({
     getPlayerMatchesOverviewUseCase: getPlayerMatchesOverviewUseCase,
     searchMatchesUseCase: searchMatchesUseCase,
     searchPlayersUseCase: searchPlayersUseCase,
+    dontJoinMatchUseCase: dontJoinMatchUseCase,
+    inviteToMatchUseCase: inviteToMatchUseCase,
+    joinMatchUseCase: joinMatchUseCase,
   );
 }
 
@@ -391,6 +429,14 @@ InitialiazedControllersDependenciesValues getInitializedControllers({
     getPlayerByIdUseCase: initializedUseCases.getPlayerByIdUseCase,
   );
 
+  final StorePlayerMatchParticipationController
+      storePlayerMatchParticipationController =
+      StorePlayerMatchParticipationController(
+    dontJoinMatchUseCase: initializedUseCases.dontJoinMatchUseCase,
+    inviteToMatchUseCase: initializedUseCases.inviteToMatchUseCase,
+    joinMatchUseCase: initializedUseCases.joinMatchUseCase,
+  );
+
   return InitialiazedControllersDependenciesValues(
     googleLoginController: googleLoginController,
     getMatchController: getMatchController,
@@ -405,6 +451,8 @@ InitialiazedControllersDependenciesValues getInitializedControllers({
     searchMatchesController: searchMatchesController,
     searchPlayersController: searchPlayersController,
     getPlayerController: getPlayerController,
+    storePlayerMatchParticipationController:
+        storePlayerMatchParticipationController,
   );
 }
 
@@ -433,6 +481,8 @@ InitializedValidatorsDependenciesValues getInitializedValidators({
       SearchPlayersRequestValidator();
   final GetPlayerRequestValidator getPlayerRequestValidator =
       GetPlayerRequestValidator();
+  final storePlayerMatchParticipateRequestValidator =
+      StorePlayerMatchParticipateRequestValidator();
 
   return InitializedValidatorsDependenciesValues(
     requestAuthorizationValidator: requestAuthorizationValidator,
@@ -447,6 +497,8 @@ InitializedValidatorsDependenciesValues getInitializedValidators({
     searchMatchesRequestValidator: searchMatchesRequestValidator,
     searchPlayersRequestValidator: searchPlayersRequestValidator,
     getPlayerRequestValidator: getPlayerRequestValidator,
+    storePlayerMatchParticipateRequestValidator:
+        storePlayerMatchParticipateRequestValidator,
   );
 }
 
@@ -496,6 +548,12 @@ InitializedMiddlewareWrappersDependenciesValues
       GetPlayerRequestMiddlewareWrapper(
     getPlayerRequestValidator: initializedValidators.getPlayerRequestValidator,
   );
+  final StorePlayerMatchParticipationRequestMiddlewareWrapper
+      storePlayerMatchParticipationRequestMiddlewareWrapper =
+      StorePlayerMatchParticipationRequestMiddlewareWrapper(
+    storePlayerMatchParticipateRequestValidator:
+        initializedValidators.storePlayerMatchParticipateRequestValidator,
+  );
 
   return InitializedMiddlewareWrappersDependenciesValues(
     authorizeRequestMiddlewareWrapper: requestAuthorizationMiddleware,
@@ -511,6 +569,8 @@ InitializedMiddlewareWrappersDependenciesValues
         searchMatchesRequestMiddlewareWrapper,
     searchPlayersMiddlewareWrapper: searchPlayersRequestMiddlewareWrapper,
     getPlayerRequestMiddlewareWrapper: getPlayerRequestMiddlewareWrapper,
+    storePlayerMatchParticipationRequestMiddlewareWrapper:
+        storePlayerMatchParticipationRequestMiddlewareWrapper,
   );
 }
 
@@ -566,9 +626,21 @@ InitializedRoutersDependenciesValues getInitializedRouters({
         initializedMiddlewareWrappers.getPlayerRequestMiddlewareWrapper,
   );
 
+  final PlayerMatchParticipationRouter playerMatchParticipationRouter =
+      PlayerMatchParticipationRouter(
+    storePlayerMatchParticipationController:
+        initializedControllers.storePlayerMatchParticipationController,
+    requestAuthorizationMiddleware:
+        initializedMiddlewareWrappers.authorizeRequestMiddlewareWrapper,
+    storePlayerMatchParticipationRequestMiddlewareWrapper:
+        initializedMiddlewareWrappers
+            .storePlayerMatchParticipationRequestMiddlewareWrapper,
+  );
+
   return InitializedRoutersDependenciesValues(
     authRouter: authRouter,
     matchesRouter: matchesRouter,
     playersRouter: playersRouter,
+    playerMatchParticipationRouter: playerMatchParticipationRouter,
   );
 }
