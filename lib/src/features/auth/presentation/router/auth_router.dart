@@ -1,3 +1,4 @@
+import 'package:five_on_4_backend/src/features/core/presentation/router/router_wrapper.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
@@ -12,7 +13,7 @@ import '../controllers/logout/logout_controller.dart';
 import '../controllers/refresh_token/refresh_token_controller.dart';
 import '../controllers/register_with_email_and_password/register_with_email_and_password_controller.dart';
 
-class AuthRouter {
+class AuthRouter implements RouterWrapper {
   AuthRouter({
     // controllers
     required GoogleLoginController googleLoginController,
@@ -95,6 +96,10 @@ class AuthRouter {
   }
 
   late final Router _router;
+
+  @override
+  final String prefix = "/auth";
+  @override
   Router get router => _router;
 }
 

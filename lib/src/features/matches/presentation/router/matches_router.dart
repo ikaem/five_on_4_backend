@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:mirrors';
 
+import 'package:five_on_4_backend/src/features/core/presentation/router/router_wrapper.dart';
 import 'package:five_on_4_backend/src/features/matches/presentation/controllers/search_matches_controller.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -9,7 +11,7 @@ import '../controllers/create_match_controller.dart';
 import '../controllers/get_match_controller.dart';
 import '../controllers/get_player_matches_overview_controller.dart';
 
-class MatchesRouter {
+class MatchesRouter implements RouterWrapper {
   MatchesRouter({
     required GetMatchController getMatchController,
     required CreateMatchController createMatchController,
@@ -41,6 +43,14 @@ class MatchesRouter {
           .addMiddleware(getPlayerMatchesOverviewRequestMiddleware())
           .addHandler(getPlayerMatchesOverviewController.call),
     );
+    // TODO as per this
+    final mirror = reflect(matchesRouter);
+    final routes = mirror.invoke(#post, [
+      "/ja",
+      (Request request) {
+        return Response.ok("ja");
+      }
+    ]);
 
     matchesRouter.post(
       "/",
@@ -49,6 +59,8 @@ class MatchesRouter {
           .addMiddleware(matchCreateRequestMiddleware())
           .addHandler(createMatchController.call),
     );
+    // _routes.add("/");
+    // matchesRouter
 
 // dynamic routes have to be last, so as not to catch other routes requests
     matchesRouter.get(
@@ -62,7 +74,19 @@ class MatchesRouter {
   }
 
   late final Router _router;
+
+  // TODO test only
+  // final List<String> _routes = [];
+  // List<String> get routes => _routes;
+
+  @override
+  final String prefix = "/matches";
+  @override
   Router get router => _router;
+
+  dynamic get mirror => reflect(router);
+
+  dynamic get routes => mirror.getField(#hashCode).reflectee;
 }
 
 Middleware someRandomMiddleware() => (innerHandler) {

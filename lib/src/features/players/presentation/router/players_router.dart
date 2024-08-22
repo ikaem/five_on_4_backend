@@ -1,4 +1,5 @@
 import 'package:five_on_4_backend/src/features/auth/utils/middlewares/authorize_request_middleware_wrapper.dart';
+import 'package:five_on_4_backend/src/features/core/presentation/router/router_wrapper.dart';
 import 'package:five_on_4_backend/src/features/players/presentation/controllers/get_player_controller.dart';
 import 'package:five_on_4_backend/src/features/players/presentation/controllers/search_players_controller.dart';
 import 'package:five_on_4_backend/src/features/players/utils/middlewares/get_player_request_middleware_wrapper.dart';
@@ -6,7 +7,7 @@ import 'package:five_on_4_backend/src/features/players/utils/middlewares/search_
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 
-class PlayersRouter {
+class PlayersRouter implements RouterWrapper {
   PlayersRouter({
     // controllers
     required SearchPlayersController searchPlayersController,
@@ -45,5 +46,9 @@ class PlayersRouter {
   }
 
   late final Router _router;
+
+  @override
+  final String prefix = "/players";
+  @override
   Router get router => _router;
 }
