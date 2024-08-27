@@ -23,10 +23,11 @@ class PlayerMatchParticipationEntity extends Table {
 
 // TODO not sure if this could be private
 // TODO leave this here for now
+// TODO move to its own thing so we can search for it easeir
 enum PlayerMatchParticipationStatus {
-  pendingDecision,
-  arriving,
-  notArriving,
+  pendingDecision, // 0
+  arriving, // 1
+  notArriving, // 2
   // TODO if any other are added, they need to be added at the end of list to account for indexes of each enum and avoid migration
-  unknown,
+  unknown, // 3
 }
