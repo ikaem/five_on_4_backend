@@ -1,4 +1,6 @@
 import 'package:drift/drift.dart';
+import 'package:equatable/equatable.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/data/entities/player_match_participation_entity.dart';
 
 import '../../../../wrappers/libraries/drift/app_database.dart';
 import '../../../../wrappers/local/database/database_wrapper.dart';
@@ -29,6 +31,7 @@ class MatchesDataSourceImpl implements MatchesDataSource {
 
   final DatabaseWrapper _databaseWrapper;
 
+// TODO these should probablsy returne some BriefEntity, so we dont get participants here - there is no need for that - we can only load participants when we get full match single one, detailed
   @override
   Future<List<MatchEntityData>> searchMatches({
     required MatchSearchFilterValue filter,
@@ -171,11 +174,114 @@ ovan
   Future<MatchEntityData?> getMatch({
     required int matchId,
   }) async {
-    final select = _databaseWrapper.matchesRepo.select();
-    final findMatch = select..where((tbl) => tbl.id.equals(matchId));
+    // return null;
 
-    final match = await findMatch.getSingleOrNull();
-    return match;
+    // return null;
+
+    final select = _databaseWrapper.matchesRepo.select();
+    final joinedSelect = select.join([
+      leftOuterJoin(
+        _databaseWrapper.playerMatchParticipationsRepo,
+        _databaseWrapper.playerMatchParticipationsRepo.matchId.equalsExp(
+          _databaseWrapper.matchesRepo.id,
+        ),
+      ),
+      leftOuterJoin(
+        _databaseWrapper.playersRepo,
+        _databaseWrapper.playersRepo.id.equalsExp(
+          _databaseWrapper.playerMatchParticipationsRepo.playerId,
+        ),
+      ),
+    ]);
+
+    final findMatchSelect = joinedSelect
+      ..where(_databaseWrapper.matchesRepo.id.equals(matchId));
+
+    // final match = await findMatchSelect.getSingleOrNull();
+
+    final result = await findMatchSelect.get();
+
+    if (result.isEmpty) {
+      return null;
+    }
+
+    final matchData = result.first.readTable(_databaseWrapper.matchesRepo);
+    final participationsData = result.map(
+      (row) {
+        // TODO we cal assem entity value here, and insert nickname here
+        final participationData =
+            row.readTable(_databaseWrapper.playerMatchParticipationsRepo);
+
+        final playerData = row.readTable(_databaseWrapper.playersRepo);
+
+        final participationEntityValue = PlayerMatchParticipationEntityValue(
+          id: participationData.id,
+          createdAt: participationData.createdAt,
+          updatedAt: participationData.updatedAt,
+          status: participationData.status,
+          playerId: participationData.playerId,
+          matchId: participationData.matchId,
+          playerNickname: playerData.nickname,
+        );
+
+        return participationEntityValue;
+      },
+    ).toList();
+
+    final MatchEntityValue matchEntityValue = MatchEntityValue(
+      id: matchData.id,
+      title: matchData.title,
+      dateAndTime: matchData.dateAndTime,
+      location: matchData.location,
+      description: matchData.description,
+      createdAt: matchData.createdAt,
+      updatedAt: matchData.updatedAt,
+      participtions: participationsData,
+    );
+
+    // final participationEntityValues = participationsInfo.map(
+    //   (participation) {
+    //     return PlayerMatchParticipationEntityValue(
+    //       id: participation.id,
+    //       createdAt: participation.createdAt,
+    //       updatedAt: participation.updatedAt,
+    //       status: participation.status,
+    //       playerId: participation.playerId,
+    //       matchId: participation.matchId,
+    //       // TODO we will come back to this
+    //       playerNickname: null,
+    //     );
+    //   },
+    // ).toList();
+
+    // final match = await findMatchSelect.get();
+    // final data = (await findMatchSelect.get()).map((row) {
+
+    //   final match = row.readTable(_databaseWrapper.matchesRepo);
+    //   final playerMatchParticipation = row.readTable(_databaseWrapper.playerMatchParticipationsRepo);
+
+    // } );
+
+    // final matchData = await findMatchSelect.map((row) {
+    //   final match = row.readTable(_databaseWrapper.matchesRepo);
+    //   final playerMatchParticipation = row.readTable(
+    //     _databaseWrapper.playerMatchParticipationsRepo,
+    //   );
+
+    //   return match;
+    // }).get();
+
+    // TODO this is possible, sure
+
+    /////////////////////
+    return null;
+
+// TODO this works, all good
+    // final select = _databaseWrapper.matchesRepo.select();
+    // final findMatch = select..where((tbl) => tbl.id.equals(matchId));
+
+    // final match = await findMatch.getSingleOrNull();
+    // return match;
   }
 
   @override
@@ -359,4 +465,71 @@ ovan
 
     return matches;
   }
+}
+
+// TODO test only
+class MatchEntityValue extends Equatable {
+  const MatchEntityValue({
+    required this.id,
+    required this.title,
+    required this.dateAndTime,
+    required this.location,
+    required this.description,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.participtions,
+  });
+
+  final int id;
+  final String title;
+  final DateTime dateAndTime;
+  final String location;
+  final String description;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final List<PlayerMatchParticipationEntityValue> participtions;
+
+  @override
+  List<Object?> get props => [
+        id,
+        title,
+        dateAndTime,
+        location,
+        description,
+        createdAt,
+        updatedAt,
+      ];
+}
+
+class PlayerMatchParticipationEntityValue extends Equatable {
+  const PlayerMatchParticipationEntityValue({
+    required this.id,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.status,
+    required this.playerId,
+    required this.matchId,
+    this.playerNickname,
+  });
+
+  final int id;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final PlayerMatchParticipationStatus status;
+  final int playerId;
+  final int matchId;
+
+  // TODO this is not in the table, but lets put it here - we will join when needed
+  final String? playerNickname;
+
+  @override
+  List<Object?> get props => [
+        id,
+        createdAt,
+        updatedAt,
+        status,
+        playerId,
+        matchId,
+        playerNickname,
+      ];
 }

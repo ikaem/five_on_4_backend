@@ -1,4 +1,6 @@
 import 'package:drift/drift.dart' hide isNull;
+import 'package:five_on_4_backend/src/features/auth/utils/constants/auth_type_constants.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/data/entities/player_match_participation_entity.dart';
 import 'package:test/test.dart';
 
 import 'package:five_on_4_backend/src/features/core/utils/extensions/date_time_extension.dart';
@@ -24,9 +26,103 @@ void main() {
   });
 
   tearDown(() async {
-    await testDatabaseWrapper.clearAll();
+    // TODO test only
+    // await testDatabaseWrapper.clearAll();
     await testDatabaseWrapper.databaseWrapper.close();
   });
+
+  group(
+    "test only",
+    () {
+      test(
+        "given <pre-condition to the test>"
+        "when <behavior we are specifying>"
+        "then should <state we expect to happen>",
+        () async {
+          final match = await matchesDataSource.getMatch(matchId: 1);
+          // setup
+          // insert auths
+
+          // final auths = List.generate(2, (index) {
+          //   return AuthEntityData(
+          //     id: index + 1,
+          //     email: "email$index",
+          //     password: "password$index",
+          //     createdAt: DateTime.now().normalizedToSeconds,
+          //     updatedAt: DateTime.now().normalizedToSeconds,
+          //     authType: AuthTypeConstants.emailPassword.name,
+          //   );
+          // });
+
+          // // insert players
+          // final players = List.generate(2, (index) {
+          //   return PlayerEntityData(
+          //     id: index + 1,
+          //     authId: index + 1,
+          //     firstName: "firstName$index",
+          //     lastName: "lastName$index",
+          //     nickname: "nickname$index",
+          //     createdAt: DateTime.now().normalizedToSeconds,
+          //     updatedAt: DateTime.now().normalizedToSeconds,
+          //   );
+          // });
+
+          // // insert match
+          // final match = MatchEntityData(
+          //   id: 1,
+          //   title: "title",
+          //   dateAndTime: DateTime.now().normalizedToSeconds,
+          //   location: "location",
+          //   description: "description",
+          //   createdAt: DateTime.now().normalizedToSeconds,
+          //   updatedAt: DateTime.now().normalizedToSeconds,
+          // );
+
+          // // insert participations - two
+          // final participations = List.generate(2, (index) {
+          //   return PlayerMatchParticipationEntityData(
+          //     id: index + 1,
+          //     playerId: index + 1,
+          //     matchId: 1,
+          //     createdAt: DateTime.now().normalizedToSeconds,
+          //     updatedAt: DateTime.now().normalizedToSeconds,
+          //     status: PlayerMatchParticipationStatus.values[index],
+          //   );
+          // });
+
+          // // insert all
+          // await testDatabaseWrapper.databaseWrapper.transaction(() async {
+          //   for (final auth in auths) {
+          //     await testDatabaseWrapper.databaseWrapper.authsRepo
+          //         .insertOne(auth);
+          //   }
+          //   for (final player in players) {
+          //     await testDatabaseWrapper.databaseWrapper.playersRepo
+          //         .insertOne(player);
+          //   }
+          //   await testDatabaseWrapper.databaseWrapper.matchesRepo
+          //       .insertOne(match);
+          //   for (final participation in participations) {
+          //     await testDatabaseWrapper
+          //         .databaseWrapper.playerMatchParticipationsRepo
+          //         .insertOne(participation);
+          //   }
+          // });
+
+          // given
+
+          // when
+          // final match = await testDatabaseWrapper.databaseWrapper.matchesRepo
+          //     .select()
+          //     .getSingleOrNull();
+
+          // then
+
+          // cleanup
+        },
+      );
+    },
+  );
 
   group("$MatchesDataSource", () {
     group(
