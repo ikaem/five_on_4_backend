@@ -1,6 +1,9 @@
 import 'package:drift/drift.dart';
 import 'package:equatable/equatable.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/values/match_entity_value.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/data/data_sources/player_match_participations_data_source.dart';
 import 'package:five_on_4_backend/src/features/player_match_participations/data/entities/player_match_participation_entity.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/domain/values/player_match_participation_entity_value.dart';
 
 import '../../../../wrappers/libraries/drift/app_database.dart';
 import '../../../../wrappers/local/database/database_wrapper.dart';
@@ -171,7 +174,7 @@ ovan
   }
 
   @override
-  Future<MatchEntityData?> getMatch({
+  Future<MatchEntityValue?> getMatch({
     required int matchId,
   }) async {
     // return null;
@@ -239,6 +242,8 @@ ovan
       participtions: participationsData,
     );
 
+    return matchEntityValue;
+
     // final participationEntityValues = participationsInfo.map(
     //   (participation) {
     //     return PlayerMatchParticipationEntityValue(
@@ -274,7 +279,7 @@ ovan
     // TODO this is possible, sure
 
     /////////////////////
-    return null;
+    // return null;
 
 // TODO this works, all good
     // final select = _databaseWrapper.matchesRepo.select();
@@ -468,68 +473,68 @@ ovan
 }
 
 // TODO test only
-class MatchEntityValue extends Equatable {
-  const MatchEntityValue({
-    required this.id,
-    required this.title,
-    required this.dateAndTime,
-    required this.location,
-    required this.description,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.participtions,
-  });
+// class MatchEntityValue extends Equatable {
+//   const MatchEntityValue({
+//     required this.id,
+//     required this.title,
+//     required this.dateAndTime,
+//     required this.location,
+//     required this.description,
+//     required this.createdAt,
+//     required this.updatedAt,
+//     required this.participtions,
+//   });
 
-  final int id;
-  final String title;
-  final DateTime dateAndTime;
-  final String location;
-  final String description;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final List<PlayerMatchParticipationEntityValue> participtions;
+//   final int id;
+//   final String title;
+//   final DateTime dateAndTime;
+//   final String location;
+//   final String description;
+//   final DateTime createdAt;
+//   final DateTime updatedAt;
+//   final List<PlayerMatchParticipationEntityValue> participtions;
 
-  @override
-  List<Object?> get props => [
-        id,
-        title,
-        dateAndTime,
-        location,
-        description,
-        createdAt,
-        updatedAt,
-      ];
-}
+//   @override
+//   List<Object?> get props => [
+//         id,
+//         title,
+//         dateAndTime,
+//         location,
+//         description,
+//         createdAt,
+//         updatedAt,
+//       ];
+// }
 
-class PlayerMatchParticipationEntityValue extends Equatable {
-  const PlayerMatchParticipationEntityValue({
-    required this.id,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.status,
-    required this.playerId,
-    required this.matchId,
-    this.playerNickname,
-  });
+// class PlayerMatchParticipationEntityValue extends Equatable {
+//   const PlayerMatchParticipationEntityValue({
+//     required this.id,
+//     required this.createdAt,
+//     required this.updatedAt,
+//     required this.status,
+//     required this.playerId,
+//     required this.matchId,
+//     this.playerNickname,
+//   });
 
-  final int id;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final PlayerMatchParticipationStatus status;
-  final int playerId;
-  final int matchId;
+//   final int id;
+//   final DateTime createdAt;
+//   final DateTime updatedAt;
+//   final PlayerMatchParticipationStatus status;
+//   final int playerId;
+//   final int matchId;
 
-  // TODO this is not in the table, but lets put it here - we will join when needed
-  final String? playerNickname;
+//   // TODO this is not in the table, but lets put it here - we will join when needed
+//   final String? playerNickname;
 
-  @override
-  List<Object?> get props => [
-        id,
-        createdAt,
-        updatedAt,
-        status,
-        playerId,
-        matchId,
-        playerNickname,
-      ];
-}
+//   @override
+//   List<Object?> get props => [
+//         id,
+//         createdAt,
+//         updatedAt,
+//         status,
+//         playerId,
+//         matchId,
+//         playerNickname,
+//       ];
+// }

@@ -16,11 +16,6 @@ abstract interface class PlayerMatchParticipationsDataSource {
 
 // TODO not needed yet
 // TODO move to values later
-class PlayerMatchParticipationEntityValue extends Equatable {
-  @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
-}
 
 // TODO move to values
 
