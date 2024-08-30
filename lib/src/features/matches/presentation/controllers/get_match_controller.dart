@@ -63,7 +63,18 @@ Map<String, Object> _generateOkResponseData({
     "description": match.description,
   };
 
+  final participationsPayload = match.participations.map((participation) {
+    return {
+      "id": participation.id,
+      "status": participation.status,
+      "playerId": participation.playerId,
+      "matchId": participation.matchId,
+      "playerNickname": participation.playerNickname,
+    };
+  }).toList();
+
   return {
     "match": matchPayload,
+    "participations": participationsPayload,
   };
 }
