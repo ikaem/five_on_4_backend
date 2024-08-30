@@ -164,4 +164,5 @@ final _testMatchModel = MatchModel(
   dateAndTime: DateTime.now().millisecondsSinceEpoch,
   location: "location",
   description: "description",
+  participations: [],
 );

@@ -123,6 +123,7 @@ void main() {
                     description: "description",
                     location: "location",
                     title: "title",
+                    participations: [],
                   ));
 
           when(() => getPlayerByIdUseCase(id: playerId)).thenAnswer(
