@@ -16,15 +16,19 @@ class MatchesRepositoryImpl implements MatchesRepository {
   Future<MatchModel?> getMatch({
     required int matchId,
   }) async {
-    final matchEntityData = await matchesDataSource.getMatch(
+    final matchEntityValue = await matchesDataSource.getMatch(
       matchId: matchId,
     );
-    if (matchEntityData == null) {
+    if (matchEntityValue == null) {
       return null;
     }
 
-    final match = MatchesConverter.modelFromEntity(
-      entity: matchEntityData,
+    // final match = MatchesConverter.modelFromEntity(
+    //   entity: matchEntityData,
+    // );
+
+    final match = MatchesConverter.modelFromEntityValue(
+      entity: matchEntityValue,
     );
 
     return match;

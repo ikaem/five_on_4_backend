@@ -1,3 +1,4 @@
+import 'package:five_on_4_backend/src/features/matches/domain/values/match_entity_value.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
@@ -182,17 +183,32 @@ void main() {
         () async {
           // setup
           final matchId = 1;
+          final testMatchEntityValue = MatchEntityValue(
+            id: matchId,
+            title: "title",
+            dateAndTime: DateTime.now().normalizedToSeconds,
+            location: "location",
+            description: "description",
+            createdAt: DateTime.now().normalizedToSeconds,
+            updatedAt: DateTime.now().normalizedToSeconds,
+            participtions: [],
+          );
 
           // given
+          // when(() => matchesDataSource.getMatch(matchId: matchId))
+          //     .thenAnswer((i) async => testMatchEntityData);
           when(() => matchesDataSource.getMatch(matchId: matchId))
-              .thenAnswer((i) async => testMatchEntityData);
+              .thenAnswer((i) async => testMatchEntityValue);
 
           // when
           final result = await matchesRepositoryImpl.getMatch(matchId: matchId);
 
           // then
-          final expectedMatch =
-              MatchesConverter.modelFromEntity(entity: testMatchEntityData);
+          // final expectedMatch =
+          //     MatchesConverter.modelFromEntity(entity: testMatchEntityData);
+          final expectedMatch = MatchesConverter.modelFromEntityValue(
+            entity: testMatchEntityValue,
+          );
           expect(result, expectedMatch);
 
           // cleanup

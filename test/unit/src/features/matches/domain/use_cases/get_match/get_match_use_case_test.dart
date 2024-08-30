@@ -73,4 +73,5 @@ final testMatchModel = MatchModel(
   id: 1,
   location: "location",
   title: "title",
+  participations: [],
 );

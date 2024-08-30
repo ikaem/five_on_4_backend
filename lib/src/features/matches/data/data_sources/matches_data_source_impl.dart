@@ -209,13 +209,26 @@ ovan
     }
 
     final matchData = result.first.readTable(_databaseWrapper.matchesRepo);
+
     final participationsData = result.map(
       (row) {
         // TODO we cal assem entity value here, and insert nickname here
         final participationData =
-            row.readTable(_databaseWrapper.playerMatchParticipationsRepo);
+            // row.readTable(_databaseWrapper.playerMatchParticipationsRepo);
+            row.readTableOrNull(_databaseWrapper.playerMatchParticipationsRepo);
 
-        final playerData = row.readTable(_databaseWrapper.playersRepo);
+        if (participationData == null) {
+          return null;
+        }
+
+        // final playerData = row.readTable(_databaseWrapper.playersRepo);
+        final playerData = row.readTableOrNull(_databaseWrapper.playersRepo);
+
+        // TODO not sure if in theory we could have particpation without player?
+        // TODO lets return null, and then we will see
+        if (playerData == null) {
+          return null;
+        }
 
         final participationEntityValue = PlayerMatchParticipationEntityValue(
           id: participationData.id,
@@ -231,6 +244,10 @@ ovan
       },
     ).toList();
 
+    final validatedParticipationsData = participationsData
+        .whereType<PlayerMatchParticipationEntityValue>()
+        .toList();
+
     final MatchEntityValue matchEntityValue = MatchEntityValue(
       id: matchData.id,
       title: matchData.title,
@@ -239,7 +256,7 @@ ovan
       description: matchData.description,
       createdAt: matchData.createdAt,
       updatedAt: matchData.updatedAt,
-      participtions: participationsData,
+      participtions: validatedParticipationsData,
     );
 
     return matchEntityValue;
