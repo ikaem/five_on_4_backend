@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:five_on_4_backend/src/features/matches/data/data_sources/matches_data_source_impl.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/values/match_entity_value.dart';
 
 import '../../../../wrappers/libraries/drift/app_database.dart';
 import '../../domain/values/create_match_value.dart';
@@ -6,7 +8,7 @@ import '../../domain/values/match_search_filter_value.dart';
 
 abstract interface class MatchesDataSource {
   // TODO eventually return value from here
-  Future<MatchEntityData?> getMatch({
+  Future<MatchEntityValue?> getMatch({
     required int matchId,
   });
 

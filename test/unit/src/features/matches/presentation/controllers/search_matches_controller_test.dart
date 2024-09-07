@@ -75,6 +75,7 @@ void main() {
                   description: "description",
                   location: "location",
                   title: "title",
+                  participations: [],
                 ));
 
         when(() => searchMatchesUseCase(filter: any(named: "filter")))
@@ -131,6 +132,7 @@ void main() {
                   description: "description",
                   location: "location",
                   title: "title",
+                  participations: [],
                 ));
 
         when(() => searchMatchesUseCase(filter: any(named: "filter")))

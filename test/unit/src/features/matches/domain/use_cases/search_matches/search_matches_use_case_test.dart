@@ -35,6 +35,7 @@ void main() {
               id: index + 1,
               location: "location",
               title: "title",
+              participations: [],
             );
           });
 

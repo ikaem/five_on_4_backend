@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:five_on_4_backend/src/features/player_match_participations/data/entities/player_match_participation_entity.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/domain/models/player_match_participation_model.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
@@ -128,7 +130,17 @@ void main() {
                 "dateAndTime": _testMatchModel.dateAndTime,
                 "location": _testMatchModel.location,
                 "description": _testMatchModel.description,
-              }
+              },
+              "participations":
+                  _testMatchModel.participations.map((participation) {
+                return {
+                  "id": participation.id,
+                  "status": participation.status,
+                  "playerId": participation.playerId,
+                  "matchId": participation.matchId,
+                  "playerNickname": participation.playerNickname,
+                };
+              }).toList(),
             },
             responseMessage: "Match found",
           );
@@ -164,4 +176,13 @@ final _testMatchModel = MatchModel(
   dateAndTime: DateTime.now().millisecondsSinceEpoch,
   location: "location",
   description: "description",
+  participations: List.generate(3, (index) {
+    return PlayerMatchParticipationModel(
+      id: index + 1,
+      status: PlayerMatchParticipationStatus.values[index].name,
+      playerId: index + 1,
+      matchId: 1,
+      playerNickname: "playerNickname",
+    );
+  }),
 );

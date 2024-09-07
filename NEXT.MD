@@ -1,5 +1,5 @@
-1. test particpation router
-2. i guess deploy it
-3. move on to mobile
-   1. start with only invite player to already existing game - not when we create a new game
-   2. with create new game, it will come later
+1. test dev version with mobile app
+   1. adjust mobile app to take in participations
+   2. load participations from server
+   3. store participations in db
+   4. display participations in mobile app

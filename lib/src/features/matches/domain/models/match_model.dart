@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/domain/models/player_match_participation_model.dart';
 
 class MatchModel extends Equatable {
   const MatchModel({
@@ -7,6 +8,7 @@ class MatchModel extends Equatable {
     required this.dateAndTime,
     required this.location,
     required this.description,
+    required this.participations,
   });
 
   final int id;
@@ -14,6 +16,7 @@ class MatchModel extends Equatable {
   final int dateAndTime;
   final String location;
   final String description;
+  final List<PlayerMatchParticipationModel> participations;
 
   @override
   List<Object?> get props => [
@@ -22,5 +25,6 @@ class MatchModel extends Equatable {
         dateAndTime,
         location,
         description,
+        participations,
       ];
 }

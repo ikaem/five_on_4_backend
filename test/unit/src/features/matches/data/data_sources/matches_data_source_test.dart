@@ -1,4 +1,8 @@
 import 'package:drift/drift.dart' hide isNull;
+import 'package:five_on_4_backend/src/features/auth/utils/constants/auth_type_constants.dart';
+import 'package:five_on_4_backend/src/features/matches/domain/values/match_entity_value.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/data/entities/player_match_participation_entity.dart';
+import 'package:five_on_4_backend/src/features/player_match_participations/domain/values/player_match_participation_entity_value.dart';
 import 'package:test/test.dart';
 
 import 'package:five_on_4_backend/src/features/core/utils/extensions/date_time_extension.dart';
@@ -24,8 +28,118 @@ void main() {
   });
 
   tearDown(() async {
+    // TODO test only
     await testDatabaseWrapper.clearAll();
     await testDatabaseWrapper.databaseWrapper.close();
+  });
+
+  group(".getMatch()", () {
+    test(
+      "given match with participations exists in db "
+      "when [.getMatch()] is called with [matchId] "
+      "then should return expected result",
+      () async {
+        // setup
+
+        // given
+        await _insertMatchWithParticipations(
+          testDatabaseWrapper: testDatabaseWrapper,
+        );
+
+        // when
+        final match = await matchesDataSource.getMatch(matchId: 1);
+
+        // then
+        final expectedMatch = MatchEntityValue(
+          id: _match.id,
+          title: _match.title,
+          dateAndTime: _match.dateAndTime,
+          location: _match.location,
+          description: _match.description,
+          createdAt: _match.createdAt,
+          updatedAt: _match.updatedAt,
+          participtions: _participations
+              .map(
+                (participation) => PlayerMatchParticipationEntityValue(
+                  id: participation.id,
+                  playerId: participation.playerId,
+                  matchId: participation.matchId,
+                  status: participation.status,
+                  createdAt: participation.createdAt,
+                  updatedAt: participation.updatedAt,
+                  playerNickname: _players
+                      .firstWhere(
+                        (player) => player.id == participation.playerId,
+                      )
+                      .nickname,
+                ),
+              )
+              .toList(),
+        );
+
+        expect(match, equals(expectedMatch));
+
+        // cleanup
+      },
+    );
+
+    test(
+      "given match without participations exists in db "
+      "when .getMatch() is called with matchId"
+      "then should return expected match entity data",
+      () async {
+        // setup
+
+        // given
+        final id =
+            await testDatabaseWrapper.databaseWrapper.matchesRepo.insertOne(
+          _match,
+        );
+
+        // when
+        final match = await matchesDataSource.getMatch(matchId: id);
+
+        // then
+        final expectedMatch = MatchEntityValue(
+          id: _match.id,
+          title: _match.title,
+          dateAndTime: _match.dateAndTime,
+          location: _match.location,
+          description: _match.description,
+          createdAt: _match.createdAt,
+          updatedAt: _match.updatedAt,
+          participtions: [],
+        );
+
+        expect(
+          match,
+          equals(expectedMatch),
+        );
+
+        // cleanup
+        print("TODO cleanup");
+      },
+    );
+
+    test(
+      "given match does not exist in db "
+      "when .getMatch() is called with matchId "
+      "then should return null",
+      () async {
+        // setup
+        final matchId = 1;
+
+        // given
+
+        // when
+        final match = await matchesDataSource.getMatch(matchId: matchId);
+
+        // then
+        expect(match, isNull);
+
+        // cleanup
+      },
+    );
   });
 
   group("$MatchesDataSource", () {
@@ -474,70 +588,71 @@ void main() {
         },
       );
     });
-
-    group(".getMatch()", () {
-      test(
-        "given match does not exist in db "
-        "when .getMatch() is called with matchId "
-        "then should return null",
-        () async {
-          // setup
-          final matchId = 1;
-
-          // given
-
-          // when
-          final match = await matchesDataSource.getMatch(matchId: matchId);
-
-          // then
-          expect(match, isNull);
-
-          // cleanup
-        },
-      );
-
-      test(
-        "given match exists in db "
-        "when .getMatch() is called with matchId"
-        "then should return expected match entity data",
-        () async {
-          // setup
-
-          // given
-          final matchCompanion = MatchEntityCompanion.insert(
-            title: "title",
-            dateAndTime: DateTime.now().normalizedToSeconds,
-            location: "location",
-            description: "description",
-            createdAt: DateTime.now().normalizedToSeconds,
-            updatedAt: DateTime.now().normalizedToSeconds,
-          );
-          final id = await testDatabaseWrapper.databaseWrapper.matchesRepo
-              .insertOne(matchCompanion);
-
-          // when
-          final match = await matchesDataSource.getMatch(matchId: id);
-
-          // then
-          final expectedMatch = MatchEntityData(
-            id: id,
-            title: matchCompanion.title.value,
-            dateAndTime: matchCompanion.dateAndTime.value,
-            location: matchCompanion.location.value,
-            description: matchCompanion.description.value,
-            createdAt: matchCompanion.createdAt.value,
-            updatedAt: matchCompanion.updatedAt.value,
-          );
-
-          expect(
-            match,
-            equals(expectedMatch),
-          );
-
-          // cleanup
-          print("TODO cleanup");
-        },
-      );
-    });
   });
 }
+
+Future<void> _insertMatchWithParticipations({
+  required TestDatabaseWrapper testDatabaseWrapper,
+}) async {
+  // insert all
+  await testDatabaseWrapper.databaseWrapper.transaction(() async {
+    for (final auth in _auths) {
+      await testDatabaseWrapper.databaseWrapper.authsRepo.insertOne(auth);
+    }
+    for (final player in _players) {
+      await testDatabaseWrapper.databaseWrapper.playersRepo.insertOne(player);
+    }
+    await testDatabaseWrapper.databaseWrapper.matchesRepo.insertOne(_match);
+    for (final participation in _participations) {
+      await testDatabaseWrapper.databaseWrapper.playerMatchParticipationsRepo
+          .insertOne(participation);
+    }
+  });
+}
+
+final _auths = List.generate(2, (index) {
+  return AuthEntityData(
+    id: index + 1,
+    email: "email$index",
+    password: "password$index",
+    createdAt: DateTime.now().normalizedToSeconds,
+    updatedAt: DateTime.now().normalizedToSeconds,
+    authType: AuthTypeConstants.emailPassword.name,
+  );
+});
+
+// insert players
+final _players = List.generate(2, (index) {
+  return PlayerEntityData(
+    id: index + 1,
+    authId: index + 1,
+    firstName: "firstName$index",
+    lastName: "lastName$index",
+    nickname: "nickname$index",
+    createdAt: DateTime.now().normalizedToSeconds,
+    updatedAt: DateTime.now().normalizedToSeconds,
+  );
+});
+
+// insert match
+final _match = MatchEntityData(
+  id: 1,
+  title: "title",
+  dateAndTime: DateTime.now().normalizedToSeconds,
+  location: "location",
+  description: "description",
+  createdAt: DateTime.now().normalizedToSeconds,
+  updatedAt: DateTime.now().normalizedToSeconds,
+);
+
+// insert participations - two
+final _participations = List.generate(2, (index) {
+  return PlayerMatchParticipationEntityData(
+    id: index + 1,
+    playerId: index + 1,
+    matchId: 1,
+    createdAt: DateTime.now().normalizedToSeconds,
+    updatedAt: DateTime.now().normalizedToSeconds,
+    status: PlayerMatchParticipationStatus.values[index],
+  );
+});
